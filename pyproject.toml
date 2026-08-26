@@ -1,0 +1,33 @@
+[project]
+name = "virtual-cell-challenge"
+version = "0.1.0"
+description = "Baseline pipeline and tooling for Virtual Cell Challenge 2026"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+  "h5py>=3.16.0",
+  "numpy>=2.5.0",
+  "pandas>=3.0.0",
+  "scipy>=1.18.0",
+  "pyyaml>=6.0.0",
+  "anndata>=0.13.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.0",
+  "ruff>=0.11.0",
+]
+
+[project.scripts]
+vcc2026 = "vcc2026.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vcc2026"]
+
+[tool.ruff]
+line-length = 100

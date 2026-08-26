@@ -1,0 +1,132 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Iterable
+
+import h5py
+import numpy as np
+from scipy import sparse
+
+
+@dataclass(frozen=True)
+class SparseProfile:
+    gene_indices: np.ndarray
+    gene_values: np.ndarray
+
+    @property
+    def nnz(self) -> int:
+        return int(self.gene_indices.size)
+
+    def as_csr_row(self, n_genes: int) -> sparse.csr_matrix:
+        indptr = np.array([0, self.nnz], dtype=np.int64)
+        return sparse.csr_matrix(
+            (self.gene_values.astype(np.float32, copy=False), self.gene_indices.astype(np.int32, copy=False), indptr),
+            shape=(1, n_genes),
+        )
+
+
+def _decode_many(values: Iterable[object]) -> list[str]:
+    result: list[str] = []
+    for value in values:
+        if isinstance(value, bytes):
+            result.append(value.decode("utf-8"))
+        else:
+            result.append(str(value))
+    return result
+
+
+def read_name_list(path: str | Path) -> list[str]:
+    lines = [line.strip() for line in Path(path).read_text(encoding="utf-8").splitlines() if line.strip()]
+    if not lines:
+        return []
+    first = lines[0].lower()
+    if first in {"gene_name", "gene", "target_gene", "perturbation", "target"}:
+        return lines[1:]
+    return lines
+
+
+def read_csv_column(path: str | Path, expected_header: str | None = None) -> list[str]:
+    lines = [line.strip() for line in Path(path).read_text(encoding="utf-8").splitlines() if line.strip()]
+    if not lines:
+        return []
+    if expected_header is not None and lines[0].lower() == expected_header.lower():
+        return lines[1:]
+    if len(lines) > 1 and "," in lines[0]:
+        header = lines[0].split(",")[0].strip().lower()
+        if expected_header is not None and header == expected_header.lower():
+            return [line.split(",")[0].strip() for line in lines[1:]]
+    return [line.split(",")[0].strip() for line in lines]
+
+
+def control_gene_profile(
+    path: str | Path,
+    *,
+    row_chunk_size: int = 1024,
+) -> tuple[np.ndarray, float, int]:
+    """Return rounded mean counts per gene for the control file.
+
+    The function streams the sparse matrix from disk to avoid loading the full
+    control matrix into memory.
+    """
+
+    with h5py.File(path, "r") as handle:
+        shape = tuple(int(x) for x in handle["X"].attrs["shape"])
+        n_rows, n_genes = shape
+        indptr = handle["X/indptr"][()]
+        gene_sums = np.zeros(n_genes, dtype=np.float64)
+        total_counts = 0.0
+        for start in range(0, n_rows, row_chunk_size):
+            stop = min(n_rows, start + row_chunk_size)
+            lo = int(indptr[start])
+            hi = int(indptr[stop])
+            chunk_indices = handle["X/indices"][lo:hi]
+            chunk_data = handle["X/data"][lo:hi]
+            gene_sums += np.bincount(chunk_indices, weights=chunk_data, minlength=n_genes)
+            total_counts += float(chunk_data.sum())
+        mean_counts = gene_sums / float(n_rows)
+        rounded = np.rint(mean_counts).astype(np.float32)
+        return rounded, float(total_counts / float(n_rows)), n_rows
+
+
+def control_profile_to_sparse(mean_counts: np.ndarray, *, max_genes: int | None = None) -> SparseProfile:
+    gene_indices = np.flatnonzero(mean_counts > 0)
+    gene_values = mean_counts[gene_indices]
+    if max_genes is not None and gene_indices.size > max_genes:
+        order = np.argsort(-gene_values, kind="stable")
+        order = order[:max_genes]
+        gene_indices = gene_indices[order]
+        gene_values = gene_values[order]
+    return SparseProfile(gene_indices=gene_indices.astype(np.int32, copy=False), gene_values=gene_values)
+
+
+def validate_gene_alignment(expected: list[str], observed: list[str]) -> list[str]:
+    if expected == observed:
+        return []
+    mismatches: list[str] = []
+    if len(expected) != len(observed):
+        mismatches.append(f"length mismatch: expected={len(expected)} observed={len(observed)}")
+    for idx, (exp, obs) in enumerate(zip(expected, observed)):
+        if exp != obs:
+            mismatches.append(f"first mismatch at {idx}: expected={exp} observed={obs}")
+            break
+    return mismatches
+
+
+def load_control_gene_names(path: str | Path) -> list[str]:
+    with h5py.File(path, "r") as handle:
+        return _decode_many(handle["var/_index/values"][()])
+
+
+def load_control_context(path: str | Path) -> str:
+    with h5py.File(path, "r") as handle:
+        values = _decode_many(handle["obs/context/categories"][()])
+        if len(values) != 1:
+            raise ValueError(f"expected exactly one context in control file, found {values}")
+        return values[0]
+
+
+def load_control_stats(path: str | Path) -> dict[str, int]:
+    with h5py.File(path, "r") as handle:
+        n_rows, n_genes = (int(x) for x in handle["X"].attrs["shape"])
+        return {"n_cells": n_rows, "n_genes": n_genes}
