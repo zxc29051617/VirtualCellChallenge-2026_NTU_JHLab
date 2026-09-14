@@ -144,5 +144,5 @@ strategy」。
 | Tahoe-100M（50 種癌症細胞株，1 億筆）| 小分子擾動而非 CRISPRi，擾動方式與比賽不符 |
 | scBaseCount（Arc atlas，逾 6 億細胞）| 以觀察性資料為主，適合表徵學習而非擾動反應評估 |
 
-> 本節取代原先的 `notes/research_public_datasets.md`（該檔內容已併入此處，
-> 其中標註「待確認」的項目已由上方查證紀錄取代）。
+> 本節取代原先的 `notes/research_public_datasets.md`，該檔已於 2026-09-15 刪除；
+> 其中標註「待確認」的項目已由上方的查證紀錄取代。

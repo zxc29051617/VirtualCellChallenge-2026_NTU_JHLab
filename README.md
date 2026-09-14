@@ -23,7 +23,7 @@ Current goals:
   averaged into an overall score. Matching the baseline scores 0.
 - **There is no local ground truth**, for any context. Scoring a prediction locally against
   challenge data is not possible; the organizers hold the perturbed cells. Local evaluation
-  requires an external public perturbation dataset — see `notes/research_public_datasets.md`.
+  requires an external public perturbation dataset — see `參考文獻/README.md`.
 - The `vcc` profile in `cell-eval` v0.8.2 computes the 2025 three-metric panel, not the 2026
   six-metric panel, so it does not reproduce the leaderboard score.
 
@@ -50,8 +50,11 @@ On this machine, invoke the official `vcc` binary directly:
 
 ## Main scripts
 
-- `scripts/inspect_challenge.py` prints a compact challenge/data inventory.
-- `scripts/build_baseline.py` builds the simple context-mean baseline prediction.
+- `uv run vcc2026 inspect` prints a compact challenge/data inventory.
+- `uv run vcc2026 build-baseline` builds the simple context-mean baseline prediction.
+- `scripts/explore_data.py` walks through one context file in plain language.
+- `scripts/download_external_data.ps1` fetches the Replogle 2022 data used for local evaluation.
+- `scripts/build_external_profiles.py` reduces it to per-perturbation mean profiles.
 - `scripts/evaluate_with_cell_eval.ps1` shows how to run the official evaluator once ground truth is available.
 - `scripts/package_submission.ps1` runs the official `vcc prep` packaging step.
 

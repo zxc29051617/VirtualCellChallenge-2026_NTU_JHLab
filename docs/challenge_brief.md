@@ -37,7 +37,7 @@ Consequences for this workspace:
   counts in `dataset/manifest.json` describe data the organizers hold, not data we have.
 - Local scoring of a prediction is therefore impossible using challenge data alone.
 - Participants may use public perturbation datasets or their own data. Building a local
-  evaluation loop requires such an external dataset — see `notes/research_public_datasets.md`.
+  evaluation loop requires such an external dataset — see `參考文獻/README.md`.
 
 ## Official submission constraints
 

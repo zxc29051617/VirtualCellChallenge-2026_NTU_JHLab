@@ -40,7 +40,7 @@ $uv = "D:\anaconda3\Scripts\uv.exe"
 & $uv run vcc2026 inspect                  # challenge manifest + data summary
 & $uv run vcc2026 build-baseline           # build context-mean prediction
 
-.\scripts\build_baseline.py                # build the baseline predictor
+.\scripts\download_external_data.ps1       # fetch Replogle 2022 for local evaluation
 .\scripts\evaluate_with_cell_eval.ps1 -Prediction <p> -Reference <r>
 .\scripts\package_submission.ps1           # package for submission
 ```
@@ -55,7 +55,7 @@ $uv = "D:\anaconda3\Scripts\uv.exe"
   currently validation controls only.
 - `scripts/` — driver scripts (PowerShell + Python).
 - `docs/` — `challenge_brief.md`, `validation_strategy.md`,
-  `research_public_datasets.md`.
+  `參考文獻/README.md`.
 - `artifacts/` — evaluation output, not committed.
 
 ## Notes
