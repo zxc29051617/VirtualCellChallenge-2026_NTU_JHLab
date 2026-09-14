@@ -3,7 +3,73 @@ from pathlib import Path
 import h5py
 import numpy as np
 
-from vcc2026.io import control_gene_profile, read_name_list, validate_gene_alignment
+from vcc2026.io import (
+    control_gene_profile,
+    group_mean_profiles,
+    read_name_list,
+    read_var_names,
+    validate_gene_alignment,
+)
+
+
+def _write_dense_h5ad(path: Path, counts: np.ndarray, perturbations: list[str]) -> None:
+    """Minimal h5ad in the layout scPerturb uses: dense X, plain var index."""
+    categories = sorted(set(perturbations))
+    codes = np.array([categories.index(p) for p in perturbations], dtype=np.int16)
+    with h5py.File(path, "w") as handle:
+        handle.attrs["encoding-type"] = "anndata"
+        handle.attrs["encoding-version"] = "0.1.0"
+        x = handle.create_dataset("X", data=counts.astype(np.float32), chunks=(2, 2))
+        x.attrs["encoding-type"] = "array"
+        x.attrs["encoding-version"] = "0.2.0"
+
+        obs = handle.create_group("obs")
+        obs.attrs["encoding-type"] = "dataframe"
+        obs.attrs["encoding-version"] = "0.2.0"
+        obs.attrs["_index"] = "cell_barcode"
+        obs.create_dataset(
+            "cell_barcode",
+            data=np.array([f"c{i}" for i in range(len(perturbations))], dtype=object),
+            dtype=h5py.string_dtype("utf-8"),
+        )
+        pert = obs.create_group("perturbation")
+        pert.attrs["encoding-type"] = "categorical"
+        pert.attrs["encoding-version"] = "0.2.0"
+        pert.create_dataset(
+            "categories", data=np.array(categories, dtype=object), dtype=h5py.string_dtype("utf-8")
+        )
+        pert.create_dataset("codes", data=codes)
+
+        var = handle.create_group("var")
+        var.attrs["encoding-type"] = "dataframe"
+        var.attrs["encoding-version"] = "0.2.0"
+        var.attrs["_index"] = "gene_name"
+        var.create_dataset(
+            "gene_name",
+            data=np.array([f"g{i}" for i in range(counts.shape[1])], dtype=object),
+            dtype=h5py.string_dtype("utf-8"),
+        )
+
+
+def test_group_mean_profiles_averages_per_category(tmp_path: Path) -> None:
+    path = tmp_path / "dense.h5ad"
+    counts = np.array([[1, 0, 3], [3, 0, 5], [10, 2, 0], [0, 0, 0], [4, 4, 4]])
+    _write_dense_h5ad(path, counts, ["A", "A", "B", "B", "C"])
+
+    # row_chunk_size below the chunk height forces multiple blocks and a partial last block
+    means, categories, cell_counts = group_mean_profiles(path, "perturbation", row_chunk_size=2)
+
+    assert categories == ["A", "B", "C"]
+    assert cell_counts.tolist() == [2, 2, 1]
+    assert means[0].tolist() == [2.0, 0.0, 4.0]
+    assert means[1].tolist() == [5.0, 1.0, 0.0]
+    assert means[2].tolist() == [4.0, 4.0, 4.0]
+
+
+def test_read_var_names_handles_plain_index_dataset(tmp_path: Path) -> None:
+    path = tmp_path / "dense.h5ad"
+    _write_dense_h5ad(path, np.zeros((2, 3)), ["A", "B"])
+    assert read_var_names(path) == ["g0", "g1", "g2"]
 
 
 def test_read_name_list_strips_header(tmp_path: Path) -> None:

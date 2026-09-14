@@ -130,3 +130,69 @@ def load_control_stats(path: str | Path) -> dict[str, int]:
     with h5py.File(path, "r") as handle:
         n_rows, n_genes = (int(x) for x in handle["X"].attrs["shape"])
         return {"n_cells": n_rows, "n_genes": n_genes}
+
+
+def _index_names(frame: h5py.Group) -> list[str]:
+    name = frame.attrs.get("_index", "_index")
+    if isinstance(name, bytes):
+        name = name.decode("utf-8")
+    node = frame[name]
+    values = node["values"][()] if isinstance(node, h5py.Group) else node[()]
+    return _decode_many(values)
+
+
+def read_var_names(path: str | Path) -> list[str]:
+    """Gene names from any h5ad, whether var's index is a dataset or a nullable-string group."""
+    with h5py.File(path, "r") as handle:
+        return _index_names(handle["var"])
+
+
+def read_categorical(path: str | Path, column: str) -> tuple[np.ndarray, list[str]]:
+    """Return (codes, categories) for a categorical obs column."""
+    with h5py.File(path, "r") as handle:
+        group = handle[f"obs/{column}"]
+        if not isinstance(group, h5py.Group) or "categories" not in group:
+            raise ValueError(f"obs/{column} in {path} is not categorical")
+        return group["codes"][()], _decode_many(group["categories"][()])
+
+
+def group_mean_profiles(
+    path: str | Path,
+    column: str,
+    *,
+    row_chunk_size: int = 2048,
+) -> tuple[np.ndarray, list[str], np.ndarray]:
+    """Mean expression per category of an obs column, streaming a dense X from disk.
+
+    Returns (means[n_categories, n_genes], categories, cell_counts).
+
+    The Replogle/scPerturb files store X densely, so reading one whole would allocate
+    roughly 9-11 GB. This reads row blocks instead.
+    """
+
+    codes, categories = read_categorical(path, column)
+    with h5py.File(path, "r") as handle:
+        matrix = handle["X"]
+        if not isinstance(matrix, h5py.Dataset):
+            raise TypeError(f"X in {path} is not a dense dataset")
+        n_rows, n_genes = matrix.shape
+
+        # Align reads to the HDF5 chunk grid, or each chunk is decompressed twice.
+        chunk_rows = matrix.chunks[0] if matrix.chunks else row_chunk_size
+        step = max(chunk_rows, (row_chunk_size // chunk_rows) * chunk_rows)
+
+        sums = np.zeros((len(categories), n_genes), dtype=np.float64)
+        counts = np.zeros(len(categories), dtype=np.int64)
+        for start in range(0, n_rows, step):
+            block = matrix[start: min(n_rows, start + step)]
+            block_codes = codes[start: start + block.shape[0]]
+            order = np.argsort(block_codes, kind="stable")
+            ordered = block_codes[order]
+            run_starts = np.concatenate(([0], np.flatnonzero(np.diff(ordered)) + 1))
+            sums[ordered[run_starts]] += np.add.reduceat(block[order], run_starts, axis=0)
+            counts += np.bincount(block_codes, minlength=len(categories))
+
+    means = np.zeros_like(sums, dtype=np.float32)
+    seen = counts > 0
+    means[seen] = (sums[seen] / counts[seen, None]).astype(np.float32)
+    return means, categories, counts

@@ -2,20 +2,30 @@
 
 This repository is set up for the 2026 Virtual Cell Challenge with a deliberately simple first-stage baseline.
 
+The 2026 task is **zero-shot**: predict CRISPRi knockdown responses in cell lines never seen
+perturbed, given only their unperturbed control cells and a list of genes to knock down.
+No challenge-specific training set is released. See `docs/challenge_brief.md` for the full
+rules, the six scored metrics, and the timeline.
+
 Current goals:
 
 1. Understand the challenge rules and submission format.
 2. Build a reproducible local environment.
 3. Validate the data layout and gene alignment.
 4. Produce a correct, low-complexity baseline.
-5. Define validation splits that reflect context generalization.
+5. Obtain an external perturbation dataset so that local evaluation becomes possible.
 
 ## Current status
 
-- Challenge controls are present under `dataset/`.
-- The workspace currently contains only validation controls for contexts `A`, `B`, and `C`.
-- Official scoring uses `cell-eval` / `vcc`-style evaluation on held-out perturbation data.
-- This repo now contains a baseline predictor that uses the control-cell mean per context.
+- Challenge controls are present under `dataset/`: validation controls for contexts `A`, `B`, `C`.
+- This repo contains a baseline predictor that uses the control-cell mean per context.
+- Official scoring is server-side: six metrics normalized against a baseline model and
+  averaged into an overall score. Matching the baseline scores 0.
+- **There is no local ground truth**, for any context. Scoring a prediction locally against
+  challenge data is not possible; the organizers hold the perturbed cells. Local evaluation
+  requires an external public perturbation dataset — see `notes/research_public_datasets.md`.
+- The `vcc` profile in `cell-eval` v0.8.2 computes the 2025 three-metric panel, not the 2026
+  six-metric panel, so it does not reproduce the leaderboard score.
 
 ## Suggested setup
 

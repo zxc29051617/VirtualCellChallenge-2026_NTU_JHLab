@@ -1,5 +1,10 @@
 # Public Perturbation Data Notes
 
+> **Superseded.** This content has been merged into `參考文獻/README.md`, which sits next to
+> the PDFs and carries the verified figures for the dataset we actually selected
+> (Replogle 2022 via scPerturb). The `待確認` items below were resolved there on 2026-09-14.
+> Kept only so you can confirm nothing was lost before deleting this file.
+
 This is a working shortlist for pretraining or representation learning.
 Anything marked `待確認` still needs exact counts, licensing, or download-path verification before use.
 

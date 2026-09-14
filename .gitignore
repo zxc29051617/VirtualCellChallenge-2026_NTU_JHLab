@@ -13,6 +13,8 @@ __pycache__/
 runs/
 artifacts/
 dataset/
+external/
+tmp/
 dist/
 build/
 *.prep.vcc
