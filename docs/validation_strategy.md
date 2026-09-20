@@ -179,14 +179,23 @@ Two caveats:
   competitor.
 - `transfer` — carry the fold change measured in the source line onto the target's own
   control profile. The first model here that is actually zero-shot.
+- `scaled` — `transfer` with one weight on the whole log fold change.
+- `calibrated` — `transfer` with separate weights on its shared and perturbation-specific
+  halves.
 
-K562 → RPE1, 1,827 perturbations (shared, ≥25 cells), 7,226 shared genes:
+The two weighted models are fit on the fit half of the perturbations and scored on the other
+half, so no model is tuned on what it is scored against. In the Challenge those constants
+would come from public cell-line pairs rather than from the scored context.
+
+K562 → RPE1, 1,827 usable perturbations split 913 fit / 914 scored, 7,226 shared genes:
 
 | model | pds ↑ | expr_error ↓ | direction ↑ | jaccard ↑ |
 | --- | --- | --- | --- | --- |
 | `control` | 0.5000 | 1.0000 | 0.0000 | 0.0138 |
-| `mean_response` | 0.5000 | 0.7342 | 0.7622 | 0.0938 |
-| `transfer` | **0.8140** | 1.1714 | 0.5913 | 0.0243 |
+| `mean_response` | 0.5000 | **0.7270** | **0.7671** | **0.0989** |
+| `transfer` | 0.8208 | 1.1613 | 0.5928 | 0.0243 |
+| `scaled` | **0.8273** | 0.9785 | 0.5806 | 0.0242 |
+| `calibrated` | 0.6301 | 0.9507 | 0.7163 | 0.0234 |
 
 Two implementation checks land exactly on values the official spec predicts, which is good
 evidence the discrimination metric is faithful: a constant prediction scores exactly 0.5000,
@@ -195,11 +204,33 @@ and a zero-effect prediction scores exactly 1.0000 on the expression error.
 `control` scoring 0.0000 on direction is not a bug. A predicted fold change of exactly zero
 carries no direction, and the official rule counts that as a miss rather than dropping it.
 
-The result worth acting on: **transfer wins decisively on discrimination (0.81 against the
-0.50 floor) and loses on everything else.** Fold changes carry enough cross-line signal to
-identify which perturbation is which, but not enough to place the response accurately — it is
-worse than predicting nothing at all on expression error. That mirrors the real leaderboard,
-where discrimination is nearly saturated and the DE metrics are not.
+### What the numbers say
+
+**Cross-line fold changes identify a perturbation but do not place its response.** `transfer`
+reaches 0.82 on discrimination against a 0.50 floor while scoring *worse than predicting
+nothing* on expression error. Measured directly: the two lines' shared response correlates at
+r = 0.475, but the perturbation-specific part correlates at only r = 0.158 — weak enough to
+be useless for magnitude, strong enough to rank.
+
+**The composition, not the magnitude, is what is wrong.** The measured response is 27.5%
+shared and 72.5% perturbation-specific; the transferred one is 4.2% and 95.8%. It is missing
+almost all of the common response, and what it does carry is mostly noise.
+
+**A single weight is nearly free; reweighting the two halves is not.** `scaled` moves
+expression error from 1.16 to 0.98 and leaves discrimination untouched — cosine distance
+ignores a uniform scale, so it cannot do otherwise. `calibrated` reaches a better 0.95 by
+pushing the shared half up and the specific half down (×1.38 and ×0.23), and pays 0.20 of
+discrimination for it, because the shared half is by definition identical across
+perturbations and swamps what distinguishes them.
+
+Least-squares shrinkage is optimal for squared error and actively harmful for the metric that
+rewards telling perturbations apart. Given that the competition averages six metrics, this is
+the trap its scoring design is meant to punish.
+
+**The standing gap: nothing here beats `mean_response` on magnitude.** The best transfer
+variant sits at 0.95 against its 0.73, and `mean_response` reads the answer key to get there.
+Closing that gap means estimating the target context's own shared response from its control
+profile — which is the actual open problem, not a tuning exercise.
 
 ### Known weakness in the direction and jaccard proxies
 

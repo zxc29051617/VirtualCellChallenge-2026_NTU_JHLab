@@ -3,6 +3,8 @@ import numpy as np
 from vcc2026.local_eval import (
     _own_gene_columns,
     expression_error,
+    fold_change,
+    means_from_fold_change,
     perturbation_discrimination,
     responding_set_jaccard,
     score,
@@ -68,6 +70,25 @@ def test_jaccard_is_one_for_an_exact_prediction() -> None:
         EFFECTS, EFFECTS, own_columns=NO_OWN_GENE, expressed=expressed, top_n=2
     )
     assert got == 1.0
+
+
+def test_fold_change_survives_a_round_trip_up_to_library_size() -> None:
+    """Applying a fold change moves the profile's total, which normalization then removes.
+
+    What survives is every gene relative to the others, which is all the metrics read.
+    """
+    control = np.array([10.0, 20.0, 5.0, 40.0])
+    ratios = np.array([[0.4, -0.2, 0.0, 0.1], [-0.3, 0.5, 0.2, -0.1]])
+    recovered = fold_change(means_from_fold_change(ratios, control), control)
+    shift = (recovered - ratios).mean(axis=1, keepdims=True)
+    assert np.allclose(recovered - shift, ratios, atol=1e-9)
+
+
+def test_uniform_scaling_leaves_discrimination_unchanged() -> None:
+    """Cosine distance ignores magnitude, so a global scale can only move the error metrics."""
+    before = perturbation_discrimination(EFFECTS, EFFECTS, own_columns=NO_OWN_GENE)
+    after = perturbation_discrimination(EFFECTS * 0.287, EFFECTS, own_columns=NO_OWN_GENE)
+    assert before == after
 
 
 def test_score_reports_all_four_metrics_from_mean_profiles() -> None:

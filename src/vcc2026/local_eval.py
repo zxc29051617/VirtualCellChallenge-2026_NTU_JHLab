@@ -71,6 +71,25 @@ def log2_fold_change(means: np.ndarray, control: np.ndarray) -> np.ndarray:
     return np.log2((pert_cpm + LFC_EPSILON) / (ctrl_cpm + LFC_EPSILON))
 
 
+def fold_change(means: np.ndarray, control_means: np.ndarray) -> np.ndarray:
+    """Natural-log fold change of CPM-normalized means against the control.
+
+    Models are built in this space rather than in the log-profile space the discrimination
+    metric uses, because a profile is renormalized to a fixed total before scoring: an
+    arbitrary vector added in that space is not realizable as a profile, so composing a
+    prediction there and converting back loses accuracy. A fold change always is realizable.
+    """
+
+    pert = _rescale(means, CPM_TOTAL)
+    control = _rescale(control_means.reshape(1, -1), CPM_TOTAL)
+    return np.log((pert + LFC_EPSILON) / (control + LFC_EPSILON))
+
+
+def means_from_fold_change(log_ratio: np.ndarray, control_means: np.ndarray) -> np.ndarray:
+    """Apply a log fold change to the control profile. Inverts `fold_change`."""
+    return _rescale(control_means.reshape(1, -1), CPM_TOTAL) * np.exp(log_ratio)
+
+
 def _own_gene_columns(perturbations: list[str], genes: list[str]) -> np.ndarray:
     """Column index of each perturbation's own target gene, or -1 when not measured."""
     lookup = {gene: idx for idx, gene in enumerate(genes)}
