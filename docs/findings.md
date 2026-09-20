@@ -126,3 +126,57 @@ and it reframes the problem from "find a better estimator" to "assemble enough c
 With four or five contexts instead of two, hold one out and ask whether a shared response
 predicted from the remaining ones beats the r = 0.345 that a single donor line achieves. That
 is a direct test of the claim above, and it is the smallest experiment that can refute it.
+
+**Prediction registered before running it**, so the outcome cannot be rationalized after the
+fact: averaging several donor contexts should beat a single one, because the part of a shared
+response that is idiosyncratic to the donor averages out while the part common to
+perturbation response everywhere survives. If instead a four-context average lands at the
+same r ≈ 0.345, then shared responses are close to context-specific, collecting more contexts
+will not help, and the approach in section 7 — leaning on identification rather than
+magnitude — is the one worth developing.
+
+Two caveats the result will have to be read against. The Tian contexts come from a different
+lab, chemistry and perturbation panel than Replogle, so some of any gap will be batch rather
+than biology. And iPSC and day-7 neuron are related samples from one study, so they count as
+fewer than two independent contexts.
+
+### The experiment was attempted and cannot be run on this data
+
+The three files were downloaded and inspected. It fails on two independent counts.
+
+**There is no perturbation panel shared across contexts.** Single-gene perturbations with at
+least 25 cells, and their pairwise overlap:
+
+| | K562 | RPE1 | iPSC | neuron d7 | neuron 2021 |
+| --- | --- | --- | --- | --- | --- |
+| **K562** | 2,003 | 1,790 | 10 | 10 | 51 |
+| **RPE1** | 1,790 | 2,122 | 10 | 10 | 59 |
+| **iPSC** | 10 | 10 | 26 | 26 | 2 |
+| **neuron d7** | 10 | 10 | 26 | 26 | 2 |
+| **neuron 2021** | 51 | 59 | 2 | 2 | 184 |
+
+Shared by all five: **0**. Shared between the Replogle pair and the Tian trio: **0**.
+Comparing shared responses measured on disjoint gene panels confounds context with panel, so
+a low correlation would say nothing about context.
+
+Tian 2019 also turns out to be a combinatorial screen — 39,162 labels of the form
+`ATP5A1_HMGCS1_UQCRQ`, of which only 26 are single-gene.
+
+**The one overlap that exists is too small to resolve anything.** K562 ∩ neuron-2021 is 51
+perturbations. Subsampling the Replogle pair to that size to measure the noise floor:
+
+| panel size | RPE1 reliability | K562 reliability | cross-line r |
+| --- | --- | --- | --- |
+| 50 | 0.669 | **0.222** | 0.176 |
+| 100 | 0.803 | 0.294 | 0.205 |
+| 400 | 0.942 | 0.568 | 0.279 |
+| 1,827 | 0.987 | 0.842 | 0.316 |
+
+At 50 perturbations K562's shared response cannot even be reproduced from two halves of its
+own data. An experiment meant to distinguish 0.345 from something better cannot be run at a
+noise floor of 0.222.
+
+**So the claim in this section stands untested.** It is not supported by a failed experiment
+and it is not refuted by one; the public CRISPRi data available here does not contain the
+matched multi-context panel the test requires. Saying so is more useful than reporting a
+number produced at a noise floor above the effect.

@@ -13,6 +13,8 @@
 
 param(
     [string]$OutDir = "external",
+    [ValidateSet("core", "extra", "all")]
+    [string]$Contexts = "core",
     [switch]$IncludeGwps,
     [switch]$Force
 )
@@ -21,10 +23,23 @@ $ErrorActionPreference = "Stop"
 
 $record = "https://zenodo.org/api/records/13350497/files"
 
-$files = @(
+# Two cell lines are enough to compare contexts but not to learn a mapping between them.
+# The "extra" set adds CRISPRi screens in unrelated contexts so a context can be held out.
+$core = @(
     @{ Name = "ReplogleWeissman2022_K562_essential.h5ad"; SizeGb = 1.54 }
     @{ Name = "ReplogleWeissman2022_rpe1.h5ad";           SizeGb = 1.24 }
 )
+$extra = @(
+    @{ Name = "TianKampmann2019_iPSC.h5ad";        SizeGb = 0.35 }
+    @{ Name = "TianKampmann2019_day7neuron.h5ad";  SizeGb = 0.27 }
+    @{ Name = "TianKampmann2021_CRISPRi.h5ad";     SizeGb = 0.29 }
+)
+
+$files = switch ($Contexts) {
+    "core"  { $core }
+    "extra" { $extra }
+    "all"   { $core + $extra }
+}
 if ($IncludeGwps) {
     $files += @{ Name = "ReplogleWeissman2022_K562_gwps.h5ad"; SizeGb = 8.81 }
 }
