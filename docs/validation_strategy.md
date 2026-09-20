@@ -204,33 +204,11 @@ and a zero-effect prediction scores exactly 1.0000 on the expression error.
 `control` scoring 0.0000 on direction is not a bug. A predicted fold change of exactly zero
 carries no direction, and the official rule counts that as a miss rather than dropping it.
 
-### What the numbers say
-
-**Cross-line fold changes identify a perturbation but do not place its response.** `transfer`
-reaches 0.82 on discrimination against a 0.50 floor while scoring *worse than predicting
-nothing* on expression error. Measured directly: the two lines' shared response correlates at
-r = 0.475, but the perturbation-specific part correlates at only r = 0.158 — weak enough to
-be useless for magnitude, strong enough to rank.
-
-**The composition, not the magnitude, is what is wrong.** The measured response is 27.5%
-shared and 72.5% perturbation-specific; the transferred one is 4.2% and 95.8%. It is missing
-almost all of the common response, and what it does carry is mostly noise.
-
-**A single weight is nearly free; reweighting the two halves is not.** `scaled` moves
-expression error from 1.16 to 0.98 and leaves discrimination untouched — cosine distance
-ignores a uniform scale, so it cannot do otherwise. `calibrated` reaches a better 0.95 by
-pushing the shared half up and the specific half down (×1.38 and ×0.23), and pays 0.20 of
-discrimination for it, because the shared half is by definition identical across
-perturbations and swamps what distinguishes them.
-
-Least-squares shrinkage is optimal for squared error and actively harmful for the metric that
-rewards telling perturbations apart. Given that the competition averages six metrics, this is
-the trap its scoring design is meant to punish.
-
-**The standing gap: nothing here beats `mean_response` on magnitude.** The best transfer
-variant sits at 0.95 against its 0.73, and `mean_response` reads the answer key to get there.
-Closing that gap means estimating the target context's own shared response from its control
-profile — which is the actual open problem, not a tuning exercise.
+What these numbers mean, and the diagnostics that follow from them, are in
+`docs/findings.md`. The short version: cross-line fold changes identify a perturbation well
+and place its response badly, nothing here beats `mean_response` on magnitude, and the reason
+is that a cell line's shared response is reliable, worth a quarter of the signal, and
+transfers from one other line at r = 0.345 at best.
 
 ### Known weakness in the direction and jaccard proxies
 
