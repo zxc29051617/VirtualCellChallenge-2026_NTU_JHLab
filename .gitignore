@@ -10,6 +10,7 @@ __pycache__/
 *.log
 *.tmp
 *.swp
+
 runs/
 artifacts/
 dataset/
@@ -19,3 +20,9 @@ dist/
 build/
 *.prep.vcc
 *.vcc
+
+TRASH/
+TRASH-FILES.md
+data/*.h5ad
+submissions/*.h5ad
+submissions/*.vcc
