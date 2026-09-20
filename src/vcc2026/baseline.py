@@ -4,10 +4,14 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import h5py
-import numpy as np
 from scipy import sparse
 
-from .io import control_gene_profile, control_profile_to_sparse, load_control_gene_names, validate_gene_alignment
+from .io import (
+    control_gene_profile,
+    control_profile_to_sparse,
+    load_control_gene_names,
+    validate_gene_alignment,
+)
 
 
 @dataclass(frozen=True)
@@ -18,7 +22,20 @@ class ContextBaseline:
     mean_library_size: float
 
 
-def fit_context_mean_baseline(control_path: str | Path, *, row_chunk_size: int = 1024) -> ContextBaseline:
+# What bounds the gene count is `vcc prep`, not the scoring cap. It loads the whole indices
+# array as int64, so a submission costs about 12 bytes per stored entry while being packaged:
+# all 7,608 genes that survive rounding would ask for 33 GB and fail on a 31 GB machine, well
+# inside the 4.75e9 entries the scorer allows. 3,000 keeps 72% of the control's expression at
+# about 13 GB. Raise it on a larger machine; the cost of lowering it is signal, not format.
+DEFAULT_MAX_GENES = 3000
+
+
+def fit_context_mean_baseline(
+    control_path: str | Path,
+    *,
+    row_chunk_size: int = 1024,
+    max_genes: int | None = DEFAULT_MAX_GENES,
+) -> ContextBaseline:
     with h5py.File(control_path, "r") as handle:
         context_values = handle["obs/context/categories"][()]
         context = context_values[0].decode("utf-8") if isinstance(context_values[0], bytes) else str(context_values[0])
@@ -27,8 +44,12 @@ def fit_context_mean_baseline(control_path: str | Path, *, row_chunk_size: int =
         mismatch = validate_gene_alignment(gene_names, observed_genes)
         if mismatch:
             raise ValueError(f"gene alignment failed for {control_path}: {'; '.join(mismatch)}")
-        rounded_mean, mean_library_size, n_cells = control_gene_profile(control_path, row_chunk_size=row_chunk_size)
-        profile = control_profile_to_sparse(rounded_mean, max_genes=1000).as_csr_row(len(gene_names))
+        mean_counts, mean_library_size, n_cells = control_gene_profile(
+            control_path, row_chunk_size=row_chunk_size
+        )
+        profile = control_profile_to_sparse(mean_counts, max_genes=max_genes).as_csr_row(
+            len(gene_names)
+        )
         return ContextBaseline(
             context=context,
             profile=profile,

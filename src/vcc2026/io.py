@@ -64,7 +64,11 @@ def control_gene_profile(
     *,
     row_chunk_size: int = 1024,
 ) -> tuple[np.ndarray, float, int]:
-    """Return rounded mean counts per gene for the control file.
+    """Return mean counts per gene for the control file.
+
+    The mean is returned unrounded. Rounding to the integer counts a submission must carry
+    is `control_profile_to_sparse`'s job, because it has to happen after the low-expression
+    filter rather than before it.
 
     The function streams the sparse matrix from disk to avoid loading the full
     control matrix into memory.
@@ -85,16 +89,38 @@ def control_gene_profile(
             gene_sums += np.bincount(chunk_indices, weights=chunk_data, minlength=n_genes)
             total_counts += float(chunk_data.sum())
         mean_counts = gene_sums / float(n_rows)
-        rounded = np.rint(mean_counts).astype(np.float32)
-        return rounded, float(total_counts / float(n_rows)), n_rows
+        return mean_counts.astype(np.float32), float(total_counts / float(n_rows)), n_rows
 
 
-def control_profile_to_sparse(mean_counts: np.ndarray, *, max_genes: int | None = None) -> SparseProfile:
-    gene_indices = np.flatnonzero(mean_counts > 0)
-    gene_values = mean_counts[gene_indices]
+def control_profile_to_sparse(
+    mean_counts: np.ndarray,
+    *,
+    min_cpm: float = 1.0,
+    max_genes: int | None = None,
+) -> SparseProfile:
+    """Round a mean profile to the integer counts a submission must carry.
+
+    Genes below `min_cpm` counts per million are dropped first. They carry almost no
+    expression mass, but each would cost a stored entry against the scoring density cap.
+    Rounding then removes whatever averages below half a count. Filtering before rounding
+    rather than after is what keeps the surviving set defined by expression rather than by
+    an arbitrary rank cut.
+
+    `max_genes` caps the result to the strongest genes. It costs real signal -- on the
+    challenge controls, a cap of 1,000 discards 6,608 genes carrying 57% of the expression
+    -- so leave it unset unless something downstream demands a hard bound.
+    """
+
+    counts = np.asarray(mean_counts, dtype=np.float64)
+    total = counts.sum()
+    if min_cpm > 0 and total > 0:
+        counts = np.where(counts * (1e6 / total) >= min_cpm, counts, 0.0)
+
+    rounded = np.rint(counts).astype(np.float32)
+    gene_indices = np.flatnonzero(rounded)
+    gene_values = rounded[gene_indices]
     if max_genes is not None and gene_indices.size > max_genes:
-        order = np.argsort(-gene_values, kind="stable")
-        order = order[:max_genes]
+        order = np.argsort(-gene_values, kind="stable")[:max_genes]
         gene_indices = gene_indices[order]
         gene_values = gene_values[order]
     return SparseProfile(gene_indices=gene_indices.astype(np.int32, copy=False), gene_values=gene_values)

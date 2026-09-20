@@ -5,6 +5,7 @@ import numpy as np
 
 from vcc2026.io import (
     control_gene_profile,
+    control_profile_to_sparse,
     group_mean_profiles,
     read_name_list,
     read_var_names,
@@ -129,4 +130,25 @@ def test_control_gene_profile_streams_sparse_matrix(tmp_path: Path) -> None:
     mean, mean_library, n_cells = control_gene_profile(path, row_chunk_size=1)
     assert n_cells == 2
     assert mean_library == 3.0
-    assert mean.tolist() == [0.0, 2.0, 1.0]
+    assert mean.tolist() == [0.5, 1.5, 1.0]
+
+
+def test_profile_to_sparse_filters_by_cpm_before_rounding() -> None:
+    """Order matters: a gene under the CPM floor goes even though it would have rounded up."""
+    # 0.6 counts in a million-count profile is 0.6 CPM, but rounds to 1.
+    counts = np.array([1_000_000.0, 0.6])
+    assert control_profile_to_sparse(counts, min_cpm=1.0).gene_indices.tolist() == [0]
+    assert control_profile_to_sparse(counts, min_cpm=0.0).gene_indices.tolist() == [0, 1]
+
+
+def test_profile_to_sparse_rounds_to_integer_counts() -> None:
+    counts = np.array([10.4, 10.6, 0.4, 0.6])
+    kept = control_profile_to_sparse(counts, min_cpm=0.0)
+    assert kept.gene_indices.tolist() == [0, 1, 3]
+    assert kept.gene_values.tolist() == [10.0, 11.0, 1.0]
+
+
+def test_max_genes_caps_to_the_strongest() -> None:
+    counts = np.array([5.0, 50.0, 500.0, 2.0])
+    kept = control_profile_to_sparse(counts, min_cpm=0.0, max_genes=2)
+    assert sorted(kept.gene_indices.tolist()) == [1, 2]
