@@ -168,6 +168,53 @@ Two caveats:
   predicting the knockdown itself measures nothing the Challenge scores.
   See `docs/challenge_brief.md`.
 
+## The loop, and what it says so far
+
+`scripts/evaluate_local.py` fits on one cell line and scores the other. Metrics live in
+`vcc2026.local_eval`. Three reference models are built in:
+
+- `control` — predict no change.
+- `mean_response` — one averaged response assigned to every perturbation. This is the shape
+  of the official baseline `b`. It reads the answer key, so it is the yardstick, not a
+  competitor.
+- `transfer` — carry the fold change measured in the source line onto the target's own
+  control profile. The first model here that is actually zero-shot.
+
+K562 → RPE1, 1,827 perturbations (shared, ≥25 cells), 7,226 shared genes:
+
+| model | pds ↑ | expr_error ↓ | direction ↑ | jaccard ↑ |
+| --- | --- | --- | --- | --- |
+| `control` | 0.5000 | 1.0000 | 0.0000 | 0.0138 |
+| `mean_response` | 0.5000 | 0.7342 | 0.7622 | 0.0938 |
+| `transfer` | **0.8140** | 1.1714 | 0.5913 | 0.0243 |
+
+Two implementation checks land exactly on values the official spec predicts, which is good
+evidence the discrimination metric is faithful: a constant prediction scores exactly 0.5000,
+and a zero-effect prediction scores exactly 1.0000 on the expression error.
+
+`control` scoring 0.0000 on direction is not a bug. A predicted fold change of exactly zero
+carries no direction, and the official rule counts that as a miss rather than dropping it.
+
+The result worth acting on: **transfer wins decisively on discrimination (0.81 against the
+0.50 floor) and loses on everything else.** Fold changes carry enough cross-line signal to
+identify which perturbation is which, but not enough to place the response accurately — it is
+worse than predicting nothing at all on expression error. That mirrors the real leaderboard,
+where discrimination is nearly saturated and the DE metrics are not.
+
+### Known weakness in the direction and jaccard proxies
+
+`mean_response` scores 0.7622 on `direction` here, while the official baseline scores
+0.505–0.522 on `de_wilcoxon_direction_fidelity_yield_raw`. The gap is the proxy, not the data.
+
+The official gate is the reference's *significant* set, which is perturbation-specific. This
+proxy gates on the top `--top-n` genes by |log2 fold change|, and those are dominated by the
+response signature shared across perturbations — exactly what an averaged prediction gets
+right. So the proxy over-credits `mean_response`, and by extension under-states how much room
+a real model has above it.
+
+Treat `pds` and `expr_error` as trustworthy, and the other two as rough. Closing this gap
+means computing the Wilcoxon table from cell-level data rather than from pseudobulk means.
+
 ## Recommended order
 
 1. Random split, once, to prove the pipeline runs end to end.
