@@ -1,0 +1,7 @@
+TRASH/
+TRASH-FILES.md
+data/*.h5ad
+submissions/*.h5ad
+submissions/*.vcc
+__pycache__/
+*.pyc
