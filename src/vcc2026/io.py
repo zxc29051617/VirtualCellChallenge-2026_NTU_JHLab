@@ -98,13 +98,19 @@ def control_profile_to_sparse(
     min_cpm: float = 1.0,
     max_genes: int | None = None,
 ) -> SparseProfile:
-    """Round a mean profile to the integer counts a submission must carry.
+    """Select the genes a submission will carry, keeping their means unrounded.
 
     Genes below `min_cpm` counts per million are dropped first. They carry almost no
     expression mass, but each would cost a stored entry against the scoring density cap.
-    Rounding then removes whatever averages below half a count. Filtering before rounding
-    rather than after is what keeps the surviving set defined by expression rather than by
-    an arbitrary rank cut.
+    A gene is then kept if its mean reaches half a count, which is what it would take to
+    round to one. Filtering before that rather than after is what keeps the surviving set
+    defined by expression rather than by an arbitrary rank cut.
+
+    Values stay as means rather than rounded counts. A submission's cells must hold
+    integers, but a perturbation's cells need not be identical, so a mean of 5.3 is
+    representable exactly and rounding it to 5 here would throw that away. Turning a mean
+    into integer cells is `submission.write_prediction_h5ad`'s job, since only it knows how
+    many cells there are to spread across.
 
     `max_genes` caps the result to the strongest genes. It costs real signal -- on the
     challenge controls, a cap of 1,000 discards 6,608 genes carrying 57% of the expression
@@ -116,9 +122,8 @@ def control_profile_to_sparse(
     if min_cpm > 0 and total > 0:
         counts = np.where(counts * (1e6 / total) >= min_cpm, counts, 0.0)
 
-    rounded = np.rint(counts).astype(np.float32)
-    gene_indices = np.flatnonzero(rounded)
-    gene_values = rounded[gene_indices]
+    gene_indices = np.flatnonzero(counts >= 0.5)
+    gene_values = counts[gene_indices].astype(np.float32)
     if max_genes is not None and gene_indices.size > max_genes:
         order = np.argsort(-gene_values, kind="stable")[:max_genes]
         gene_indices = gene_indices[order]

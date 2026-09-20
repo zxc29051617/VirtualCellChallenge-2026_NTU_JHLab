@@ -2,6 +2,7 @@ from pathlib import Path
 
 import h5py
 import numpy as np
+import pytest
 
 from vcc2026.io import (
     control_gene_profile,
@@ -141,11 +142,12 @@ def test_profile_to_sparse_filters_by_cpm_before_rounding() -> None:
     assert control_profile_to_sparse(counts, min_cpm=0.0).gene_indices.tolist() == [0, 1]
 
 
-def test_profile_to_sparse_rounds_to_integer_counts() -> None:
+def test_profile_to_sparse_keeps_means_unrounded() -> None:
+    """Selection uses the half-count threshold; the values stay as means for the writer."""
     counts = np.array([10.4, 10.6, 0.4, 0.6])
     kept = control_profile_to_sparse(counts, min_cpm=0.0)
     assert kept.gene_indices.tolist() == [0, 1, 3]
-    assert kept.gene_values.tolist() == [10.0, 11.0, 1.0]
+    assert kept.gene_values == pytest.approx([10.4, 10.6, 0.6])
 
 
 def test_max_genes_caps_to_the_strongest() -> None:

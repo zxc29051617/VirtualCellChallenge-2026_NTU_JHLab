@@ -5,6 +5,7 @@ from pathlib import Path
 
 import h5py
 import numpy as np
+from scipy import sparse
 
 from .baseline import ContextBaseline
 
@@ -51,65 +52,94 @@ def _categorical(group: h5py.Group, name: str, categories: list[str], codes: np.
     node.create_dataset("codes", data=codes, compression="gzip", compression_opts=4)
 
 
-def _indptr(
-    contexts: list[str],
-    baselines: Mapping[str, ContextBaseline],
-    rows_per_context: int,
+def cells_from_mean(
+    values: np.ndarray, n_cells: int, rng: np.random.Generator
 ) -> np.ndarray:
-    per_row = np.concatenate(
-        [
-            np.full(rows_per_context, int(baselines[ctx].profile.nnz), dtype=np.int64)
-            for ctx in contexts
-        ]
+    """`n_cells` integer rows whose column means are `values`.
+
+    A cell must hold whole counts, but the metrics read group-summed profiles, so a mean of
+    5.3 is not a 5 -- it is 70% of cells at 5 and 30% at 6. Rounding each gene to an integer
+    instead would silently discard every predicted change smaller than half a count, which
+    on this data is most of them.
+
+    Each gene's surplus cells are drawn independently, so the cells differ from one another
+    in the way real ones do rather than splitting into two rigid groups.
+    """
+
+    floor = np.floor(values)
+    surplus = np.rint((values - floor) * n_cells).astype(np.int64)
+    cells = np.tile(floor.astype(np.float32), (n_cells, 1))
+    for gene, count in enumerate(surplus):
+        if count >= n_cells:
+            cells[:, gene] += 1
+        elif count > 0:
+            cells[rng.choice(n_cells, size=int(count), replace=False), gene] += 1
+    return cells
+
+
+def _expand(
+    profile: sparse.csr_matrix, n_cells: int, rng: np.random.Generator
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Flatten one context's cells into (indices, data, indptr) over those cells."""
+    columns = np.asarray(profile.indices, dtype=np.int32)
+    cells = cells_from_mean(np.asarray(profile.data, dtype=np.float64), n_cells, rng)
+
+    present = cells > 0
+    per_row = present.sum(axis=1).astype(np.int64)
+    indices = np.concatenate([columns[row] for row in present])
+    data = np.concatenate([cells[i][row] for i, row in enumerate(present)])
+    return (
+        indices.astype(np.int32, copy=False),
+        data.astype(np.float32, copy=False),
+        np.concatenate(([0], np.cumsum(per_row))).astype(np.int64),
     )
-    return np.concatenate(([0], np.cumsum(per_row))).astype(np.int64)
 
 
 def _write_x_virtual(
     handle: h5py.File,
     x_group: h5py.Group,
     contexts: list[str],
-    baselines: Mapping[str, ContextBaseline],
-    rows_per_context: int,
+    expanded: Mapping[str, tuple[np.ndarray, np.ndarray, np.ndarray]],
+    perturbations: int,
     indptr: np.ndarray,
 ) -> None:
-    """Store each context's row once and map every predicted row onto that single copy.
+    """Store one context's cells once and map every perturbation onto the same cells.
 
-    Every row of a context-mean prediction is byte-for-byte identical, but gzip cannot
-    exploit that: its 32 KB DEFLATE window is smaller than one row, so it never sees the
-    repetition. An HDF5 virtual dataset expands on read instead, so `.X` returns exactly
-    what a materialized file would while the file itself stays small.
+    The prediction does not depend on which gene is knocked down, so all `perturbations`
+    copies of a context are the same `cells_per_pert` rows. Storing them once and mapping
+    keeps the file from growing with the perturbation count; gzip cannot do the same,
+    because its 32 KB window is smaller than the block it would have to see repeat.
 
     Technique taken from scnpg/VCC_2026_NTU_JHLab.
     """
 
-    total_nnz = int(indptr[-1])
-    store = handle["uns"].create_group("_context_profile")
+    store = handle["uns"].create_group("_context_cells")
     sources = {}
     for ctx in contexts:
-        profile = baselines[ctx].profile.tocsr()
-        indices = store.create_dataset(
-            f"{ctx}_indices", data=np.asarray(profile.indices, dtype=np.int32)
-        )
-        values = store.create_dataset(
-            f"{ctx}_data", data=np.asarray(profile.data, dtype=np.float32)
-        )
-        for node in (indices, values):
+        indices, data, _ = expanded[ctx]
+        index_node = store.create_dataset(f"{ctx}_indices", data=indices)
+        value_node = store.create_dataset(f"{ctx}_data", data=data)
+        for node in (index_node, value_node):
             node.attrs["encoding-type"] = "array"
             node.attrs["encoding-version"] = "0.2.0"
-        sources[ctx] = (h5py.VirtualSource(indices), h5py.VirtualSource(values))
+        sources[ctx] = (h5py.VirtualSource(index_node), h5py.VirtualSource(value_node))
 
+    total_nnz = int(indptr[-1])
     data_layout = h5py.VirtualLayout(shape=(total_nnz,), dtype=np.float32)
     indices_layout = h5py.VirtualLayout(shape=(total_nnz,), dtype=np.int32)
 
     position = 0
     for ctx in contexts:
         index_source, value_source = sources[ctx]
-        nnz = int(baselines[ctx].profile.nnz)
-        for _ in range(rows_per_context):
-            data_layout[position: position + nnz] = value_source
-            indices_layout[position: position + nnz] = index_source
-            position += nnz
+        cell_indptr = expanded[ctx][2]
+        n_cells = cell_indptr.size - 1
+        for _ in range(perturbations):
+            for cell in range(n_cells):
+                start, stop = int(cell_indptr[cell]), int(cell_indptr[cell + 1])
+                span = stop - start
+                data_layout[position: position + span] = value_source[start:stop]
+                indices_layout[position: position + span] = index_source[start:stop]
+                position += span
 
     x_group.create_virtual_dataset("data", data_layout)
     x_group.create_virtual_dataset("indices", indices_layout)
@@ -119,10 +149,9 @@ def _write_x_virtual(
 def _write_x_materialized(
     x_group: h5py.Group,
     contexts: list[str],
-    baselines: Mapping[str, ContextBaseline],
-    rows_per_context: int,
+    expanded: Mapping[str, tuple[np.ndarray, np.ndarray, np.ndarray]],
+    perturbations: int,
     indptr: np.ndarray,
-    block_rows: int,
 ) -> None:
     """Physically write every row. Larger and slower; for tools that reject virtual datasets."""
 
@@ -143,15 +172,11 @@ def _write_x_materialized(
 
     cursor = 0
     for ctx in contexts:
-        profile = baselines[ctx].profile.tocsr()
-        row_data = np.asarray(profile.data, dtype=np.float32)
-        row_indices = np.asarray(profile.indices, dtype=np.int32)
-        nnz = int(row_data.size)
-        for start in range(0, rows_per_context, block_rows):
-            rows = min(block_rows, rows_per_context - start)
-            span = nnz * rows
-            data[cursor: cursor + span] = np.tile(row_data, rows)
-            indices[cursor: cursor + span] = np.tile(row_indices, rows)
+        ctx_indices, ctx_data, _ = expanded[ctx]
+        span = ctx_data.size
+        for _ in range(perturbations):
+            data[cursor: cursor + span] = ctx_data
+            indices[cursor: cursor + span] = ctx_indices
             cursor += span
 
 
@@ -162,14 +187,23 @@ def write_prediction_h5ad(
     perturbations: list[str],
     baselines: Mapping[str, ContextBaseline],
     cells_per_pert: int = 400,
-    block_rows: int = 256,
     virtual: bool = True,
+    seed: int = 0,
 ) -> Path:
     contexts = list(baselines.keys())
     rows_per_context = len(perturbations) * cells_per_pert
     n_rows = len(contexts) * rows_per_context
     n_genes = len(gene_names)
-    indptr = _indptr(contexts, baselines, rows_per_context)
+
+    rng = np.random.default_rng(seed)
+    expanded = {
+        ctx: _expand(baselines[ctx].profile.tocsr(), cells_per_pert, rng) for ctx in contexts
+    }
+    indptr = np.concatenate(
+        ([0], np.cumsum(np.concatenate([
+            np.tile(np.diff(expanded[ctx][2]), len(perturbations)) for ctx in contexts
+        ])))
+    ).astype(np.int64)
 
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -189,10 +223,10 @@ def write_prediction_h5ad(
         x_group.attrs["shape"] = np.array([n_rows, n_genes], dtype=np.int64)
 
         if virtual:
-            _write_x_virtual(handle, x_group, contexts, baselines, rows_per_context, indptr)
+            _write_x_virtual(handle, x_group, contexts, expanded, len(perturbations), indptr)
         else:
             _write_x_materialized(
-                x_group, contexts, baselines, rows_per_context, indptr, block_rows
+                x_group, contexts, expanded, len(perturbations), indptr
             )
 
         obs_group = handle.create_group("obs")

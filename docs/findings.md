@@ -129,18 +129,27 @@ something. It covers 9,357 of the challenge's 18,533 genes and 93% of the 3,000 
 carries. Applied at the measured magnitude it moves 734 genes — 615 down, 119 up, which is
 the expected shape for essential-gene knockdown — at a median |log fold change| of 0.223.
 
-### Integer rounding caps this at about a quarter of the genes
+### Identical cells threw away three quarters of it; varying them recovered it
 
-Only 26% of carried genes move, because predictions must be integer counts and the generic
-response is small: its median |log fold change| is 0.055, while a gene averaging 5 counts
-needs 10% to reach 6. Amplifying to compensate is the wrong fix — it distorts magnitude to
-work around a format artifact, and even ×8 only reaches 52%.
+Writing one integer profile and repeating it 400 times moved only 26% of carried genes. The
+generic response has a median |log fold change| of 0.055, while a gene averaging 5 counts
+needs 10% to reach 6, so most of the signal rounded away. Amplifying to compensate is the
+wrong fix — it distorts magnitude to work around a format artifact, and even ×8 reaches only
+52%.
 
-The right fix is that the 400 cells of a perturbation need not be identical. Metrics read
-group-summed profiles, so a target mean of 5.3 is representable exactly as 70% of cells at 5
-and 30% at 6. That would lift coverage from 26% to the 93% the public data supports, and it
-survives virtual storage: the same 400 distinct rows serve all 300 perturbations of a
-context, so 1,200 stored rows still back all 360,000. Not yet built.
+The cells of a perturbation need not be identical. Metrics read group-summed profiles, so a
+mean of 5.3 is representable exactly as 70% of cells at 5 and 30% at 6, and each gene's
+surplus cells are drawn independently so the cells differ the way real ones do.
+
+| | identical cells | varied cells |
+| --- | --- | --- |
+| genes with a nonzero fold change | 734 (26%) | **2,733 (95%)** |
+| direction | 615 down, 119 up | 1,951 down, 782 up |
+| median abs. log fold change | 0.223 | 0.049 (as measured, not amplified) |
+
+Virtual storage survives it: one context's 400 cells serve all 300 of its perturbations, so
+1,200 stored rows still back all 360,000. The file goes from 70 MB to 107 MB, the submission
+sits at 23% of the density cap, and `vcc prep` passes.
 
 ## What this adds up to
 
