@@ -21,6 +21,7 @@ from vcc2026.io import group_mean_profiles, read_var_names
 FILES = {
     "K562": "ReplogleWeissman2022_K562_essential.h5ad",
     "RPE1": "ReplogleWeissman2022_rpe1.h5ad",
+    "K562gw": "ReplogleWeissman2022_K562_gwps.h5ad",
 }
 
 
@@ -30,12 +31,18 @@ def main() -> int:
     parser.add_argument("--out-dir", default="external/profiles")
     parser.add_argument("--pert-col", default="perturbation")
     parser.add_argument("--row-chunk-size", type=int, default=4096)
+    parser.add_argument(
+        "--lines", nargs="*", choices=list(FILES), default=["K562", "RPE1"],
+        help="Which cell lines to reduce. K562gw is the genome-wide screen: 2M cells, "
+        "66 GB to stream, and the only source covering the Challenge's target panel.",
+    )
     args = parser.parse_args()
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    for line, filename in FILES.items():
+    for line in args.lines:
+        filename = FILES[line]
         path = Path(args.external_dir) / filename
         print(f"{line}: reading {path}")
         started = time.perf_counter()

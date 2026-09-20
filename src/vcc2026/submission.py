@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from dataclasses import dataclass
 from pathlib import Path
 
 import h5py
@@ -75,6 +76,32 @@ def cells_from_mean(
         elif count > 0:
             cells[rng.choice(n_cells, size=int(count), replace=False), gene] += 1
     return cells
+
+
+@dataclass(frozen=True)
+class ContextPrediction:
+    """Target mean counts per perturbation for one context, over a shared set of genes.
+
+    `means` is [n_perturbations, len(gene_indices)]. A single row broadcasts to every
+    perturbation, which is what a context-mean baseline wants; more rows let each
+    perturbation carry its own prediction.
+    """
+
+    context: str
+    gene_indices: np.ndarray
+    means: np.ndarray
+
+    @classmethod
+    def from_baseline(cls, baseline: ContextBaseline) -> ContextPrediction:
+        profile = baseline.profile.tocsr()
+        return cls(
+            context=baseline.context,
+            gene_indices=np.asarray(profile.indices, dtype=np.int32),
+            means=np.asarray(profile.data, dtype=np.float32).reshape(1, -1),
+        )
+
+    def row(self, perturbation: int) -> np.ndarray:
+        return self.means[perturbation if self.means.shape[0] > 1 else 0]
 
 
 def _expand(
@@ -180,6 +207,73 @@ def _write_x_materialized(
             cursor += span
 
 
+def _write_x_per_perturbation(
+    handle: h5py.File,
+    x_group: h5py.Group,
+    contexts: list[str],
+    predictions: Mapping[str, ContextPrediction],
+    n_perturbations: int,
+    cells_per_pert: int,
+    cell_patterns: int,
+    rng: np.random.Generator,
+) -> np.ndarray:
+    """Write a prediction that differs per perturbation.
+
+    Every row is now distinct, so the virtual trick cannot collapse them the way it does for
+    a context-mean baseline. Two things still keep this bounded. The gene set is shared, so
+    `indices` is stored once and mapped everywhere. And a perturbation's cells are drawn from
+    `cell_patterns` distinct rows rather than `cells_per_pert`, which caps stored values at
+    perturbations x patterns instead of perturbations x cells; the cost is that a mean is
+    represented to 1/patterns of a count rather than 1/cells.
+    """
+
+    n_genes = predictions[contexts[0]].gene_indices.size
+    per_row = np.full(len(contexts) * n_perturbations * cells_per_pert, n_genes, dtype=np.int64)
+    indptr = np.concatenate(([0], np.cumsum(per_row))).astype(np.int64)
+
+    store = handle["uns"].create_group("_context_cells")
+    shared_indices = store.create_dataset(
+        "gene_indices", data=predictions[contexts[0]].gene_indices.astype(np.int32)
+    )
+    shared_indices.attrs["encoding-type"] = "array"
+    shared_indices.attrs["encoding-version"] = "0.2.0"
+
+    stored = {}
+    for ctx in contexts:
+        prediction = predictions[ctx]
+        rows = np.empty((n_perturbations * cell_patterns, n_genes), dtype=np.float32)
+        for p in range(n_perturbations):
+            rows[p * cell_patterns: (p + 1) * cell_patterns] = cells_from_mean(
+                prediction.row(p).astype(np.float64), cell_patterns, rng
+            )
+        node = store.create_dataset(
+            f"{ctx}_data", data=rows.reshape(-1), compression="gzip", compression_opts=4
+        )
+        node.attrs["encoding-type"] = "array"
+        node.attrs["encoding-version"] = "0.2.0"
+        stored[ctx] = h5py.VirtualSource(node)
+
+    total_nnz = int(indptr[-1])
+    data_layout = h5py.VirtualLayout(shape=(total_nnz,), dtype=np.float32)
+    indices_layout = h5py.VirtualLayout(shape=(total_nnz,), dtype=np.int32)
+    index_source = h5py.VirtualSource(shared_indices)
+
+    position = 0
+    for ctx in contexts:
+        source = stored[ctx]
+        for p in range(n_perturbations):
+            for cell in range(cells_per_pert):
+                offset = (p * cell_patterns + cell % cell_patterns) * n_genes
+                data_layout[position: position + n_genes] = source[offset: offset + n_genes]
+                indices_layout[position: position + n_genes] = index_source
+                position += n_genes
+
+    x_group.create_virtual_dataset("data", data_layout)
+    x_group.create_virtual_dataset("indices", indices_layout)
+    x_group.create_dataset("indptr", data=indptr, dtype=np.int64)
+    return indptr
+
+
 def write_prediction_h5ad(
     output_path: str | Path,
     *,
@@ -229,42 +323,100 @@ def write_prediction_h5ad(
                 x_group, contexts, expanded, len(perturbations), indptr
             )
 
-        obs_group = handle.create_group("obs")
-        obs_group.attrs["encoding-type"] = "dataframe"
-        obs_group.attrs["encoding-version"] = "0.2.0"
-        obs_group.attrs["_index"] = "_index"
-        obs_group.attrs["column-order"] = np.asarray(["target_gene", "context"], dtype=object)
-        _create_nullable_string_array(
-            obs_group,
-            [
-                f"{ctx}_{pert}_{idx:04d}"
-                for ctx in contexts
-                for pert in perturbations
-                for idx in range(cells_per_pert)
-            ],
-            "_index",
-        )
-        _categorical(
-            obs_group,
-            "context",
-            contexts,
-            np.repeat(np.arange(len(contexts), dtype=np.int8), rows_per_context),
-        )
-        _categorical(
-            obs_group,
-            "target_gene",
-            list(perturbations),
-            np.tile(
-                np.repeat(np.arange(len(perturbations), dtype=np.int16), cells_per_pert),
-                len(contexts),
-            ),
-        )
+        _write_frame(handle, gene_names, perturbations, contexts, cells_per_pert)
 
-        var_group = handle.create_group("var")
-        var_group.attrs["encoding-type"] = "dataframe"
-        var_group.attrs["encoding-version"] = "0.2.0"
-        var_group.attrs["_index"] = "_index"
-        var_group.attrs["column-order"] = np.asarray([], dtype=np.float64)
-        _create_nullable_string_array(var_group, gene_names, "_index")
+    return output
+
+
+def _write_frame(
+    handle: h5py.File,
+    gene_names: list[str],
+    perturbations: list[str],
+    contexts: list[str],
+    cells_per_pert: int,
+) -> None:
+    """obs and var, in the order X's rows are written: context, then perturbation, then cell."""
+
+    rows_per_context = len(perturbations) * cells_per_pert
+    obs_group = handle.create_group("obs")
+    obs_group.attrs["encoding-type"] = "dataframe"
+    obs_group.attrs["encoding-version"] = "0.2.0"
+    obs_group.attrs["_index"] = "_index"
+    obs_group.attrs["column-order"] = np.asarray(["target_gene", "context"], dtype=object)
+    _create_nullable_string_array(
+        obs_group,
+        [
+            f"{ctx}_{pert}_{idx:04d}"
+            for ctx in contexts
+            for pert in perturbations
+            for idx in range(cells_per_pert)
+        ],
+        "_index",
+    )
+    _categorical(
+        obs_group,
+        "context",
+        contexts,
+        np.repeat(np.arange(len(contexts), dtype=np.int8), rows_per_context),
+    )
+    _categorical(
+        obs_group,
+        "target_gene",
+        list(perturbations),
+        np.tile(
+            np.repeat(np.arange(len(perturbations), dtype=np.int16), cells_per_pert),
+            len(contexts),
+        ),
+    )
+
+    var_group = handle.create_group("var")
+    var_group.attrs["encoding-type"] = "dataframe"
+    var_group.attrs["encoding-version"] = "0.2.0"
+    var_group.attrs["_index"] = "_index"
+    var_group.attrs["column-order"] = np.asarray([], dtype=np.float64)
+    _create_nullable_string_array(var_group, gene_names, "_index")
+
+
+def write_perturbation_h5ad(
+    output_path: str | Path,
+    *,
+    gene_names: list[str],
+    perturbations: list[str],
+    predictions: Mapping[str, ContextPrediction],
+    cells_per_pert: int = 400,
+    cell_patterns: int = 100,
+    seed: int = 0,
+) -> Path:
+    """Write a prediction that differs per perturbation, rather than one profile per context."""
+
+    contexts = list(predictions.keys())
+    n_rows = len(contexts) * len(perturbations) * cells_per_pert
+    output = Path(output_path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+
+    with h5py.File(output, "w") as handle:
+        handle.attrs["encoding-type"] = "anndata"
+        handle.attrs["encoding-version"] = "0.1.0"
+        for name in ["layers", "obsm", "obsp", "uns", "varm", "varp"]:
+            empty = handle.create_group(name)
+            empty.attrs["encoding-type"] = "dict"
+            empty.attrs["encoding-version"] = "0.1.0"
+
+        x_group = handle.create_group("X")
+        x_group.attrs["encoding-type"] = "csr_matrix"
+        x_group.attrs["encoding-version"] = "0.1.0"
+        x_group.attrs["shape"] = np.array([n_rows, len(gene_names)], dtype=np.int64)
+
+        _write_x_per_perturbation(
+            handle,
+            x_group,
+            contexts,
+            predictions,
+            len(perturbations),
+            cells_per_pert,
+            cell_patterns,
+            np.random.default_rng(seed),
+        )
+        _write_frame(handle, gene_names, perturbations, contexts, cells_per_pert)
 
     return output
