@@ -57,7 +57,12 @@ def build_parser() -> argparse.ArgumentParser:
     transfer.add_argument("--run-id", default=None)
     transfer.add_argument("--seed", type=int, default=0)
     transfer.add_argument("--cells-per-pert", type=int, default=400)
-    transfer.add_argument("--cell-patterns", type=int, default=100)
+    transfer.add_argument("--cell-patterns", type=int, default=200)
+    transfer.add_argument(
+        "--profile-scale", type=float, default=0.15,
+        help="Multiply the whole predicted profile. Every metric normalizes, so this "
+        "changes no score, but it makes low-expression genes cheap enough to carry.",
+    )
     transfer.add_argument("--scale", type=float, default=0.3)
     transfer.add_argument(
         "--entries-per-cell", type=float, default=3000.0,
@@ -104,9 +109,15 @@ def cmd_build_transfer(args: argparse.Namespace) -> int:
             fallback=fallback,
             scale=args.scale,
             entries_per_cell=args.entries_per_cell,
+            profile_scale=args.profile_scale,
+            cell_patterns=args.cell_patterns,
         )
-    carried = predictions[manifest.contexts[0]].gene_indices.size
-    print(f"carrying {carried:,} genes at {args.entries_per_cell:,.0f} entries/cell")
+    first = predictions[manifest.contexts[0]]
+    cost = np.minimum(first.means[0], 1.0).sum()
+    print(
+        f"carrying {first.gene_indices.size:,} genes at profile scale {args.profile_scale}"
+        f" -> {cost:,.0f} entries/cell, {cost * 360_000 / 1e9:.2f}e9 total"
+    )
 
     output = write_perturbation_h5ad(
         args.output,
@@ -128,7 +139,9 @@ def cmd_build_transfer(args: argparse.Namespace) -> int:
         config={
             "source": args.source,
             "scale": args.scale,
-            "max_genes": args.max_genes,
+            "entries_per_cell": args.entries_per_cell,
+            "profile_scale": args.profile_scale,
+            "genes_carried": int(first.gene_indices.size),
             "cells_per_pert": args.cells_per_pert,
             "cell_patterns": args.cell_patterns,
             "targets_covered": int(covered.sum()),

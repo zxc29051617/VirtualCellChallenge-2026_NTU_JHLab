@@ -97,6 +97,7 @@ def select_within_budget(
     *,
     entries_per_cell: float,
     min_cpm: float = 5.0,
+    min_mean: float = 0.0,
 ) -> np.ndarray:
     """Gene columns to carry, buying coverage of the scored set rather than expression mass.
 
@@ -114,6 +115,7 @@ def select_within_budget(
 
     total = mean_counts.sum()
     admitted = (mean_counts * (1e6 / total) >= min_cpm) if total > 0 else mean_counts > 0
+    admitted &= mean_counts >= min_mean
     cost = np.minimum(mean_counts, 1.0)
 
     order = np.argsort(np.where(admitted & (cost > 0), cost, np.inf))

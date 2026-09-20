@@ -71,6 +71,8 @@ def build_transfer_prediction(
     fallback: np.ndarray | None = None,
     scale: float = 0.3,
     entries_per_cell: float = 3000.0,
+    profile_scale: float = 0.15,
+    cell_patterns: int = 200,
     row_chunk_size: int = 1024,
 ) -> ContextPrediction:
     """One context's per-perturbation target means: its control moved by each target's effect.
@@ -83,7 +85,18 @@ def build_transfer_prediction(
     """
 
     mean_counts, _, _ = control_gene_profile(control_path, row_chunk_size=row_chunk_size)
-    columns = select_within_budget(mean_counts, entries_per_cell=entries_per_cell)
+
+    # Every metric normalizes -- mse reads log(1 + TS * P / sum P), the DE metrics read CPM
+    # -- so multiplying the whole profile by a constant changes no score. Density is not
+    # invariant: a gene is nonzero in min(mean, 1) of its cells, so scaling down makes every
+    # gene averaging under a count proportionally cheaper. That is what makes it affordable
+    # to carry all 9,923 genes the DE filter admits rather than the 3,000 richest, and
+    # carrying them is worth far more than the mass: a gene left out is read as a predicted
+    # expression of zero, not as no claim. See docs/findings.md section 9.
+    mean_counts = mean_counts * profile_scale
+    columns = select_within_budget(
+        mean_counts, entries_per_cell=entries_per_cell, min_mean=1.0 / cell_patterns
+    )
     selected = control_profile_to_sparse(mean_counts, columns=columns)
 
     shifts = target_fold_changes[:, columns] * scale
