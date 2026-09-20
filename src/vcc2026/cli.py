@@ -4,7 +4,9 @@ import argparse
 import json
 from pathlib import Path
 
-from .baseline import fit_context_mean_baseline
+import numpy as np
+
+from .baseline import fit_context_mean_baseline, generic_perturbation_response
 from .challenge import format_manifest, load_manifest
 from .io import load_control_gene_names, read_csv_column, read_name_list, validate_gene_alignment
 from .registry import ExperimentRecord, append_record, current_timestamp, default_run_id
@@ -30,6 +32,17 @@ def build_parser() -> argparse.ArgumentParser:
     baseline.add_argument("--run-id", default=None)
     baseline.add_argument("--seed", type=int, default=0)
     baseline.add_argument("--cells-per-pert", type=int, default=400)
+    baseline.add_argument(
+        "--response-profiles",
+        nargs="*",
+        default=[
+            "external/profiles/K562_perturbation_means.npz",
+            "external/profiles/RPE1_perturbation_means.npz",
+        ],
+        help="Public profiles to take the generic perturbation direction from. "
+        "Pass none to predict the control unchanged.",
+    )
+    baseline.add_argument("--response-scale", type=float, default=1.0)
 
     return parser
 
@@ -56,6 +69,14 @@ def cmd_build_baseline(args: argparse.Namespace) -> int:
     gene_names = read_name_list(args.genes)
     perts = read_csv_column(args.perts, expected_header="target_gene")
 
+    available = [p for p in (args.response_profiles or []) if Path(p).exists()]
+    shift = generic_perturbation_response(available, gene_names) if available else None
+    if shift is not None:
+        covered = int(np.count_nonzero(shift))
+        print(f"generic response from {len(available)} profile(s): {covered:,} genes carry a direction")
+    elif args.response_profiles:
+        print("no response profiles found; predicting the control unchanged")
+
     baselines = {}
     for ctx in manifest.contexts:
         control_path = Path(args.controls_dir) / f"context_{ctx}.h5ad"
@@ -63,7 +84,9 @@ def cmd_build_baseline(args: argparse.Namespace) -> int:
         mismatch = validate_gene_alignment(gene_names, control_gene_names)
         if mismatch:
             raise ValueError(f"{control_path}: {'; '.join(mismatch)}")
-        baselines[ctx] = fit_context_mean_baseline(control_path)
+        baselines[ctx] = fit_context_mean_baseline(
+            control_path, response_shift=shift, response_scale=args.response_scale
+        )
 
     output = write_prediction_h5ad(
         args.output,

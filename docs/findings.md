@@ -100,6 +100,48 @@ match from 913 wrong ones. Accuracy and identifiability are close to independent
 
 ---
 
+## 8. Predicting the control unchanged forfeits a metric outright
+
+The direction metric treats a predicted fold change of exactly zero as a **miss**, not as an
+abstention: "A gene the submission calls but leaves without a direction, through a null, NaN
+or exactly zero predicted fold change, stays in n_pred and scores as a miss."
+
+A control-pasting submission has zero fold change everywhere, so it scores 0 on a metric
+whose baseline is 0.51 and whose span is the narrowest of the six. Working the spec's scale
+`(u − b)/(r − b)` through all six:
+
+| metric | raw | b | scaled |
+| --- | --- | --- | --- |
+| `pds` | 0.500 | 0.500 | 0.00 |
+| `mse` | ~1.008 | 0.989 | 0.00 (clamped) |
+| `fid` | **0** | 0.51 | **≈ −1.7** |
+| `reach` | ~0 | 0.07 | ≈ −0.08 |
+| `jac` | ~0 | 0.03 | ≈ −0.08 |
+| `nmae` | 1.008 | 1.001 | ≈ −0.01 |
+| **overall** | | | **≈ −0.31** |
+
+Roughly −0.28 of that comes from one metric, and from a property of the submission rather
+than from anything the model got wrong.
+
+The fix is to carry a direction over from public data: the mean log fold change across all
+perturbations in Replogle's two lines, which is the generic consequence of breaking
+something. It covers 9,357 of the challenge's 18,533 genes and 93% of the 3,000 a submission
+carries. Applied at the measured magnitude it moves 734 genes — 615 down, 119 up, which is
+the expected shape for essential-gene knockdown — at a median |log fold change| of 0.223.
+
+### Integer rounding caps this at about a quarter of the genes
+
+Only 26% of carried genes move, because predictions must be integer counts and the generic
+response is small: its median |log fold change| is 0.055, while a gene averaging 5 counts
+needs 10% to reach 6. Amplifying to compensate is the wrong fix — it distorts magnitude to
+work around a format artifact, and even ×8 only reaches 52%.
+
+The right fix is that the 400 cells of a perturbation need not be identical. Metrics read
+group-summed profiles, so a target mean of 5.3 is representable exactly as 70% of cells at 5
+and 30% at 6. That would lift coverage from 26% to the 93% the public data supports, and it
+survives virtual storage: the same 400 distinct rows serve all 300 perturbations of a
+context, so 1,200 stored rows still back all 360,000. Not yet built.
+
 ## What this adds up to
 
 The shared response is reliably measurable (r = 0.987), worth 27.5% of the signal, and the
