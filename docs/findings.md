@@ -213,6 +213,49 @@ zeroed genes swamped it cannot be separated from one submission.
 
 `reach` is the one metric clearly above baseline: 0.150 against 0.07, scaled 0.082.
 
+## 10. Where the leaders' points actually come from
+
+Top three on 2026-09-20, scaled score with raw beneath:
+
+| | Illumina AI | cqawesome | chill |
+| --- | --- | --- | --- |
+| submissions | 36 | 61 | 20 |
+| **overall** | **0.3449** | **0.2967** | **0.2611** |
+| `pds` | 0.853 (0.884) | 0.826 (0.873) | 0.748 (0.837) |
+| `mse` | 0.423 (0.586) | 0.389 (0.619) | 0.232 (0.767) |
+| `reach` | 0.373 (0.409) | 0.278 (0.326) | 0.241 (0.292) |
+| `nmae` | 0.293 (0.825) | 0.258 (0.844) | 0.276 (0.836) |
+| `fid` | 0.111 (0.545) | 0.019 (0.518) | 0.040 (0.524) |
+| `jac` | 0.016 (0.037) | 0.011 (0.035) | 0.030 (0.041) |
+
+**Discrimination is 41% of the leader's total**, and `pds` + `mse` + `reach` together are 79%.
+
+### This refutes section 3's strategic reading
+
+Section 3 argued that `jac` deserved the effort because exact reproduction scores 2.48–2.85
+there, the largest headroom in the suite. The leaderboard says otherwise: the top three score
+0.011 to 0.030 on it, having made 20 to 61 submissions between them. Headroom is not the same
+as reachable. `fid` is the same story — raw 0.518 to 0.545 against a 0.51 baseline, so even
+the leader is 4.5% better than a coin flip.
+
+The metrics people actually move are the ones this repo's transfer model targets. That is
+encouraging for the approach and a correction to where the effort was pointed.
+
+### What our own first submission establishes
+
+| | ours | leader |
+| --- | --- | --- |
+| `pds` | 0.002 | 0.853 |
+| `mse` | 0.000 | 0.423 |
+| `nmae` | −6.000 | 0.293 |
+| overall | −0.9934 | 0.3449 |
+
+Of the −0.9934, −1.0 is the `nmae` floor and that is a format defect rather than a model one
+(section 9). Fixing it should return roughly 0 — the starting line, not a result. Whether
+`pds` moves off 0.501 is the first clean test of whether cross-context transfer works at this
+distance at all; the previous attempt could not answer it, because the zeroed genes distorted
+every profile the metric compared.
+
 ## What this adds up to
 
 The shared response is reliably measurable (r = 0.987), worth 27.5% of the signal, and the

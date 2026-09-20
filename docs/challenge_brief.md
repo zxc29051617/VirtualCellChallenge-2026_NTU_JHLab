@@ -78,8 +78,9 @@ Each of these is a rejection rather than a repair.
 - **Store the prediction sparse.** The cap is on stored entries, not file size. A dense matrix
   at the standard shape carries 6,671,880,000 entries — 1.40× the cap — and is rejected on its
   own with no adversarial content at all.
-- Daily submission limit: still unverified. Neither the 2026 Commentary nor the metric spec
-  mentions one; the "two per day" claim came from the 2025 challenge.
+- There is a daily submission limit. Confirmed 2026-09-20 by hitting it; the exact allowance
+  is still unstated in the Commentary and the metric spec. Budget submissions accordingly —
+  a wasted one costs a day.
 
 ## Timing
 
