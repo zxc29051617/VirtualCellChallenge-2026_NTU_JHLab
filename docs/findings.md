@@ -256,6 +256,56 @@ Of the −0.9934, −1.0 is the `nmae` floor and that is a format defect rather 
 distance at all; the previous attempt could not answer it, because the zeroed genes distorted
 every profile the metric compared.
 
+## 11. A fold-change heuristic matches STATE's published zero-shot discrimination
+
+Arc publishes `ST-SE-Replogle` on HuggingFace: STATE trained on Replogle, with zero-shot
+checkpoints for four cell lines. Each carries the evaluation `cell-eval` produced, and the
+aggregate CSVs are 3.5 KB each — the comparison costs a 14 KB download, not the 71 GB repo.
+
+STATE's zero-shot numbers, each line held out of training entirely:
+
+| | RPE1 | K562 | HepG2 | Jurkat |
+| --- | --- | --- | --- | --- |
+| `discrimination_score_cosine` | 0.617 | 0.732 | 0.646 | 0.673 |
+| `overlap_at_N` | 0.027 | 0.094 | 0.120 | 0.060 |
+| `de_direction_match` | 0.556 | 0.634 | 0.662 | 0.604 |
+| `pearson_delta` | 0.104 | 0.200 | 0.258 | 0.157 |
+
+Against `scripts/evaluate_local.py`'s `transfer` — carry the source line's log fold change
+onto the target's control profile, and nothing else:
+
+| task | ours | STATE zero-shot |
+| --- | --- | --- |
+| predict RPE1 | **0.812** | 0.617 |
+| predict K562 | **0.753** | 0.732 |
+
+Candidate count is not the explanation. PDS is a rank among candidates, so a larger panel is
+a harder task; scoring 914, 1,462 and 1,736 perturbations gives 0.821, 0.812 and 0.813, so
+the comparison at STATE's 1,499 holds.
+
+### What this does and does not show
+
+Three differences remain, and two of them favour us:
+
+- STATE's zero-shot trains on the other three lines; `transfer` uses one.
+- Our gene axis is the 7,226 shared between two lines; STATE's is Replogle's full set.
+- `discrimination_score_cosine` in `cell-eval` may not remove the whole target panel from
+  the feature space, which the vcc2026 metric does and our implementation does. That would
+  make the two numbers not quite the same statistic.
+
+And one caveat outweighs the result: **our local 0.82 did not survive contact with the
+Challenge**, where the same model scored 0.501. Local numbers, ours and STATE's alike, are
+measured between two Replogle cell lines grown in one lab. They do not establish what
+survives the move to an unseen context.
+
+### The pattern that does hold everywhere
+
+STATE's own DE metrics sit near chance on held-out lines — `overlap_at_N` 0.027 to 0.120,
+`de_direction_match` 0.556 to 0.662 — which is the leaderboard's shape (section 10) and our
+own. Three independent measurements agree: discrimination transfers across contexts, and
+differential expression does not. That is the finding to build on, and it is not one this
+repo produced alone.
+
 ## What this adds up to
 
 The shared response is reliably measurable (r = 0.987), worth 27.5% of the signal, and the
