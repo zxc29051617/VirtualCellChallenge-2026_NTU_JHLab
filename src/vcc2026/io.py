@@ -92,11 +92,41 @@ def control_gene_profile(
         return mean_counts.astype(np.float32), float(total_counts / float(n_rows)), n_rows
 
 
+def select_within_budget(
+    mean_counts: np.ndarray,
+    *,
+    entries_per_cell: float,
+    min_cpm: float = 5.0,
+) -> np.ndarray:
+    """Gene columns to carry, buying coverage of the scored set rather than expression mass.
+
+    With varied cells a gene is nonzero in min(mean, 1) of them, so one averaging 0.1 counts
+    costs a tenth of what one averaging 10 does. Taking the top N by expression therefore
+    buys the most expensive genes first, and coverage is what the scoring punishes: a gene
+    left out is stored as zero, which the DE table reads as a predicted expression of zero
+    rather than as no claim, and its log fold change against a control that does express it
+    is enormous. One submission carrying 3,000 of the 9,923 genes the DE filter admits
+    scored 52.6 on a metric whose no-skill point is 1.0 and whose floor binds at 4.6.
+
+    So spend the budget cheapest-first over the genes the filter admits -- `min_cpm` is the
+    official 5 CPM gate, read off the control alone.
+    """
+
+    total = mean_counts.sum()
+    admitted = (mean_counts * (1e6 / total) >= min_cpm) if total > 0 else mean_counts > 0
+    cost = np.minimum(mean_counts, 1.0)
+
+    order = np.argsort(np.where(admitted & (cost > 0), cost, np.inf))
+    affordable = np.cumsum(cost[order]) <= entries_per_cell
+    return np.sort(order[affordable & admitted[order]]).astype(np.int32)
+
+
 def control_profile_to_sparse(
     mean_counts: np.ndarray,
     *,
     min_cpm: float = 1.0,
     max_genes: int | None = None,
+    columns: np.ndarray | None = None,
 ) -> SparseProfile:
     """Select the genes a submission will carry, keeping their means unrounded.
 
@@ -118,6 +148,12 @@ def control_profile_to_sparse(
     """
 
     counts = np.asarray(mean_counts, dtype=np.float64)
+    if columns is not None:
+        gene_indices = np.asarray(columns, dtype=np.int32)
+        return SparseProfile(
+            gene_indices=gene_indices, gene_values=counts[gene_indices].astype(np.float32)
+        )
+
     total = counts.sum()
     if min_cpm > 0 and total > 0:
         counts = np.where(counts * (1e6 / total) >= min_cpm, counts, 0.0)

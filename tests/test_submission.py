@@ -6,7 +6,12 @@ import pytest
 from scipy import sparse
 
 from vcc2026.baseline import ContextBaseline
-from vcc2026.submission import cells_from_mean, write_prediction_h5ad
+from vcc2026.submission import (
+    ContextPrediction,
+    cells_from_mean,
+    write_perturbation_h5ad,
+    write_prediction_h5ad,
+)
 
 
 def _baseline() -> ContextBaseline:
@@ -100,6 +105,42 @@ def test_virtual_and_materialized_hold_identical_values(tmp_path: Path) -> None:
 
     for actual, expected in zip(written[True], written[False]):
         assert (actual == expected).all()
+
+
+def test_per_perturbation_rows_hold_their_means_without_storing_zeros(tmp_path: Path) -> None:
+    """A gene averaging under a count is zero in most cells, and those zeros must not be stored.
+
+    Storing them would spend the density cap on nothing and the spec rejects explicit zeros,
+    so rows differ in length. The means must still come back exactly.
+    """
+
+    output = tmp_path / "pred.h5ad"
+    targets = np.array([[10.0, 0.25, 3.0, 0.5], [9.0, 0.5, 3.0, 0.25]], dtype=np.float32)
+    write_perturbation_h5ad(
+        output,
+        gene_names=["g0", "g1", "g2", "g3"],
+        perturbations=["p1", "p2"],
+        predictions={
+            "A": ContextPrediction(
+                context="A", gene_indices=np.array([0, 1, 2, 3], dtype=np.int32), means=targets
+            )
+        },
+        cells_per_pert=100,
+        cell_patterns=100,
+    )
+
+    with h5py.File(output, "r") as handle:
+        indptr, indices, data = (handle[f"X/{k}"][()] for k in ("indptr", "indices", "data"))
+
+    assert not (data == 0).any(), "explicit zeros must not be stored"
+    assert int(indptr[-1]) < 200 * 4, "a dense write would store every slot"
+
+    dense = np.zeros((200, 4))
+    for row in range(200):
+        lo, hi = int(indptr[row]), int(indptr[row + 1])
+        dense[row, indices[lo:hi]] = data[lo:hi]
+    assert dense[:100].mean(axis=0) == pytest.approx(targets[0])
+    assert dense[100:].mean(axis=0) == pytest.approx(targets[1])
 
 
 def test_virtual_storage_does_not_grow_with_the_perturbation_count(tmp_path: Path) -> None:

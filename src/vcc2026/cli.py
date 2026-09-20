@@ -59,7 +59,11 @@ def build_parser() -> argparse.ArgumentParser:
     transfer.add_argument("--cells-per-pert", type=int, default=400)
     transfer.add_argument("--cell-patterns", type=int, default=100)
     transfer.add_argument("--scale", type=float, default=0.3)
-    transfer.add_argument("--max-genes", type=int, default=3000)
+    transfer.add_argument(
+        "--entries-per-cell", type=float, default=3000.0,
+        help="Density budget. Total stored entries are this x 360,000; vcc prep needs "
+        "roughly 12 bytes per entry to package.",
+    )
     transfer.add_argument(
         "--fallback-profiles",
         nargs="*",
@@ -99,8 +103,10 @@ def cmd_build_transfer(args: argparse.Namespace) -> int:
             target_fold_changes=fold_changes,
             fallback=fallback,
             scale=args.scale,
-            max_genes=args.max_genes,
+            entries_per_cell=args.entries_per_cell,
         )
+    carried = predictions[manifest.contexts[0]].gene_indices.size
+    print(f"carrying {carried:,} genes at {args.entries_per_cell:,.0f} entries/cell")
 
     output = write_perturbation_h5ad(
         args.output,

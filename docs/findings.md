@@ -151,6 +151,68 @@ Virtual storage survives it: one context's 400 cells serve all 300 of its pertur
 1,200 stored rows still back all 360,000. The file goes from 70 MB to 107 MB, the submission
 sits at 23% of the density cap, and `vcc prep` passes.
 
+## 9. The first real score: −0.9934, and a metric floored by a format decision
+
+`transfer.vcc`, submitted 2026-09-20. Scaled score above, raw below:
+
+| metric | scaled | raw | baseline `b` |
+| --- | --- | --- | --- |
+| `pds` | 0.002 | 0.501 | 0.500 |
+| `mse` | 0.000 | **990.4** | 0.989 |
+| `jac` | 0.001 | 0.031 | 0.03 |
+| `nmae` | **−6.000** | **52.6** | 1.001 |
+| `fid` | −0.045 | 0.499 | 0.51 |
+| `reach` | 0.082 | 0.150 | 0.07 |
+| **overall** | **−0.9934** | | |
+
+`nmae` alone contributes −1.0 of the −0.993; the other five together are about zero.
+
+### An unstored gene is not an abstention, it is a claim of zero expression
+
+The submission carried the top 3,000 genes by expression. The DE metrics test the 9,923
+genes whose control expression exceeds 5 CPM, so **6,923 of the tested genes — 70% — were
+sent as zero**, and a sparse matrix's absent entries are zeros, not gaps. Their predicted
+log fold change is `log2(1e-9 / control)`, around −32, against a reference of order ±0.5.
+
+Each such gene contributes roughly 50 to a metric whose no-skill point is 1.0. Observed 52.6
+is what ~70% coverage predicts. `mse` at 990 is the same wound: the denominator is the true
+perturbation effect, which for this panel is small, so a systematic distortion swamps it.
+
+Predicting nothing at all would have scored better than predicting something for a third of
+the genes and zero for the rest.
+
+### Partial coverage does not help, because the floor binds at 4.6
+
+`nmae` scales as `(u − 1.001)/(0.40 − 1.001)`, so the −6 floor binds at a raw value of 4.6.
+At ~50 per uncovered gene, staying under it needs **93% coverage or better**. Going from 30%
+to 50% moves the raw value from 52 to 35 and changes the score not at all.
+
+### Coverage is cheap; the strategy was buying the wrong thing
+
+With varied cells a gene is nonzero in `min(mean, 1)` of them, so one averaging 0.1 counts
+costs a tenth of one averaging 10. Taking the top N by expression buys the most expensive
+genes first. Spending the same budget cheapest-first over the DE-admitted set instead:
+
+| entries/cell | top by expression | cheapest-first | prep RAM |
+| --- | --- | --- | --- |
+| 3,000 | 3,000 (30%) | **5,181 (52%)** | 13 GB |
+| 5,000 | 5,000 (50%) | 7,181 (72%) | 22 GB |
+| 7,000 | 6,022 (61%) | 9,181 (93%) | 30 GB |
+| 7,742 | 9,923 (100%) | 9,923 (100%) | 33 GB |
+
+Full coverage costs 2.79e9 entries — 59% of the scoring cap, so the cap was never the
+binding constraint. What binds is that `vcc prep` loads the indices array whole as int64:
+33 GB against 31.2 GB of RAM, of which 16.9 GB was free.
+
+### The other result: per-target transfer bought nothing
+
+`pds` came back at 0.501 against a floor of 0.500. Predicting each of the 300 targets from
+its own measured effect in gwps — which locally reaches 0.82 between Replogle's two lines —
+moved discrimination by 0.001. Whether the transfer itself fails across this distance or the
+zeroed genes swamped it cannot be separated from one submission.
+
+`reach` is the one metric clearly above baseline: 0.150 against 0.07, scaled 0.082.
+
 ## What this adds up to
 
 The shared response is reliably measurable (r = 0.987), worth 27.5% of the signal, and the

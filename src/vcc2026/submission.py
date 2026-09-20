@@ -227,46 +227,74 @@ def _write_x_per_perturbation(
     represented to 1/patterns of a count rather than 1/cells.
     """
 
-    n_genes = predictions[contexts[0]].gene_indices.size
-    per_row = np.full(len(contexts) * n_perturbations * cells_per_pert, n_genes, dtype=np.int64)
-    indptr = np.concatenate(([0], np.cumsum(per_row))).astype(np.int64)
-
     store = handle["uns"].create_group("_context_cells")
-    shared_indices = store.create_dataset(
-        "gene_indices", data=predictions[contexts[0]].gene_indices.astype(np.int32)
-    )
-    shared_indices.attrs["encoding-type"] = "array"
-    shared_indices.attrs["encoding-version"] = "0.2.0"
+    stored: dict[str, tuple[h5py.VirtualSource, h5py.VirtualSource, np.ndarray]] = {}
 
-    stored = {}
     for ctx in contexts:
         prediction = predictions[ctx]
-        rows = np.empty((n_perturbations * cell_patterns, n_genes), dtype=np.float32)
+        columns = prediction.gene_indices.astype(np.int32)
+        flat_indices: list[np.ndarray] = []
+        flat_data: list[np.ndarray] = []
+        per_row: list[int] = []
+
         for p in range(n_perturbations):
-            rows[p * cell_patterns: (p + 1) * cell_patterns] = cells_from_mean(
-                prediction.row(p).astype(np.float64), cell_patterns, rng
-            )
-        node = store.create_dataset(
-            f"{ctx}_data", data=rows.reshape(-1), compression="gzip", compression_opts=4
+            cells = cells_from_mean(prediction.row(p).astype(np.float64), cell_patterns, rng)
+            # A gene averaging under a count is zero in most cells. Storing those zeros
+            # explicitly would spend density on nothing and the spec rejects it, so each
+            # row keeps only what it actually holds and rows differ in length.
+            present = cells > 0
+            per_row.extend(present.sum(axis=1).tolist())
+            flat_indices.append(np.concatenate([columns[row] for row in present]))
+            flat_data.append(np.concatenate([cells[i][row] for i, row in enumerate(present)]))
+
+        index_node = store.create_dataset(
+            f"{ctx}_indices", data=np.concatenate(flat_indices).astype(np.int32),
+            compression="gzip", compression_opts=4,
         )
-        node.attrs["encoding-type"] = "array"
-        node.attrs["encoding-version"] = "0.2.0"
-        stored[ctx] = h5py.VirtualSource(node)
+        value_node = store.create_dataset(
+            f"{ctx}_data", data=np.concatenate(flat_data).astype(np.float32),
+            compression="gzip", compression_opts=4,
+        )
+        for node in (index_node, value_node):
+            node.attrs["encoding-type"] = "array"
+            node.attrs["encoding-version"] = "0.2.0"
+
+        pattern_indptr = np.concatenate(([0], np.cumsum(per_row))).astype(np.int64)
+        stored[ctx] = (
+            h5py.VirtualSource(index_node),
+            h5py.VirtualSource(value_node),
+            pattern_indptr,
+        )
+
+    # Output rows repeat each perturbation's patterns until its cell count is met.
+    output_rows: list[int] = []
+    for ctx in contexts:
+        pattern_indptr = stored[ctx][2]
+        widths = np.diff(pattern_indptr)
+        for p in range(n_perturbations):
+            base = p * cell_patterns
+            output_rows.extend(
+                int(widths[base + cell % cell_patterns]) for cell in range(cells_per_pert)
+            )
+    indptr = np.concatenate(([0], np.cumsum(output_rows))).astype(np.int64)
 
     total_nnz = int(indptr[-1])
     data_layout = h5py.VirtualLayout(shape=(total_nnz,), dtype=np.float32)
     indices_layout = h5py.VirtualLayout(shape=(total_nnz,), dtype=np.int32)
-    index_source = h5py.VirtualSource(shared_indices)
 
     position = 0
     for ctx in contexts:
-        source = stored[ctx]
+        index_source, value_source, pattern_indptr = stored[ctx]
         for p in range(n_perturbations):
+            base = p * cell_patterns
             for cell in range(cells_per_pert):
-                offset = (p * cell_patterns + cell % cell_patterns) * n_genes
-                data_layout[position: position + n_genes] = source[offset: offset + n_genes]
-                indices_layout[position: position + n_genes] = index_source
-                position += n_genes
+                pattern = base + cell % cell_patterns
+                start, stop = int(pattern_indptr[pattern]), int(pattern_indptr[pattern + 1])
+                span = stop - start
+                if span:
+                    data_layout[position: position + span] = value_source[start:stop]
+                    indices_layout[position: position + span] = index_source[start:stop]
+                position += span
 
     x_group.create_virtual_dataset("data", data_layout)
     x_group.create_virtual_dataset("indices", indices_layout)

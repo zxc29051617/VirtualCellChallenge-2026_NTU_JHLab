@@ -21,7 +21,7 @@ from pathlib import Path
 import h5py
 import numpy as np
 
-from .io import control_gene_profile, control_profile_to_sparse
+from .io import control_gene_profile, control_profile_to_sparse, select_within_budget
 from .local_eval import fold_change, load_profiles
 from .submission import ContextPrediction
 
@@ -70,7 +70,7 @@ def build_transfer_prediction(
     target_fold_changes: np.ndarray,
     fallback: np.ndarray | None = None,
     scale: float = 0.3,
-    max_genes: int | None = 3000,
+    entries_per_cell: float = 3000.0,
     row_chunk_size: int = 1024,
 ) -> ContextPrediction:
     """One context's per-perturbation target means: its control moved by each target's effect.
@@ -83,8 +83,8 @@ def build_transfer_prediction(
     """
 
     mean_counts, _, _ = control_gene_profile(control_path, row_chunk_size=row_chunk_size)
-    selected = control_profile_to_sparse(mean_counts, max_genes=max_genes)
-    columns = selected.gene_indices
+    columns = select_within_budget(mean_counts, entries_per_cell=entries_per_cell)
+    selected = control_profile_to_sparse(mean_counts, columns=columns)
 
     shifts = target_fold_changes[:, columns] * scale
     if fallback is not None:
