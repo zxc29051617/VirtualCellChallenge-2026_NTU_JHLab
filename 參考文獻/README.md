@@ -2,6 +2,13 @@
 
 這個資料夾放專題用到的論文 PDF，以及「為什麼用這份資料」的決策紀錄。
 
+**2026-09-21 新資料決策：** [離線驗證與資料覆蓋報告](../docs/offline_validation_20260921.md)
+包含 Notion 提到的 CD4 CRISPRi 與 Hs27/RPE1 CRISPRa 逐目標覆蓋盤點。
+CD4 三狀態聯集可補 29 個原 K562gw 未覆蓋目標；候選 QC 後是 19 個。
+CRISPRa 兩個 mean-population 檔的 target categories 各重疊 80/300，但只比 K562gw 多
+STAT6、ZNF174；活化不能直接當作抑制。採用順序是先取得 CD4 的直接 CRISPRi
+效果，再評估功能先驗是否在留出 context 中有增益。數據來源、篩選定義與限制均在上述報告。
+
 ---
 
 ## A. 賽事文件

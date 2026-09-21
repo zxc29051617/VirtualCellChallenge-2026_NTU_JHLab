@@ -56,17 +56,22 @@ def _categorical(group: h5py.Group, name: str, categories: list[str], codes: np.
 def cells_from_mean(
     values: np.ndarray, n_cells: int, rng: np.random.Generator
 ) -> np.ndarray:
-    """`n_cells` integer rows whose column means are `values`.
+    """Integer rows with column-mean error at most 0.5 / n_cells.
 
-    A cell must hold whole counts, but the metrics read group-summed profiles, so a mean of
+    Group-profile metrics read group-summed counts, so a mean of
     5.3 is not a 5 -- it is 70% of cells at 5 and 30% at 6. Rounding each gene to an integer
     instead would silently discard every predicted change smaller than half a count, which
     on this data is most of them.
 
-    Each gene's surplus cells are drawn independently, so the cells differ from one another
-    in the way real ones do rather than splitting into two rigid groups.
+    This is mean-preserving quantization, not a biological distribution model.
+    DE metrics also depend on the individual cells' distributions.
     """
 
+    values = np.asarray(values, dtype=np.float64)
+    if n_cells < 1 or values.ndim != 1:
+        raise ValueError("Expected a vector and a positive cell count")
+    if not np.isfinite(values).all() or (values < 0).any() or (values >= 2**24).any():
+        raise ValueError("Counts must be finite, nonnegative, and exactly representable in float32")
     floor = np.floor(values)
     surplus = np.rint((values - floor) * n_cells).astype(np.int64)
     cells = np.tile(floor.astype(np.float32), (n_cells, 1))
@@ -412,12 +417,30 @@ def write_perturbation_h5ad(
     perturbations: list[str],
     predictions: Mapping[str, ContextPrediction],
     cells_per_pert: int = 400,
-    cell_patterns: int = 100,
+    cell_patterns: int = 400,
     seed: int = 0,
 ) -> Path:
     """Write a prediction that differs per perturbation, rather than one profile per context."""
 
     contexts = list(predictions.keys())
+    if not gene_names or len(set(gene_names)) != len(gene_names):
+        raise ValueError("Gene names must be nonempty and unique")
+    if not perturbations or len(set(perturbations)) != len(perturbations) or not contexts:
+        raise ValueError("Require unique perturbations and at least one context")
+    if cell_patterns < 1 or cells_per_pert < 1 or cells_per_pert % cell_patterns:
+        raise ValueError("cell_patterns must divide cells_per_pert exactly")
+    for ctx, prediction in predictions.items():
+        cols = np.asarray(prediction.gene_indices)
+        if (prediction.context != ctx or cols.ndim != 1
+                or not np.issubdtype(cols.dtype, np.integer)
+                or len(set(cols.tolist())) != len(cols)
+                or (cols < 0).any() or (cols >= len(gene_names)).any()):
+            raise ValueError("Invalid context or gene indices")
+        if prediction.means.shape not in ((1, len(cols)), (len(perturbations), len(cols))):
+            raise ValueError("Prediction dimensions do not match the output contract")
+        if (not np.isfinite(prediction.means).all() or (prediction.means < 0).any()
+                or (prediction.means >= 2**24).any()):
+            raise ValueError("Invalid predicted counts")
     n_rows = len(contexts) * len(perturbations) * cells_per_pert
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)

@@ -1,0 +1,20 @@
+{
+  "experiment": "transfer_v3_geneaxis",
+  "parent": "artifacts/transfer_v2.h5ad",
+  "protected_submission": "artifacts/transfer_v2.vcc",
+  "protected_sha256": "6bce7114b221d373acacf2dbcc5e06972344709da85b93106bf06779ee7e319a",
+  "source": "external/profiles/K562gw_perturbation_means.npz",
+  "fallback_profiles": ["external/profiles/K562_perturbation_means.npz", "external/profiles/RPE1_perturbation_means.npz"],
+  "scale": 0.3,
+  "profile_scale": 0.15,
+  "cells_per_pert": 400,
+  "cell_patterns": 200,
+  "seed": 0,
+  "parent_entries_per_cell": 8000.0,
+  "parent_gene_strategy": "legacy_budget_min_cpm5_min_mean0.005",
+  "candidate_gene_strategy": "full_axis_no_gene_filter",
+  "output": "artifacts/transfer_v3_geneaxis.h5ad",
+  "submission": "artifacts/transfer_v3_geneaxis.vcc",
+  "evaluation_split": "offline_20260921_32_targets_seed20260921_min50",
+  "notes": "Only gene strategy changes; same source, fallback, scales, floorceil, patterns and seed. Parent v2 is NOT top3000."
+}

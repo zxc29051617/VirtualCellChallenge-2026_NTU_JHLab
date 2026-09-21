@@ -1,4 +1,9 @@
-"""Score models on a held-out cell line, as a local stand-in for the Challenge.
+"""Historical continuous-profile diagnostics, including target-supervised calibration.
+
+For source-only predictions scored AFTER actual integer H5AD output/readback, use
+scripts/offline_validation.py roundtrip and scripts/compare_generative_pilot.py.
+This script does not exercise serialization. Its scaled/calibrated models use target
+perturbations for fitting; mean_response is an oracle using the scored answer key.
 
 Fit on K562, predict RPE1. RPE1's perturbation profiles are the answer key and are never
 shown to a model -- only its control profile and the list of genes to knock down, which is
@@ -147,7 +152,7 @@ def main() -> int:
         "control": np.broadcast_to(target_control, measured.shape),
         "mean_response": np.broadcast_to(measured.mean(axis=0), measured.shape),
         "transfer": means_from_fold_change(source_lfc[score_rows], target_control),
-        # Cosine distance ignores a uniform scale, so this can only move the error metrics.
+        # Scale is applied before nonlinear log normalization; PDS can change as well.
         "scaled": means_from_fold_change(source_lfc[score_rows] * uniform, target_control),
         "calibrated": means_from_fold_change(
             shared * beta + specific[score_rows] * alpha, target_control

@@ -57,15 +57,16 @@ def build_parser() -> argparse.ArgumentParser:
     transfer.add_argument("--run-id", default=None)
     transfer.add_argument("--seed", type=int, default=0)
     transfer.add_argument("--cells-per-pert", type=int, default=400)
-    transfer.add_argument("--cell-patterns", type=int, default=200)
+    transfer.add_argument("--cell-patterns", type=int, default=400)
+    transfer.add_argument("--coverage", choices=["all_expressed", "legacy_budget"],
+                          default="all_expressed")
     transfer.add_argument(
-        "--profile-scale", type=float, default=0.15,
-        help="Multiply the whole predicted profile. Every metric normalizes, so this "
-        "changes no score, but it makes low-expression genes cheap enough to carry.",
+        "--profile-scale", type=float, default=1.0,
+        help="Count-depth multiplier. Changes integerized cell distributions and DE tests.",
     )
     transfer.add_argument("--scale", type=float, default=0.3)
     transfer.add_argument(
-        "--entries-per-cell", type=float, default=3000.0,
+        "--entries-per-cell", type=float, default=None,
         help="Density budget. Total stored entries are this x 360,000; vcc prep needs "
         "roughly 12 bytes per entry to package.",
     )
@@ -111,6 +112,7 @@ def cmd_build_transfer(args: argparse.Namespace) -> int:
             entries_per_cell=args.entries_per_cell,
             profile_scale=args.profile_scale,
             cell_patterns=args.cell_patterns,
+            coverage=args.coverage,
         )
     first = predictions[manifest.contexts[0]]
     cost = np.minimum(first.means[0], 1.0).sum()
@@ -144,6 +146,7 @@ def cmd_build_transfer(args: argparse.Namespace) -> int:
             "genes_carried": int(first.gene_indices.size),
             "cells_per_pert": args.cells_per_pert,
             "cell_patterns": args.cell_patterns,
+            "coverage": args.coverage,
             "targets_covered": int(covered.sum()),
         },
         metrics={},

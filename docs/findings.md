@@ -1,5 +1,13 @@
 # Findings
 
+> **2026-09-21 correction and follow-up:** See
+> [output roundtrip, null DE, new-data coverage, and generative pilot](offline_validation_20260921.md).
+> Historical continuous-profile scores below did not exercise integer output/readback.
+> Scaling before integerization changes cell distributions; floor/ceil is not a biological
+> noise model; independent-gene NB is not equivalent to flow/diffusion. The original
+> scaled/calibrated local models use target-context perturbations for fitting and are not
+> source-only zero-shot estimates. The new experiments report their own fixed splits.
+
 Measurements from the local evaluation loop (`scripts/evaluate_local.py`), K562 → RPE1 on
 Replogle 2022. How the loop works and where its metrics depart from the official suite is in
 `docs/validation_strategy.md`; read that before acting on a number here.

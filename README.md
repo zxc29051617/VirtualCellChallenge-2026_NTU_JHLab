@@ -17,6 +17,11 @@ Current goals:
 
 ## Current status
 
+- **2026-09-21 offline validation:** output/readback ablations, independent-control null
+  tests, new-data target coverage, and a source-only flow/diffusion pilot are documented in
+  [the experiment report](docs/offline_validation_20260921.md). These are local diagnostics,
+  not official leaderboard scores. The existing `transfer_v2.vcc` is unchanged.
+
 - Challenge controls are present under `dataset/`: validation controls for contexts `A`, `B`, `C`.
 - This repo contains a baseline predictor that uses the control-cell mean per context.
 - Official scoring is server-side: six metrics normalized against a baseline model and
