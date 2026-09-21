@@ -465,7 +465,58 @@ calibration amplifying CD4 by 2.2× and 6.3× to match effect size — good for 
 ranking, bad for magnitude. A blend for submission should use a low weight and be read as
 buying discrimination and direction, not magnitude.
 
-## What this adds up to
+## 14. v5 scores 0.1040, and the overall is a plain mean of the six
+
+`transfer_v5_blend.vcc`, submitted 2026-09-21. Rank 377.
+
+| metric | v1 | v2 | **v5** | leader | gap to leader |
+| --- | --- | --- | --- | --- | --- |
+| `pds` | 0.002 | 0.315 | **0.5674** | 0.853 | 0.286 |
+| `mse` | 0.000 | — | **0.0000** | 0.423 | **0.423** |
+| `reach` | 0.082 | — | **0.0629** | 0.373 | 0.310 |
+| `nmae` | −6.000 | — | **0.0313** | 0.293 | 0.262 |
+| `fid` | −0.045 | — | **−0.0316** | 0.111 | 0.143 |
+| `jac` | 0.001 | — | **−0.0058** | 0.016 | 0.022 |
+| **overall** | **−0.9934** | **0.0434** | **0.1040** | 0.3449 | |
+
+The six scaled metrics average to 0.104027, against a reported 0.10402667, and the leader's
+six average to 0.3448 against a reported 0.3449. **The overall is an unweighted mean and each
+metric is worth exactly one sixth**, which was assumed before and is now measured.
+
+### The gain is real and its cause is not identified
+
+`pds` scaled 0.315 → 0.5674, which is raw 0.643 → 0.756. Section 13 predicted +0.006 raw from
+blending. The move is eighteen times that, so most of it is not the blend.
+
+v5 changed two things against v2 at once: the second source, and v3's full gene axis in place
+of v2's 9,923 selected genes. The local fold put the axis change at +0.002, but that was
+measured on the 7,226 genes two Replogle lines share, which cannot see what carrying 16,135
+genes instead of 9,923 does to a cosine over the full space — and section 9 already measured
+exactly that effect at a larger scale, top-3,000 scoring 0.517 against a full axis 0.776.
+So the axis is the likelier cause, and `transfer_v3_geneaxis.vcc` — built, never submitted —
+would separate them for one slot.
+
+Stated plainly: the local folds have now mispredicted the size of a change by more than an
+order of magnitude in the favourable direction, having previously mispredicted 0.82 → 0.501 in
+the unfavourable one. They are directionally useful and not quantitatively trustworthy.
+
+### Expression accuracy is the largest untouched metric
+
+`mse` came back 0.0000 — not small, exactly the baseline. The prediction is the control
+profile moved by a carried fold change shrunk by 0.3, which for this panel is close enough to
+the context mean that the metric cannot tell them apart. The leader scores 0.423 there, the
+second-largest number on their card after discrimination, and nothing in this repo has ever
+targeted it. `scale` being a stated assumption rather than a fitted quantity (section 1) is
+the obvious place to look.
+
+### The differential-expression metrics are at or below baseline
+
+`fid` −0.0316 and `jac` −0.0058 are both *below* predicting nothing, and `reach` 0.0629 sits
+against a leader's 0.373. Section 12 measured why: floor/ceil construction at profile scale
+0.15 calls 7,581 genes significant against real control cells where real cells call 0, so the
+DE table these three metrics read is mostly manufactured. v4 drops that to 8 and remains
+unpackageable here. Those three metrics are worth half the card, and we currently score
+0.0255 of a possible 3.0 on them.
 
 The shared response is reliably measurable (r = 0.987), worth 27.5% of the signal, and the
 single thing standing between a transfer model and the baseline on every magnitude metric.
