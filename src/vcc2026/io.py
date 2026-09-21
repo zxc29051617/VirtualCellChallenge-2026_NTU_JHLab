@@ -92,6 +92,46 @@ def control_gene_profile(
         return mean_counts.astype(np.float32), float(total_counts / float(n_rows)), n_rows
 
 
+def control_gene_dispersion(
+    path: str | Path,
+    *,
+    row_chunk_size: int = 1024,
+    floor: float = 1e-3,
+    ceiling: float = 1e6,
+) -> np.ndarray:
+    """Per-gene negative-binomial dispersion of the control cells, streamed.
+
+    For an NB with mean m and dispersion theta, var = m + m^2 / theta, so
+    theta = m^2 / (var - m). It is a property of the gene rather than of the depth, which is
+    what makes it reusable at a predicted mean different from the control's.
+
+    Every gene the DE filter admits is over-dispersed on this data -- 9,893 of 9,923, at a
+    median var/mean of 1.5 -- so the fallback matters little, but a gene at or below Poisson
+    gets `ceiling`, which `cells_from_nb` reads as "as tight as a multinomial allows".
+    """
+
+    with h5py.File(path, "r") as handle:
+        n_rows, n_genes = (int(x) for x in handle["X"].attrs["shape"])
+        indptr = handle["X/indptr"][()]
+        total = np.zeros(n_genes, dtype=np.float64)
+        total_sq = np.zeros(n_genes, dtype=np.float64)
+        for start in range(0, n_rows, row_chunk_size):
+            stop = min(n_rows, start + row_chunk_size)
+            lo, hi = int(indptr[start]), int(indptr[stop])
+            idx = handle["X/indices"][lo:hi]
+            val = handle["X/data"][lo:hi].astype(np.float64)
+            total += np.bincount(idx, weights=val, minlength=n_genes)
+            total_sq += np.bincount(idx, weights=val * val, minlength=n_genes)
+
+    mean = total / n_rows
+    variance = total_sq / n_rows - mean**2
+    theta = np.divide(
+        mean**2, variance - mean,
+        out=np.full_like(mean, ceiling), where=variance > mean + 1e-10,
+    )
+    return np.clip(theta, floor, ceiling)
+
+
 def select_within_budget(
     mean_counts: np.ndarray,
     *,

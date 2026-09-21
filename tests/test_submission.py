@@ -9,6 +9,7 @@ from vcc2026.baseline import ContextBaseline
 from vcc2026.submission import (
     ContextPrediction,
     cells_from_mean,
+    cells_from_nb,
     write_perturbation_h5ad,
     write_prediction_h5ad,
 )
@@ -105,6 +106,73 @@ def test_virtual_and_materialized_hold_identical_values(tmp_path: Path) -> None:
 
     for actual, expected in zip(written[True], written[False]):
         assert (actual == expected).all()
+
+
+def test_nb_cells_reproduce_the_mean_exactly_and_spread_more_than_floorceil() -> None:
+    """The two properties the construction exists for: exact mean, realistic spread."""
+    rng = np.random.default_rng(0)
+    mean = np.array([5.3, 0.6, 12.0, 40.0])
+    theta = np.array([2.5, 2.5, 2.5, 2.5])
+
+    cells = cells_from_nb(mean, theta, 400, rng)
+    assert (cells == np.floor(cells)).all(), "counts must be whole"
+    assert (cells >= 0).all()
+    # Exact to the same 1/n_cells quantum floor/ceil achieves.
+    assert cells.mean(axis=0) == pytest.approx(np.rint(mean * 400) / 400)
+
+    tight = cells_from_mean(mean, 400, np.random.default_rng(0))
+    over = cells.var(axis=0) / np.maximum(cells.mean(axis=0), 1e-9)
+    assert (over > tight.var(axis=0) / np.maximum(tight.mean(axis=0), 1e-9)).all()
+    assert (over[2:] > 1.0).all(), "expressed genes should exceed Poisson"
+
+
+def test_nb_construction_needs_theta(tmp_path: Path) -> None:
+    prediction = ContextPrediction(
+        context="A",
+        gene_indices=np.array([0, 1], dtype=np.int32),
+        means=np.array([[4.0, 2.0]], dtype=np.float32),
+    )
+    with pytest.raises(ValueError, match="theta"):
+        write_perturbation_h5ad(
+            tmp_path / "x.h5ad",
+            gene_names=["g0", "g1"],
+            perturbations=["p1"],
+            predictions={"A": prediction},
+            cells_per_pert=10,
+            cell_patterns=10,
+            construction="conditioned_nb",
+        )
+
+
+def test_written_nb_cells_keep_the_requested_means(tmp_path: Path) -> None:
+    output = tmp_path / "nb.h5ad"
+    targets = np.array([[6.0, 1.5, 20.0], [4.0, 0.5, 25.0]], dtype=np.float32)
+    write_perturbation_h5ad(
+        output,
+        gene_names=["g0", "g1", "g2"],
+        perturbations=["p1", "p2"],
+        predictions={
+            "A": ContextPrediction(
+                context="A",
+                gene_indices=np.array([0, 1, 2], dtype=np.int32),
+                means=targets,
+                theta=np.array([2.0, 2.0, 2.0]),
+            )
+        },
+        cells_per_pert=200,
+        cell_patterns=200,
+        construction="conditioned_nb",
+    )
+    with h5py.File(output, "r") as handle:
+        indptr, indices, data = (handle[f"X/{k}"][()] for k in ("indptr", "indices", "data"))
+
+    assert not (data == 0).any(), "explicit zeros must not be stored"
+    dense = np.zeros((400, 3))
+    for row in range(400):
+        lo, hi = int(indptr[row]), int(indptr[row + 1])
+        dense[row, indices[lo:hi]] = data[lo:hi]
+    assert dense[:200].mean(axis=0) == pytest.approx(targets[0])
+    assert dense[200:].mean(axis=0) == pytest.approx(targets[1])
 
 
 def test_per_perturbation_rows_hold_their_means_without_storing_zeros(tmp_path: Path) -> None:

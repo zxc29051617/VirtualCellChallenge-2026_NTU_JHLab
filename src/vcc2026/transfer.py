@@ -21,7 +21,12 @@ from pathlib import Path
 import h5py
 import numpy as np
 
-from .io import control_gene_profile, read_var_names, select_within_budget
+from .io import (
+    control_gene_dispersion,
+    control_gene_profile,
+    read_var_names,
+    select_within_budget,
+)
 from .local_eval import fold_change, load_profiles
 from .submission import ContextPrediction
 
@@ -74,6 +79,7 @@ def build_transfer_prediction(
     profile_scale: float = 1.0,
     cell_patterns: int = 400,
     coverage: str = "all_expressed",
+    with_dispersion: bool = False,
     row_chunk_size: int = 1024,
 ) -> ContextPrediction:
     """One context's per-perturbation target means: its control moved by each target's effect.
@@ -124,8 +130,15 @@ def build_transfer_prediction(
         context = handle["obs/context/categories"][0]
     context = context.decode("utf-8") if isinstance(context, bytes) else str(context)
 
+    # Dispersion is read from the control at its own depth, since theta is a property of the
+    # gene rather than of the level we predict it at. Streaming it costs a second pass.
+    theta = None
+    if with_dispersion:
+        theta = control_gene_dispersion(control_path, row_chunk_size=row_chunk_size)[columns]
+
     return ContextPrediction(
         context=context,
         gene_indices=columns,
         means=means,
+        theta=theta,
     )

@@ -66,6 +66,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     transfer.add_argument("--scale", type=float, default=0.3)
     transfer.add_argument(
+        "--cell-construction", choices=["floorceil", "conditioned_nb"], default="floorceil",
+        help="floorceil splits a mean between its floor and ceiling, which is the tightest "
+        "an integer group can be and produces thousands of spurious DE calls against real "
+        "control cells. conditioned_nb reproduces the mean exactly while spreading the cells "
+        "like real ones, and needs the profile at full depth to stay clean.",
+    )
+    transfer.add_argument(
         "--entries-per-cell", type=float, default=None,
         help="Density budget. Total stored entries are this x 360,000; vcc prep needs "
         "roughly 12 bytes per entry to package.",
@@ -113,6 +120,7 @@ def cmd_build_transfer(args: argparse.Namespace) -> int:
             profile_scale=args.profile_scale,
             cell_patterns=args.cell_patterns,
             coverage=args.coverage,
+            with_dispersion=args.cell_construction == "conditioned_nb",
         )
     first = predictions[manifest.contexts[0]]
     cost = np.minimum(first.means[0], 1.0).sum()
@@ -129,6 +137,7 @@ def cmd_build_transfer(args: argparse.Namespace) -> int:
         cells_per_pert=args.cells_per_pert,
         cell_patterns=args.cell_patterns,
         seed=args.seed,
+        construction=args.cell_construction,
     )
 
     record = ExperimentRecord(
@@ -147,6 +156,7 @@ def cmd_build_transfer(args: argparse.Namespace) -> int:
             "cells_per_pert": args.cells_per_pert,
             "cell_patterns": args.cell_patterns,
             "coverage": args.coverage,
+            "cell_construction": args.cell_construction,
             "targets_covered": int(covered.sum()),
         },
         metrics={},

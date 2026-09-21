@@ -314,6 +314,72 @@ own. Three independent measurements agree: discrimination transfers across conte
 differential expression does not. That is the finding to build on, and it is not one this
 repo produced alone.
 
+## 12. The cell construction is fixable; packaging it on this machine is not
+
+`cells_from_nb` draws each gene's per-cell weights from a gamma and distributes its fixed
+total by a multinomial — a negative binomial conditioned on that total. The group mean
+survives exactly while the cells spread. Against real control cells with no perturbation at
+all:
+
+| construction | depth | false DE |
+| --- | --- | --- |
+| real cells | — | **0** |
+| floor/ceil | 1.00 | 7,581 |
+| **conditioned NB** | **1.00** | **8** |
+| conditioned NB | 0.50 | 6,638 |
+| conditioned NB | 0.15 | 9,884 |
+
+**The fix only exists at full depth.** Below it our counts sit on a coarser grid than the
+reference's, and the rank test reads that as a difference however the profile is normalized
+— which is what the "every metric normalizes, so scaling is free" argument in section 9
+missed. At 0.15 the NB is worse than the floor/ceil it replaces.
+
+### And full depth costs more than vcc prep can package
+
+NB is about 25% cheaper per gene than floor/ceil, but depth 1.0 more than undoes that:
+5,778 entries per cell, 2.08e9 total. That is 44% of the scoring cap — the rules were never
+the constraint — and the same density as a real control cell, which carries 5,975 nonzero
+genes.
+
+`vcc prep` fails on it, three times, at 24, 30 and 40 GB of commit free, always on the same
+allocation. With `VCC_TRACEBACK=1`:
+
+```
+File "vcc/prep.py", line 376, in _all_values_integer
+    return not bool(np.any(np.abs(frac) > 1e-6))
+numpy MemoryError: Unable to allocate 7.75 GiB for shape (2080105930,) float32
+```
+
+It materializes the whole value array to check the counts are whole numbers, then copies it
+again for `abs`. `--no-require-counts --allow-discrete` skips that check and the run reaches
+a later 1.94 GiB bool allocation, which fails with 41.8 GB free — so by then it holds nearly
+40 GB. Chasing allocations one at a time has no visible end.
+
+**Measured ceiling: 0.94e9 entries packages, 2.08e9 does not.** The official density cap is
+4.75e9, so prep tops out around a fifth of what the rules allow.
+
+### No compromise keeps the benefit
+
+| candidate | entries | packages? | what it costs |
+| --- | --- | --- | --- |
+| v4 as built | 2.08e9 | no | — |
+| depth 0.8 | 1.99e9 | no | saves 4% |
+| depth 0.5 | 1.55e9 | maybe | false DE 8 → 6,638 |
+| depth 0.15 + NB | 0.79e9 | yes | false DE 9,884, worse than floor/ceil |
+| genes ≥1 count only | 1.63e9 | maybe | zeroes 4,280 gate genes → nmae back to −6 |
+
+The cost is concentrated in the ~5,600 genes the control expresses above one count, each
+nonzero in nearly every cell. That is the price of cells that look like real ones, and it is
+not negotiable downward.
+
+**So the next gains have to come from somewhere that does not touch density**: the transfer
+itself. `pds` is 41% of the leader's total and the one metric where we score (0.315 against
+0.853), and improving it costs no entries at all — more source coverage (CD4 adds 19 targets
+past QC), a better effect scale than the assumed 0.3, better fold-change estimates.
+
+`transfer_v4.h5ad` is kept as built. It is a legal submission that this machine cannot
+package; a machine with more memory, or a prep that chunks that check, would.
+
 ## What this adds up to
 
 The shared response is reliably measurable (r = 0.987), worth 27.5% of the signal, and the

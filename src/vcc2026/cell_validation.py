@@ -6,7 +6,7 @@ import numpy as np
 from scipy import sparse, stats
 
 from .io import read_categorical, read_var_names
-from .submission import _write_frame, cells_from_mean
+from .submission import _write_frame, cells_from_mean, cells_from_nb
 
 
 def read_rows(path, rows, columns=None):
@@ -118,14 +118,7 @@ def construct_cells(mean, variance, n, rng, method):
         return rng.negative_binomial(theta, theta / (theta + mean),
                                     size=(n, len(mean))).astype(np.float32)
     if method == "conditioned_nb":
-        # NB conditioned on each column's total is Dirichlet-multinomial.
-        # Preserves rounded means; does NOT preserve cross-gene covariance.
-        out = np.zeros((n, len(mean)), dtype=np.float32)
-        for j, total in enumerate(np.rint(n * mean).astype(np.int64)):
-            if total:
-                w = rng.gamma(theta[j], 1, n)
-                if w.sum() == 0:
-                    w[:] = 1
-                out[:, j] = rng.multinomial(total, w / w.sum())
-        return out
+        # The same construction the submission writer uses, so the null diagnostic below
+        # measures what actually ships rather than a second implementation of it.
+        return cells_from_nb(mean, theta, n, rng)
     raise ValueError(method)

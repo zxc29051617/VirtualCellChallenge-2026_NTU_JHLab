@@ -83,6 +83,45 @@ def cells_from_mean(
     return cells
 
 
+def cells_from_nb(
+    values: np.ndarray, theta: np.ndarray, n_cells: int, rng: np.random.Generator
+) -> np.ndarray:
+    """Integer rows that reproduce `values` exactly and are over-dispersed like real cells.
+
+    `cells_from_mean` splits a mean between its floor and ceiling, which is the tightest an
+    integer group can be. Real single-cell counts are over-dispersed -- every gene the DE
+    filter admits has variance above its mean, at a median ratio of 1.5 -- and three of the
+    six metrics come from a rank-sum test that reads spread, not only location. Measured with
+    no perturbation at all, floor/ceil cells are called significantly different from real
+    control cells for 7,581 genes where real cells give 0; these give 8.
+
+    Drawing each gene's per-cell weights from a gamma and then distributing its fixed total
+    by a multinomial is a negative binomial conditioned on that total, so the group mean
+    survives exactly while the cells spread. It does not reproduce correlation between genes:
+    each gene is drawn independently, so cells vary less in library size than real ones do.
+
+    `theta` is the NB dispersion, estimated per gene from the control as m^2 / (var - m).
+    Larger is tighter; a Poisson gene has no finite value and should be given a large one.
+    """
+
+    values = np.asarray(values, dtype=np.float64)
+    theta = np.clip(np.asarray(theta, dtype=np.float64), 1e-3, 1e6)
+    if values.shape != theta.shape or values.ndim != 1 or n_cells < 1:
+        raise ValueError("Expected matching vectors and a positive cell count")
+    if not np.isfinite(values).all() or (values < 0).any():
+        raise ValueError("Counts must be finite and nonnegative")
+
+    cells = np.zeros((n_cells, values.size), dtype=np.float32)
+    for gene, total in enumerate(np.rint(values * n_cells).astype(np.int64)):
+        if total <= 0:
+            continue
+        weights = rng.gamma(theta[gene], 1.0, n_cells)
+        if not weights.sum():
+            weights = np.ones(n_cells)
+        cells[:, gene] = rng.multinomial(total, weights / weights.sum())
+    return cells
+
+
 @dataclass(frozen=True)
 class ContextPrediction:
     """Target mean counts per perturbation for one context, over a shared set of genes.
@@ -90,11 +129,16 @@ class ContextPrediction:
     `means` is [n_perturbations, len(gene_indices)]. A single row broadcasts to every
     perturbation, which is what a context-mean baseline wants; more rows let each
     perturbation carry its own prediction.
+
+    `theta` carries the per-gene NB dispersion measured from that context's control cells,
+    so the writer can give the cells a realistic spread. Without it only floor/ceil is
+    available.
     """
 
     context: str
     gene_indices: np.ndarray
     means: np.ndarray
+    theta: np.ndarray | None = None
 
     @classmethod
     def from_baseline(cls, baseline: ContextBaseline) -> ContextPrediction:
@@ -221,6 +265,7 @@ def _write_x_per_perturbation(
     cells_per_pert: int,
     cell_patterns: int,
     rng: np.random.Generator,
+    construction: str = "floorceil",
 ) -> np.ndarray:
     """Write a prediction that differs per perturbation.
 
@@ -243,7 +288,15 @@ def _write_x_per_perturbation(
         per_row: list[int] = []
 
         for p in range(n_perturbations):
-            cells = cells_from_mean(prediction.row(p).astype(np.float64), cell_patterns, rng)
+            row = prediction.row(p).astype(np.float64)
+            if construction == "conditioned_nb":
+                if prediction.theta is None:
+                    raise ValueError("conditioned_nb needs per-gene theta on the prediction")
+                cells = cells_from_nb(row, prediction.theta, cell_patterns, rng)
+            elif construction == "floorceil":
+                cells = cells_from_mean(row, cell_patterns, rng)
+            else:
+                raise ValueError(f"unknown construction {construction!r}")
             # A gene averaging under a count is zero in most cells. Storing those zeros
             # explicitly would spend density on nothing and the spec rejects it, so each
             # row keeps only what it actually holds and rows differ in length.
@@ -419,6 +472,7 @@ def write_perturbation_h5ad(
     cells_per_pert: int = 400,
     cell_patterns: int = 400,
     seed: int = 0,
+    construction: str = "floorceil",
 ) -> Path:
     """Write a prediction that differs per perturbation, rather than one profile per context."""
 
@@ -441,6 +495,11 @@ def write_perturbation_h5ad(
         if (not np.isfinite(prediction.means).all() or (prediction.means < 0).any()
                 or (prediction.means >= 2**24).any()):
             raise ValueError("Invalid predicted counts")
+        if construction == "conditioned_nb":
+            if prediction.theta is None or np.shape(prediction.theta) != (len(cols),):
+                raise ValueError("conditioned_nb needs one theta per carried gene")
+            if not np.isfinite(prediction.theta).all() or (prediction.theta <= 0).any():
+                raise ValueError("theta must be finite and positive")
     n_rows = len(contexts) * len(perturbations) * cells_per_pert
     output = Path(output_path)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -467,6 +526,7 @@ def write_perturbation_h5ad(
             cells_per_pert,
             cell_patterns,
             np.random.default_rng(seed),
+            construction,
         )
         _write_frame(handle, gene_names, perturbations, contexts, cells_per_pert)
 
