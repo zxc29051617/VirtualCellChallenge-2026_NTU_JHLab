@@ -17,6 +17,10 @@ Current goals:
 
 ## Current status
 
+- **Start here: [docs/state_of_play.md](docs/state_of_play.md)** — the submitted scores, the
+  next experiment and why, and what has already been ruled out with the measurement that
+  ruled it out. Best score so far is **0.1040 (rank 377)** with `transfer_v5_blend.vcc`.
+
 - **2026-09-21 offline validation:** output/readback ablations, independent-control null
   tests, new-data target coverage, and a source-only flow/diffusion pilot are documented in
   [the experiment report](docs/offline_validation_20260921.md). These are local diagnostics,
