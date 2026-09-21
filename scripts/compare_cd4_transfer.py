@@ -90,27 +90,30 @@ def main() -> int:
     # One gene axis for everything, in the held-out context's order.
     source_columns = {gene: i for i, gene in enumerate(source.genes)}
     cd4_columns = {gene: i for i, gene in enumerate(cd4_genes)}
+    target_columns = {gene: i for i, gene in enumerate(target.genes)}
     shared = [g for g in target.genes if g in source_columns]
-    target_take = np.array([target.genes.index(g) for g in shared])
+    target_take = np.array([target_columns[g] for g in shared])
     source_take = np.array([source_columns[g] for g in shared])
     cd4_take = np.array([cd4_columns.get(g, -1) for g in shared])
     cd4_known = cd4_take >= 0
 
     # Perturbations all three can speak to, so A and B are scored on the same rows.
+    source_rows_by_name = {p: i for i, p in enumerate(source.perturbations)}
+    target_rows_by_name = {p: i for i, p in enumerate(target.perturbations)}
     scored = [
         p for p in target.perturbations
-        if p != CONTROL and p in source.perturbations and p in cd4_effects
+        if p != CONTROL and p in source_rows_by_name and p in cd4_effects
     ]
     print(f"{len(shared):,} shared genes, {len(scored):,} shared perturbations")
     print(f"CD4 covers {int(cd4_known.sum()):,} of them\n")
     if not scored:
         raise SystemExit("no perturbation is present in all three datasets")
 
-    target_rows = np.array([target.index_of(p) for p in scored])
-    source_rows = np.array([source.index_of(p) for p in scored])
+    target_rows = np.array([target_rows_by_name[p] for p in scored])
+    source_rows = np.array([source_rows_by_name[p] for p in scored])
 
-    target_control = target.means[target.index_of(CONTROL)][target_take]
-    source_control = source.means[source.index_of(CONTROL)][source_take]
+    target_control = target.means[target_rows_by_name[CONTROL]][target_take]
+    source_control = source.means[source_rows_by_name[CONTROL]][source_take]
     measured = target.means[np.ix_(target_rows, target_take)]
 
     source_lfc = fold_change(source.means[np.ix_(source_rows, source_take)], source_control)
@@ -132,9 +135,13 @@ def main() -> int:
     # wrong knockdowns. Magnitude, sparsity and gene-level structure all survive; only the
     # target-specific part is destroyed. A blend that beats weight 0 but does not beat this
     # gained nothing from knowing which gene was knocked down.
-    permutation = np.random.default_rng(args.seed).permutation(len(scored))
-    while np.any(permutation == np.arange(len(scored))):
-        permutation = np.random.default_rng(args.seed).permutation(permutation)
+    rng = np.random.default_rng(args.seed)
+    identity = np.arange(len(scored))
+    permutation = rng.permutation(len(scored))
+    while np.any(permutation == identity):
+        # One rng, drawn fresh each time. Re-seeding here would re-apply the same shuffle and
+        # could cycle without ever landing on a derangement.
+        permutation = rng.permutation(len(scored))
     variants = {"CD4": cd4_lfc, "shuffled": cd4_lfc[permutation]}
 
     def blend(other: np.ndarray, weight: float) -> dict[str, float]:
