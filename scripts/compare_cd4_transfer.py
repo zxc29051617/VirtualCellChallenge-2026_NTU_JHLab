@@ -57,12 +57,18 @@ def _load_cd4(path: Path) -> tuple[dict[str, np.ndarray], list[str]]:
     return effects, genes
 
 
-def _calibrate(source: np.ndarray, other: np.ndarray) -> float:
-    """Least-squares scale putting `other` in `source`'s units, through the origin.
+def _calibrate(source: np.ndarray, other: np.ndarray, how: str) -> float:
+    """Scale putting `other` in `source`'s units. Reads only source data, never the answer key.
 
-    Absorbs the log base and any difference in effect size between the two pipelines. Uses
-    only source data, so the same number is available for a context with no answer key.
+    Two of them, because they answer different questions. `rms` equalizes effect size, so a
+    blend is an average of two measurements and nothing else. `slope` is the least-squares
+    fit through the origin, which is the better predictor but shrinks hard when the two
+    sources agree weakly -- regression attenuation -- so part of any gain it shows is just
+    prediction pulled toward no effect, which lowers squared error on its own.
     """
+    if how == "rms":
+        spread = float(np.sqrt((other**2).mean()))
+        return float(np.sqrt((source**2).mean()) / spread) if spread > 0 else 0.0
     denominator = float((other**2).sum())
     return float((source * other).sum() / denominator) if denominator > 0 else 0.0
 
@@ -73,6 +79,8 @@ def main() -> int:
     parser.add_argument("--source", default="K562gw", choices=sorted(PROFILES))
     parser.add_argument("--cd4", default="external/profiles/CD4_target_lfc.npz")
     parser.add_argument("--weights", default="0.0,0.25,0.5,0.75,1.0")
+    parser.add_argument("--calibration", default="rms", choices=["rms", "slope"])
+    parser.add_argument("--seed", type=int, default=0)
     args = parser.parse_args()
 
     target = load_profiles(PROFILES[args.predict])
@@ -111,33 +119,57 @@ def main() -> int:
         effect = cd4_effects[perturbation]
         cd4_lfc[row, cd4_known] = effect[cd4_take[cd4_known]]
 
-    scale = _calibrate(source_lfc[:, cd4_known], cd4_lfc[:, cd4_known])
+    scale = _calibrate(source_lfc[:, cd4_known], cd4_lfc[:, cd4_known], args.calibration)
     cd4_lfc *= scale
     agreement = np.corrcoef(
         source_lfc[:, cd4_known].ravel(), cd4_lfc[:, cd4_known].ravel()
     )[0, 1]
-    print(f"CD4 scale against {args.source}: {scale:.3f}   correlation r = {agreement:.4f}")
+    print(f"CD4 scale against {args.source}: {scale:.3f} ({args.calibration})"
+          f"   correlation r = {agreement:.4f}")
     print("(r near 0 would mean the two sources share almost no signal to average)\n")
 
-    header = f"{'CD4 weight':>11}  {'pds':>7}  {'expr_error':>10}  {'direction':>9}  {'jaccard':>7}"
-    print(header)
-    print("-" * len(header))
-    for weight in [float(w) for w in args.weights.split(",")]:
+    # The control that makes the result mean something: the same CD4 numbers attached to the
+    # wrong knockdowns. Magnitude, sparsity and gene-level structure all survive; only the
+    # target-specific part is destroyed. A blend that beats weight 0 but does not beat this
+    # gained nothing from knowing which gene was knocked down.
+    permutation = np.random.default_rng(args.seed).permutation(len(scored))
+    while np.any(permutation == np.arange(len(scored))):
+        permutation = np.random.default_rng(args.seed).permutation(permutation)
+    variants = {"CD4": cd4_lfc, "shuffled": cd4_lfc[permutation]}
+
+    def blend(other: np.ndarray, weight: float) -> dict[str, float]:
         blended = source_lfc.copy()
         # Genes CD4 never measured keep the single source; blending in a zero there would
         # shrink real effects toward nothing and look like a win on expression error alone.
         blended[:, cd4_known] = (
-            (1.0 - weight) * source_lfc[:, cd4_known] + weight * cd4_lfc[:, cd4_known]
+            (1.0 - weight) * source_lfc[:, cd4_known] + weight * other[:, cd4_known]
         )
-        predicted = means_from_fold_change(blended, target_control)
-        result = score(
-            predicted, measured, target_control, perturbations=scored, genes=shared
+        return score(
+            means_from_fold_change(blended, target_control),
+            measured,
+            target_control,
+            perturbations=scored,
+            genes=shared,
         )
-        print(f"{weight:>11.2f}  {result['pds']:>7.4f}  {result['expr_error']:>10.4f}"
-              f"  {result['direction']:>9.4f}  {result['jaccard']:>7.4f}")
 
-    print("\nweight 0.00 is the current V3 transfer. Higher pds and direction are better;"
-          "\nlower expr_error is better. A gain has to survive the reverse fold too.")
+    header = (f"{'second source':>14}  {'weight':>6}  {'pds':>7}  {'expr_error':>10}"
+              f"  {'direction':>9}  {'jaccard':>7}")
+    print(header)
+    print("-" * len(header))
+    for name, other in variants.items():
+        for weight in [float(w) for w in args.weights.split(",")]:
+            if weight == 0.0 and name != "CD4":
+                continue  # weight 0 is the same prediction either way
+            result = blend(other, weight)
+            label = f"{args.source} only" if weight == 0.0 else name
+            print(f"{label:>14}  {weight:>6.2f}  {result['pds']:>7.4f}"
+                  f"  {result['expr_error']:>10.4f}  {result['direction']:>9.4f}"
+                  f"  {result['jaccard']:>7.4f}")
+        print()
+
+    print("Higher pds and direction are better; lower expr_error is better. The gain that"
+          "\ncounts is CD4 over shuffled at the same weight, not over weight 0.00, and it"
+          "\nhas to survive the reverse fold.")
     return 0
 
 
