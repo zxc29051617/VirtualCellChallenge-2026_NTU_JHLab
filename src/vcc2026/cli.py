@@ -11,7 +11,12 @@ from .challenge import format_manifest, load_manifest
 from .io import load_control_gene_names, read_csv_column, read_name_list, validate_gene_alignment
 from .registry import ExperimentRecord, append_record, current_timestamp, default_run_id
 from .submission import write_perturbation_h5ad, write_prediction_h5ad
-from .transfer import build_transfer_prediction, source_fold_changes
+from .transfer import (
+    blend_fold_changes,
+    build_transfer_prediction,
+    secondary_fold_changes,
+    source_fold_changes,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -78,6 +83,18 @@ def build_parser() -> argparse.ArgumentParser:
         "roughly 12 bytes per entry to package.",
     )
     transfer.add_argument(
+        "--secondary", default=None,
+        help="A second screen's per-target effects, as written by scripts/fetch_cd4_effects.py. "
+        "Averaged into the primary source to denoise each target's own response.",
+    )
+    transfer.add_argument(
+        "--secondary-weight", type=float, default=0.10,
+        help="How much of the blend the second source gets. Held out in both directions "
+        "between Replogle's lines, 0.10 improves all four local metrics and 0.50 is worse "
+        "than the primary alone on discrimination -- the second source is the weaker "
+        "measurement, so it is a correction, not an equal partner.",
+    )
+    transfer.add_argument(
         "--fallback-profiles",
         nargs="*",
         default=[
@@ -97,6 +114,21 @@ def cmd_build_transfer(args: argparse.Namespace) -> int:
 
     fold_changes, covered = source_fold_changes(args.source, targets, gene_names)
     print(f"{covered.sum()}/{len(targets)} targets covered by {Path(args.source).name}")
+
+    blend_scale = None
+    if args.secondary:
+        second, second_covered, measured = secondary_fold_changes(
+            args.secondary, targets, gene_names
+        )
+        print(f"{second_covered.sum()}/{len(targets)} covered by "
+              f"{Path(args.secondary).name} over {measured.sum():,} genes"
+              f" ({(second_covered & ~covered).sum()} of them new)")
+        fold_changes, covered, blend_scale = blend_fold_changes(
+            fold_changes, covered, second, second_covered, measured,
+            weight=args.secondary_weight,
+        )
+        print(f"blended at weight {args.secondary_weight} after scaling the second"
+              f" source by {blend_scale:.3f} to match effect size")
 
     available = [p for p in (args.fallback_profiles or []) if Path(p).exists()]
     fallback = generic_perturbation_response(available, gene_names) if available else None
@@ -158,6 +190,9 @@ def cmd_build_transfer(args: argparse.Namespace) -> int:
             "coverage": args.coverage,
             "cell_construction": args.cell_construction,
             "targets_covered": int(covered.sum()),
+            "secondary": args.secondary,
+            "secondary_weight": args.secondary_weight if args.secondary else None,
+            "secondary_scale": blend_scale,
         },
         metrics={},
         training_time_seconds=None,

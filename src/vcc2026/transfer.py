@@ -67,6 +67,102 @@ def source_fold_changes(
     return out, covered
 
 
+def secondary_fold_changes(
+    path: str | Path,
+    targets: list[str],
+    gene_names: list[str],
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Per-target log fold change from a second screen, as written by fetch_cd4_effects.py.
+
+    Returns (fold_changes, covered[len(targets)], measured[len(gene_names)]). `measured` is
+    which genes the screen has an opinion about at all, and the caller must keep it: a gene
+    it never looked at reads as zero here, and blending a zero in would shrink a real effect
+    toward nothing rather than leave it alone.
+
+    Rows repeat per target -- one knockdown assayed in several culture conditions -- and are
+    averaged, which is the same denoising argument one level down.
+    """
+
+    payload = np.load(Path(path), allow_pickle=True)
+    log_fc = payload["log_fc"]
+    labels = [str(t) for t in payload["targets"]]
+    genes = [str(g) for g in payload["genes"]]
+
+    rows: dict[str, list[int]] = {}
+    for index, label in enumerate(labels):
+        rows.setdefault(label, []).append(index)
+    effects = {
+        label: np.nan_to_num(np.nanmean(log_fc[index, :], axis=0))
+        for label, index in rows.items()
+    }
+
+    position = {gene: i for i, gene in enumerate(gene_names)}
+    columns = np.array([position.get(g, -1) for g in genes])
+    known = columns >= 0
+
+    measured = np.zeros(len(gene_names), dtype=bool)
+    measured[columns[known]] = True
+    covered = np.array([t in effects for t in targets])
+    out = np.zeros((len(targets), len(gene_names)), dtype=np.float32)
+    for row, target in enumerate(targets):
+        if covered[row]:
+            out[row, columns[known]] = effects[target][known]
+    return out, covered, measured
+
+
+def blend_fold_changes(
+    primary: np.ndarray,
+    primary_covered: np.ndarray,
+    secondary: np.ndarray,
+    secondary_covered: np.ndarray,
+    measured: np.ndarray,
+    *,
+    weight: float,
+    fill_uncovered: bool = True,
+) -> tuple[np.ndarray, np.ndarray, float]:
+    """Average two independent measurements of the same knockdown. Returns (fc, covered, scale).
+
+    The second screen is put in the first's units by matching root-mean-square effect size
+    over the entries both measured, so a blend is an average and nothing else. A least-squares
+    fit would be the better predictor but shrinks hard when two sources agree weakly, and
+    shrinkage toward no effect lowers squared error on its own, which would read as a win.
+
+    `weight` is small on purpose. Held out in both directions between Replogle's lines, 0.10
+    improves all four local metrics while 0.50 is *worse* than the primary alone on
+    discrimination: the second source is the weaker measurement, and weighting it equally
+    dilutes the stronger one. See findings section 13.
+    """
+
+    if not 0.0 <= weight <= 1.0:
+        raise ValueError("weight must be between 0 and 1")
+    if primary.shape != secondary.shape or measured.shape[0] != primary.shape[1]:
+        raise ValueError("Fold-change and gene-mask shapes do not line up")
+
+    both = primary_covered & secondary_covered
+    shared = primary[np.ix_(both, measured)]
+    other = secondary[np.ix_(both, measured)]
+    spread = float(np.sqrt((other**2).mean())) if other.size else 0.0
+    scale = float(np.sqrt((shared**2).mean()) / spread) if spread > 0 else 0.0
+
+    out = primary.copy()
+    rows = np.flatnonzero(both)
+    out[np.ix_(rows, measured)] = (
+        (1.0 - weight) * primary[np.ix_(rows, measured)]
+        + weight * scale * secondary[np.ix_(rows, measured)]
+    )
+
+    covered = primary_covered.copy()
+    if fill_uncovered:
+        # A target only the second screen perturbed. Its scaled effect carries target-specific
+        # signal (0.661 discrimination against the first screen, findings section 13) where
+        # the generic-response fallback carries none by construction, being one vector for
+        # every target. So it is the better filling even though it is the weaker source.
+        only = np.flatnonzero(secondary_covered & ~primary_covered)
+        out[np.ix_(only, measured)] = scale * secondary[np.ix_(only, measured)]
+        covered[only] = True
+    return out, covered, scale
+
+
 def build_transfer_prediction(
     control_path: str | Path,
     *,
