@@ -66,6 +66,33 @@ On this machine, invoke the official `vcc` binary directly:
 - `scripts/build_external_profiles.py` reduces it to per-perturbation mean profiles.
 - `scripts/evaluate_with_cell_eval.ps1` shows how to run the official evaluator once ground truth is available.
 - `scripts/package_submission.ps1` runs the official `vcc prep` packaging step.
+- `scripts/extract_scgpt_embeddings.py` caches scGPT's gene embeddings (see below).
+- `scripts/eval_neighbors.py` and `scripts/eval_gene_axis_fill.py` measure whether those
+  embeddings carry usable signal. Read `docs/findings.md` section 15 before enabling them.
+
+### Optional: scGPT features and FAISS retrieval
+
+`build-transfer` can borrow effects from the genes nearest a target in scGPT's embedding space,
+searched with FAISS. It is **off by default**, and the default recipe is unchanged. The
+measurements so far show little cross-cell-type signal; section 15 of `docs/findings.md` has
+the numbers and what they do and do not support.
+
+```powershell
+# Deliberately not in pyproject.toml: torch would add every platform's CUDA packages to uv.lock
+# for a feature that is off by default. torch is only needed once, to cache the embeddings.
+uv pip install faiss-cpu torch
+
+# scGPT "whole-human" checkpoint: public bucket, no credentials (~205 MB)
+#   https://czi-scgenept-public.s3.amazonaws.com/models/pretrained/scgpt/{best_model.pt,vocab.json,args.json}
+# Put the three files in external/scgpt/, then cache the gene embeddings once:
+uv run python scripts/extract_scgpt_embeddings.py
+
+uv run vcc2026 build-transfer --neighbor-embeddings external/profiles/scgpt_gene_embeddings.npz `
+  --neighbor-k 20 [--neighbor-weight 0.1] ...   # plus the usual v5 flags
+```
+
+Without `--neighbor-weight`, neighbours only fill targets no screen measured (14 of 300 under
+v5's sources); with it, they are also mixed into measured targets.
 
 Example packaging call:
 

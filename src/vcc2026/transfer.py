@@ -21,6 +21,7 @@ from pathlib import Path
 import h5py
 import numpy as np
 
+from .embeddings import load_gene_embeddings
 from .io import (
     control_gene_dispersion,
     control_gene_profile,
@@ -28,6 +29,7 @@ from .io import (
     select_within_budget,
 )
 from .local_eval import fold_change, load_profiles
+from .neighbors import GeneIndex
 from .submission import ContextPrediction
 
 
@@ -108,6 +110,145 @@ def secondary_fold_changes(
         if covered[row]:
             out[row, columns[known]] = effects[target][known]
     return out, covered, measured
+
+
+def source_effect_table(
+    profile_path: str | Path,
+    *,
+    control_label: str = "control",
+    min_cells: int = 25,
+) -> tuple[list[str], np.ndarray, list[str]]:
+    """Fold change of every well-measured perturbation in a screen, on the screen's own axis.
+
+    Returns (perturbations, fold_changes[n, len(genes)], genes). Unlike `source_fold_changes`
+    this is not limited to the Challenge's targets: the neighbour search needs every
+    perturbation the screen measured, because the nearest genes to a target are mostly not
+    targets themselves.
+    """
+
+    profiles = load_profiles(profile_path)
+    control = profiles.means[profiles.index_of(control_label)]
+    keep = [
+        i
+        for i, label in enumerate(profiles.perturbations)
+        if label != control_label and profiles.counts[i] >= min_cells
+    ]
+    return (
+        [profiles.perturbations[i] for i in keep],
+        fold_change(profiles.means[keep], control),
+        profiles.genes,
+    )
+
+
+def neighbor_fold_changes(
+    source_path: str | Path,
+    embeddings_path: str | Path,
+    targets: list[str],
+    gene_names: list[str],
+    *,
+    k: int = 20,
+    temperature: float | None = 0.05,
+    control_label: str = "control",
+    min_cells: int = 25,
+    index_factory: str = "Flat",
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Per-target effect borrowed from the genes nearest it in scGPT embedding space.
+
+    Returns (fold_changes[len(targets), len(gene_names)], retrieved[len(targets)],
+    measured[len(gene_names)]). `retrieved` is false for a target scGPT has no embedding for.
+    `measured` is which genes the source screen has an opinion about, and a caller must keep
+    it for the same reason `secondary_fold_changes`' caller does: an unmeasured gene reads as
+    zero here, and mixing a zero in would shrink a real effect rather than leave it alone.
+
+    A target never retrieves itself, so a target the screen did measure gets an estimate that
+    is independent of its own measurement.
+    """
+
+    labels, effects, source_genes = source_effect_table(
+        source_path, control_label=control_label, min_cells=min_cells
+    )
+    embedded_genes, vectors = load_gene_embeddings(embeddings_path)
+    row_of = {gene: i for i, gene in enumerate(embedded_genes)}
+
+    reference = [i for i, label in enumerate(labels) if label in row_of]
+    index = GeneIndex(
+        [labels[i] for i in reference],
+        vectors[[row_of[labels[i]] for i in reference]],
+        factory=index_factory,
+    )
+
+    retrieved = np.array([t in row_of for t in targets])
+    rows = np.flatnonzero(retrieved)
+    averaged = index.average_effects(
+        effects[reference],
+        [targets[i] for i in rows],
+        vectors[[row_of[targets[i]] for i in rows]],
+        k=k,
+        temperature=temperature,
+    )
+
+    position = {gene: i for i, gene in enumerate(gene_names)}
+    columns = np.array([position.get(g, -1) for g in source_genes])
+    known = columns >= 0
+    out = np.zeros((len(targets), len(gene_names)), dtype=np.float32)
+    out[np.ix_(rows, columns[known])] = averaged[:, known]
+    measured = np.zeros(len(gene_names), dtype=bool)
+    measured[columns[known]] = True
+    return out, retrieved, measured
+
+
+def apply_neighbor_effects(
+    primary: np.ndarray,
+    primary_covered: np.ndarray,
+    neighbor: np.ndarray,
+    retrieved: np.ndarray,
+    measured: np.ndarray,
+    *,
+    weight: float = 0.0,
+    fill: bool = True,
+) -> tuple[np.ndarray, np.ndarray, int, int]:
+    """Use neighbour-borrowed effects where the screens give a target little or nothing.
+
+    Returns (fold_changes, covered, n_filled, n_blended).
+
+    `fill` gives a target no screen measured the effect of its scGPT neighbours, in place of
+    the generic response that the caller falls back to otherwise. The generic response is one
+    vector for every target, so it carries no information about which target it belongs to;
+    neighbours do, weakly (findings section 15). Their effects are put in the measured
+    targets' units by matching root-mean-square size, as `blend_fold_changes` does for its
+    second source -- an average of many profiles is smaller than any one of them, and the
+    caller applies one global `scale` assuming every row is a measurement.
+
+    `weight` mixes neighbours into targets that *were* measured: (1 - w) * own + w * nb.
+    Both act only on `measured` genes, since a gene the screen never saw reads as zero and
+    averaging a zero in would shrink a real effect toward nothing.
+    """
+
+    if not 0.0 <= weight <= 1.0:
+        raise ValueError("weight must be between 0 and 1")
+    if primary.shape != neighbor.shape or measured.shape[0] != primary.shape[1]:
+        raise ValueError("Fold-change and gene-mask shapes do not line up")
+
+    out = primary.copy()
+    covered = primary_covered.copy()
+
+    blended = np.flatnonzero(primary_covered & retrieved) if weight > 0 else np.array([], dtype=int)
+    if blended.size:
+        out[np.ix_(blended, measured)] = (
+            (1.0 - weight) * primary[np.ix_(blended, measured)]
+            + weight * neighbor[np.ix_(blended, measured)]
+        )
+
+    filled = np.flatnonzero(~primary_covered & retrieved) if fill else np.array([], dtype=int)
+    if filled.size:
+        reference = np.flatnonzero(primary_covered)
+        measured_rms = float(np.sqrt((primary[np.ix_(reference, measured)] ** 2).mean()))
+        values = neighbor[np.ix_(filled, measured)]
+        own_rms = float(np.sqrt((values**2).mean()))
+        gain = measured_rms / own_rms if own_rms > 0 and measured_rms > 0 else 0.0
+        out[np.ix_(filled, measured)] = values * gain
+        covered[filled] = True
+    return out, covered, int(filled.size), int(blended.size)
 
 
 def blend_fold_changes(

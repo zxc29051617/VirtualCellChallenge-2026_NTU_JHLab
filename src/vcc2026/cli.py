@@ -12,8 +12,10 @@ from .io import load_control_gene_names, read_csv_column, read_name_list, valida
 from .registry import ExperimentRecord, append_record, current_timestamp, default_run_id
 from .submission import write_perturbation_h5ad, write_prediction_h5ad
 from .transfer import (
+    apply_neighbor_effects,
     blend_fold_changes,
     build_transfer_prediction,
+    neighbor_fold_changes,
     secondary_fold_changes,
     source_fold_changes,
 )
@@ -95,6 +97,30 @@ def build_parser() -> argparse.ArgumentParser:
         "measurement, so it is a correction, not an equal partner.",
     )
     transfer.add_argument(
+        "--neighbor-embeddings", default=None,
+        help="scGPT gene embeddings from scripts/extract_scgpt_embeddings.py. Turns on FAISS "
+        "retrieval of each target's nearest genes among the source screen's perturbations; "
+        "their effects fill targets no screen measured and, with --neighbor-weight, are mixed "
+        "into measured ones. Off by default. See docs/findings.md section 15 for how much "
+        "signal there is.",
+    )
+    transfer.add_argument("--neighbor-k", type=int, default=20,
+                          help="Neighbours retrieved per target.")
+    transfer.add_argument(
+        "--neighbor-temperature", type=float, default=None,
+        help="Softmax temperature over neighbour similarity. Omit for a plain mean.",
+    )
+    transfer.add_argument(
+        "--neighbor-weight", type=float, default=0.0,
+        help="Share of the neighbours' effect mixed into targets that were measured: "
+        "(1 - w) * own + w * neighbours.",
+    )
+    transfer.add_argument(
+        "--neighbor-fill", action=argparse.BooleanOptionalAction, default=True,
+        help="Give targets no screen measured their neighbours' effect rather than the "
+        "generic response. Only acts when --neighbor-embeddings is set.",
+    )
+    transfer.add_argument(
         "--fallback-profiles",
         nargs="*",
         default=[
@@ -129,6 +155,20 @@ def cmd_build_transfer(args: argparse.Namespace) -> int:
         )
         print(f"blended at weight {args.secondary_weight} after scaling the second"
               f" source by {blend_scale:.3f} to match effect size")
+
+    neighbor_filled = neighbor_blended = None
+    if args.neighbor_embeddings:
+        borrowed, retrieved, borrowed_measured = neighbor_fold_changes(
+            args.source, args.neighbor_embeddings, targets, gene_names,
+            k=args.neighbor_k, temperature=args.neighbor_temperature,
+        )
+        fold_changes, covered, neighbor_filled, neighbor_blended = apply_neighbor_effects(
+            fold_changes, covered, borrowed, retrieved, borrowed_measured,
+            weight=args.neighbor_weight, fill=args.neighbor_fill,
+        )
+        print(f"{retrieved.sum()}/{len(targets)} targets have a scGPT embedding: "
+              f"{neighbor_filled} filled from {args.neighbor_k} neighbours, "
+              f"{neighbor_blended} blended at weight {args.neighbor_weight}")
 
     available = [p for p in (args.fallback_profiles or []) if Path(p).exists()]
     fallback = generic_perturbation_response(available, gene_names) if available else None
@@ -193,6 +233,12 @@ def cmd_build_transfer(args: argparse.Namespace) -> int:
             "secondary": args.secondary,
             "secondary_weight": args.secondary_weight if args.secondary else None,
             "secondary_scale": blend_scale,
+            "neighbor_embeddings": args.neighbor_embeddings,
+            "neighbor_k": args.neighbor_k if args.neighbor_embeddings else None,
+            "neighbor_temperature": args.neighbor_temperature if args.neighbor_embeddings else None,
+            "neighbor_weight": args.neighbor_weight if args.neighbor_embeddings else None,
+            "neighbor_filled": neighbor_filled,
+            "neighbor_blended": neighbor_blended,
         },
         metrics={},
         training_time_seconds=None,

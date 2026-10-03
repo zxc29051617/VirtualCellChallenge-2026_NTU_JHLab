@@ -596,3 +596,101 @@ noise floor of 0.222.
 and it is not refuted by one; the public CRISPRi data available here does not contain the
 matched multi-context panel the test requires. Saying so is more useful than reporting a
 number produced at a noise floor above the effect.
+
+---
+
+## 15. scGPT neighbours: a signal inside one cell line, almost none across cell types
+
+`src/vcc2026/embeddings.py` reads the gene-token table (`encoder.embedding.weight`, 60,697 x
+512) out of the scGPT whole-human checkpoint, and `src/vcc2026/neighbors.py` indexes it with
+FAISS: exact cosine search, `Flat` over unit vectors. 300 of 300 Challenge targets and 18,262 of
+18,533 axis genes have an embedding. Only the token table is used, not contextual embeddings
+from the transformer, which would need a forward pass over cells that a bare gene name does not
+give us. Two uses were measured before either went near the pipeline.
+
+### Use 1: borrow a target's effect from its neighbours
+
+Reference: K562gw's 9,614 embedded perturbations. Held out: the CD4 T-cell effects of the 215
+Challenge targets both screens measured, over 6,631 shared genes. A target never retrieves
+itself. Scored as in section 13, so 0.5 is chance. `scripts/eval_neighbors.py`.
+
+| prediction | PDS | mean r |
+| --- | --- | --- |
+| own K562 effect | 0.6616 | +0.057 |
+| neighbours only, best of 20 settings (k=20, plain mean) | 0.5379 | +0.009 |
+| the same search, embeddings shuffled: best of 20, over 50 draws | mean 0.514, sd 0.013, 95th pct 0.538 | |
+| one vector for every target (what the generic response carries) | 0.5000 | +0.025 |
+
+The first row reproduces section 13's 0.6611. The second is the best of a 5 x 4 grid, so the
+fair null is the best of that grid under shuffled embeddings, and the observed value sits at about
+its 95th percentile: **one-sided p = 0.078** (3 of 50 draws reached it). All 20 settings beat their own shuffled mean, which is
+consistent in sign, but the settings are strongly correlated and the gain, about 0.02 to 0.04
+over chance, is within one to three standard deviations of the null at 215 targets.
+
+Mixing neighbours into a target that was measured, `(1 - w) * own + w * neighbours`:
+
+| w | 0 | 0.05 | 0.1 | 0.2 | 0.35 | 0.5 | 1 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| PDS | 0.6616 | 0.6620 | 0.6631 | 0.6632 | 0.6586 | 0.6468 | 0.5379 |
+
+A gain of 0.0016 at the best weight, then a loss. Section 13's second source bought 0.006 and
+0.012 in its two folds.
+
+### Use 2: fill genes a screen never measured
+
+K562gw has an effect for 8,248 genes and the Challenge scores 18,533; the rest read as a predicted
+fold change of exactly zero, which the direction metric counts as a miss. For each target, a gene's
+effect was predicted as the mean of that same target's effects on the gene's nearest kept
+neighbours. `scripts/eval_gene_axis_fill.py`.
+
+**A. Genes held out of the same screen**, three random 20% splits, 267 targets, both scores over
+held-out genes only:
+
+| k | temperature | r (scGPT) | r (shuffled) | PDS (scGPT) | PDS (shuffled) |
+| --- | --- | --- | --- | --- | --- |
+| 5 | mean | 0.045 | 0.001 | 0.828 | 0.604 |
+| 20 | mean | 0.067 | -0.001 | 0.879 | 0.616 |
+| 20 | 0.05 | 0.067 | -0.000 | 0.885 | 0.616 |
+| 50 | mean | 0.080 | -0.001 | 0.889 | 0.632 |
+
+**B. Genes K562 never measured, scored against CD4**: the 3,578 genes the CD4 screen measured
+and K562gw did not, 215 targets, neighbours drawn from K562-measured genes:
+
+| k | temperature | r (scGPT) | r (shuffled) | PDS (scGPT) | PDS (shuffled) | OLS gain |
+| --- | --- | --- | --- | --- | --- | --- |
+| 5 | mean | 0.002 | -0.001 | 0.514 | 0.511 | 0.04 |
+| 20 | mean | 0.004 | 0.000 | 0.526 | 0.514 | 0.14 |
+| 20 | 0.05 | 0.004 | -0.001 | 0.521 | 0.498 | 0.10 |
+| 50 | mean | 0.002 | 0.001 | 0.526 | 0.512 | 0.26 |
+
+### Reading
+
+A is a large effect and B is nothing. What A measures is co-regulation inside K562: genes in one
+program move together when a perturbation hits that program, and scGPT knows which genes share a
+program. It does not follow a target into another cell type, which is the only regime the
+Challenge scores. B is that regime for exactly the genes a fill would touch, and it finds no
+correlation to speak of. The OLS gain says what the predictions are worth if used anyway: scaled
+to 4% to 26% of their size. Unscaled they would add noise to every target.
+
+This is the repo's recurring pattern again (sections 5 to 7, 11, 13): what is specific to a cell
+line does not travel, and identification survives where placement does not.
+
+So **no gene-axis fill is wired in.** What is wired in, behind `--neighbor-embeddings` and off by
+default, is Use 1: neighbours fill the 14 targets no screen measured, in place of the generic
+response, and `--neighbor-weight` can mix them into measured targets, though the table above
+gives no reason to set it above 0.1 to 0.2. The default recipe is unchanged and v5 reproduces
+with the same command.
+
+### What this does not show
+
+- That the neighbour fill helps. The estimate is p = 0.078 for a 0.02 to 0.04 PDS gain, on
+  14 of 300 targets. At roughly 2 scaled points of `pds` per raw point, 0.04 raw on 4.7% of
+  targets is about +0.004 scaled `pds` and under +0.001 overall, far below what one submission
+  can resolve. It has not been submitted.
+- That scGPT is a poor feature extractor. Only the token table was tried. Contextual gene
+  embeddings from the transformer, or cell embeddings, are untested.
+- That the fill is harmless: its magnitude is matched to the measured targets by RMS, an
+  assumption with no held-out test behind it.
+- Anything about the Challenge's own contexts. CD4 is a stand-in for them, and 215 targets put
+  the null's standard deviation at 0.013 to 0.02, so effects under about 0.03 cannot be told from
+  chance.

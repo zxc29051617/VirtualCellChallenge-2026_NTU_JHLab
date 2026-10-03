@@ -114,6 +114,10 @@ density compromise that keeps the benefit.
   splits win slightly on expression error and lose on discrimination, both directions.
 - **A multi-context test on public CRISPRi data.** No shared perturbation panel exists across
   Replogle and Tian; the one overlap that does is 51 perturbations, below the noise floor.
+- **Filling unmeasured genes from scGPT neighbours.** Strong inside one cell line (PDS 0.83 to
+  0.89 against 0.60 to 0.63 with shuffled embeddings) and nothing across cell types, on the
+  3,578 genes CD4 measured and K562 did not (r 0.002 to 0.004, PDS 0.51 to 0.53). Not wired in
+  (section 15).
 
 ## Assets
 
@@ -122,5 +126,11 @@ density compromise that keeps the benefit.
 - `src/vcc2026/remote.py` — reads a 16.8 GB remote HDF5 over HTTP range requests, with retry.
 - `scripts/compare_cd4_transfer.py` — held-out blend evaluation with a shuffled control.
 - `scripts/cd4_gwps_agreement.py` — matched-vs-mismatched agreement between two screens.
+- `src/vcc2026/embeddings.py`, `src/vcc2026/neighbors.py`, `scripts/extract_scgpt_embeddings.py` —
+  scGPT gene embeddings and FAISS retrieval, behind `build-transfer --neighbor-embeddings` and
+  off by default. Borrowing a target's effect from its neighbours scores PDS 0.538 against a
+  shuffled-embedding null of 0.514 (best of 20 settings, p = 0.078) and touches 14 of 300
+  targets under v5's sources, so the expected gain is under +0.001. **Not submitted**; v5 is
+  still the best score and reproduces with the same command (section 15).
 
 Push target is `friend` (`scnpg/VCC_2026_NTU_JHLab`); `origin` is the personal mirror.
