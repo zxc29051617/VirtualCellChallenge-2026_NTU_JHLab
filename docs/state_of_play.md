@@ -12,7 +12,23 @@ Deadline: **2026-11-05 23:59 UTC**. Test contexts release 2026-10-22. Two submis
 | --- | --- | --- | --- |
 | v1 | `artifacts/transfer.vcc` | −0.9934 | — |
 | v2 | `artifacts/transfer_v2.vcc` | 0.0434 | — |
-| **v5** | `artifacts/transfer_v5_blend.vcc` | **0.1040** | **377** |
+| v5 | `artifacts/transfer_v5_blend.vcc` | 0.1040 | 377 (2026-09-21) |
+| v7 | `artifacts/transfer_v7_nb_fulldepth.vcc` | 0.0619 | 549 |
+| v8 | `artifacts/transfer_v8_scgpt_faiss_fill.vcc` | 0.1037 | 573 |
+| **v9** | `artifacts/transfer_v9_hct116.vcc` | **0.1086** | 680 |
+
+**Ranks are not comparable across dates**: the field keeps improving (v9 scores higher than v8
+and ranks lower). Compare scores. The leaderboard ranks a team's most recent submission, not its
+best, so the last submission before the deadline must be the best model.
+
+**v9 is the best so far** and is v5's recipe plus HCT116 (X-Atlas/Orion) as a third source:
+`--secondary external/profiles/CD4_target_lfc.npz external/profiles/HCT116_target_lfc.npz
+--secondary-weight 0.10 0.25`, everything else as v5. `pds` 0.5674 to 0.5922, `reach` 0.0629 to
+0.0707, `nmae` 0.0313 to 0.0285, `fid` and `jac` flat, `mse` still exactly 0. Evidence and the
+dataset scan are in findings section 16. **v7** (full-depth `conditioned_nb` cells, the combination
+this file called wanted but unpackageable) packages on a current `vcc-cli`, but moved `fid` from
+−0.03 to −0.37 and so lost overall even though `mse`, `reach`, `nmae` and `pds` all improved;
+findings section 15 has the likely mechanism. **v8** is section 15's neighbour fill.
 
 v5's card, against the leader's (each metric is worth exactly one sixth — the overall is an
 unweighted mean, measured to six figures in findings section 14):
@@ -130,7 +146,8 @@ density compromise that keeps the benefit.
   scGPT gene embeddings and FAISS retrieval, behind `build-transfer --neighbor-embeddings` and
   off by default. Borrowing a target's effect from its neighbours scores PDS 0.538 against a
   shuffled-embedding null of 0.514 (best of 20 settings, p = 0.078) and touches 14 of 300
-  targets under v5's sources, so the expected gain is under +0.001. **Not submitted**; v5 is
-  still the best score and reproduces with the same command (section 15).
+  targets under v5's sources, so the expected gain is under +0.001. **Submitted as v8: 0.1037, no
+  better than v5's 0.1040.** The default recipe is unchanged and v5 reproduces with the same
+  command (section 15).
 
 Push target is `friend` (`scnpg/VCC_2026_NTU_JHLab`); `origin` is the personal mirror.

@@ -686,7 +686,8 @@ with the same command.
 - That the neighbour fill helps. The estimate is p = 0.078 for a 0.02 to 0.04 PDS gain, on
   14 of 300 targets. At roughly 2 scaled points of `pds` per raw point, 0.04 raw on 4.7% of
   targets is about +0.004 scaled `pds` and under +0.001 overall, far below what one submission
-  can resolve. It has not been submitted.
+  can resolve. It was later submitted as v8 and scored 0.1037 against v5's 0.1040, which is
+  inside noise.
 - That scGPT is a poor feature extractor. Only the token table was tried. Contextual gene
   embeddings from the transformer, or cell embeddings, are untested.
 - That the fill is harmless: its magnitude is matched to the measured targets by RMS, an
@@ -694,3 +695,102 @@ with the same command.
 - Anything about the Challenge's own contexts. CD4 is a stand-in for them, and 215 targets put
   the null's standard deviation at 0.013 to 0.02, so effects under about 0.03 cannot be told from
   chance.
+
+---
+
+## 16. More screens: HCT116 helps, and is the strongest source so far
+
+Section 12 left the transfer itself as the only place gains could come from, and section 14 named
+the number of cell contexts as the bottleneck. This looks for more contexts that share our targets.
+
+### Where the Challenge's 300 targets are measured
+
+Targets covered, counted from each dataset's own perturbation list:
+
+| dataset | contexts | of 300 |
+| --- | --- | --- |
+| K562 genome-wide (Replogle 2022) | 1 | 267 |
+| CD4 T cells (Marson 2025), DE summary | 3 culture conditions | 234 |
+| X-Atlas/Orion, Arc PIE preprocessed set | HCT116, HEK293T | 146, 11 |
+| hPSC genome-wide CRISPRi (Feng 2025), per-gene table | 34 lines in the study | 182 |
+| Replogle/Nadig essential screens (K562, RPE1, HepG2, Jurkat) | 4 | 0 |
+| Tahoe-100M (drugs) | 50 | 0 |
+| VCC 2025 H1 hESC | 2 | 16 |
+| Jiang 2025 (cytokine signalling) | 30 | 7 |
+
+X-Atlas/Orion (Huang 2025, CC BY-NC-SA 4.0) is genome-wide, and its guide library contains all
+300 targets. The preprocessed set drops perturbations that failed Arc's filters, which is where
+the 146 and 11 come from. The raw per-cell files hold all 300 in HCT116 (median 149 cells per
+target, 49,542 cells, 1.5% of the file) but are 209 GB (HCT116) and 350 GB (HEK293T), chunked and
+compressed, with rows not grouped by target, so extracting them is hours of scattered reads. It
+has not been done, and is the largest untapped source. HCT116 is the only one of the two lines
+worth using from the preprocessed set.
+
+`scripts/fetch_xatlas_effects.py` reads the 146 rows by HTTP range request from `lfc_true.npy`
+(a plain row-major array, 177 kB per row) without downloading its 2.4 GB.
+`scripts/fetch_hpsc_effects.py` streams the stem-cell table.
+
+### Agreement between screens
+
+Over the genes and targets each pair shares, scored as in section 13 (PDS 0.5 is chance; `r` is
+the mean correlation of matched targets, and mismatched pairs sit at 0.000 to 0.002 throughout).
+`scripts/eval_source_pairs.py`.
+
+| pair | genes | targets | PDS | r matched |
+| --- | --- | --- | --- | --- |
+| HCT116 ~ K562 | 7,530 | 127 | 0.716 | +0.130 |
+| CD4 ~ HCT116 | 8,318 | 113 | 0.640 | +0.123 |
+| CD4 ~ K562 | 6,631 | 215 | 0.660 | +0.057 |
+| HCT116 ~ hPSC | 6,004 | 94 | 0.609 | +0.048 |
+| CD4 ~ hPSC | 5,159 | 145 | 0.644 | +0.032 |
+| K562 ~ hPSC | 5,668 | 171 | 0.638 | +0.027 |
+
+HCT116 agrees with both other screens about twice as well as they agree with each other, so it is
+the cleanest measurement of what a knockdown does that transfers. hPSC is real but weak.
+
+### Does adding one improve prediction of a held-out screen
+
+Prediction `(1 - w) * base + w * extra`, `extra` rescaled to the base's effect size, scored against
+a third screen. `scripts/eval_third_source.py`, 6,390 shared genes, 102 targets:
+
+| truth | base | + HCT116 at w = 0, 0.1, 0.2, 0.5 | shuffled at 0.5 |
+| --- | --- | --- | --- |
+| CD4 | K562 | 0.7317, 0.7364, 0.7390, 0.7301 | 0.7023 |
+| K562 | CD4 | 0.7236, 0.7352, 0.7463, 0.7704 | 0.6955 |
+
+Shuffling attaches HCT116's numbers to the wrong targets, and it gets worse with weight in every
+case, so the gain is target-specific signal. hPSC at 0.25 added about +0.02 in 4 of 6 setups and
+about nothing (+0.003 and -0.001) in the two that pair K562 with HCT116. These sets are 74 to 139
+targets, so differences under 0.01 are noise.
+
+### The submission
+
+**v9 scored 0.1086 against v5's 0.1040** (CD4 at 0.10, HCT116 at 0.25, otherwise v5). `pds` rose
+0.5674 to 0.5922 and `reach` 0.0629 to 0.0707; `nmae`, `fid`, `jac` and `mse` did not move. That
+is +4% overall and nowhere near the leader's 0.345. HCT116 filled 8 targets nobody had measured,
+so 6 rather than 14 now fall back to the generic response. A v10 adding hPSC at 0.15 was built and
+packages, but adds one target and is weak evidence; it was not submitted.
+
+---
+
+## 17. STATE cannot be run on these targets, and context-aware scGPT does not help
+
+**STATE** (Arc, `ST-HVG-Replogle` zero-shot checkpoint) identifies a perturbation by position in a
+fixed one-hot map of 2,024 genes, shared by every Replogle checkpoint. **0 of the 300 targets are
+in it.** Its inference code replaces an unmapped label with the control one-hot ("not in mapping;
+using control fallback one-hot"). Run on real context A control cells, six unmapped Challenge
+targets' predicted shifts correlated with each other at +0.065, which is noise, against +0.32 among
+six genes it knows. It needs Python below 3.13 (its `cell-load` dependency) and `transformers`
+below 5, so it ran in a separate 3.12 environment. `scripts/run_state_probe.py`. A retrain with
+gene-embedding perturbation features would be needed, which wants per-cell Replogle data and compute.
+
+**Context-aware scGPT.** The `scgpt` package does not install on current Pythons, so
+`src/vcc2026/scgpt_model.py` rebuilds the encoder from the checkpoint; its layers match PyTorch's
+reference `TransformerEncoder` to 2.5e-5. Its decoder-based checks did not reproduce scGPT's
+pretraining behaviour, so equivalence is the only validation. 600 real control cells from each of
+K562, RPE1 and contexts A, B, C are assigned to the right context 99.7% of the time. Asked whether
+a gene's context-dependent state predicts how well its effects transfer between K562 and RPE1
+(5,491 genes), expression and effect size already explain R^2 = 0.51, and scGPT adds +0.014
+(shuffled null sd 0.0004). Used as per-gene weights on the transferred effect, scGPT features score
+the same as shuffled ones (0.8027 against 0.8027); weights from expression and effect size alone
+raised local PDS from 0.791 to 0.803. `scripts/eval_context_transfer.py`.

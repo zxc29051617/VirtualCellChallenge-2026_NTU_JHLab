@@ -197,6 +197,42 @@ def neighbor_fold_changes(
     return out, retrieved, measured
 
 
+def blend_secondary_sources(
+    primary: np.ndarray,
+    primary_covered: np.ndarray,
+    sources: list[tuple[str | Path, float]],
+    targets: list[str],
+    gene_names: list[str],
+) -> tuple[np.ndarray, np.ndarray, list[dict]]:
+    """Fold in several further screens one after another, each at its own weight.
+
+    Each is put in the units of what has been built so far (`blend_fold_changes` matches
+    root-mean-square size), so a screen added later is averaged into the running blend rather
+    than into the primary alone. A target only a later screen measured is filled from it, so
+    coverage grows with every source. Returns (fold_changes, covered, one report per source).
+    """
+
+    fold_changes, covered = primary, primary_covered
+    reports = []
+    for path, weight in sources:
+        second, second_covered, measured = secondary_fold_changes(path, targets, gene_names)
+        if not (second_covered & covered).any():
+            # Its effect size can only be matched to the blend over targets both measured. With
+            # none, blend_fold_changes would fill new targets with zeros without saying so.
+            raise ValueError(f"{path} shares no target with the sources before it, so its "
+                             "effects cannot be put in their units")
+        new = int((second_covered & ~covered).sum())
+        fold_changes, covered, scale = blend_fold_changes(
+            fold_changes, covered, second, second_covered, measured, weight=weight
+        )
+        reports.append({
+            "path": str(path), "weight": weight, "scale": scale,
+            "covered": int(second_covered.sum()), "new_targets": new,
+            "genes_measured": int(measured.sum()),
+        })
+    return fold_changes, covered, reports
+
+
 def apply_neighbor_effects(
     primary: np.ndarray,
     primary_covered: np.ndarray,

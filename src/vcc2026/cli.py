@@ -13,10 +13,9 @@ from .registry import ExperimentRecord, append_record, current_timestamp, defaul
 from .submission import write_perturbation_h5ad, write_prediction_h5ad
 from .transfer import (
     apply_neighbor_effects,
-    blend_fold_changes,
+    blend_secondary_sources,
     build_transfer_prediction,
     neighbor_fold_changes,
-    secondary_fold_changes,
     source_fold_changes,
 )
 
@@ -85,16 +84,19 @@ def build_parser() -> argparse.ArgumentParser:
         "roughly 12 bytes per entry to package.",
     )
     transfer.add_argument(
-        "--secondary", default=None,
-        help="A second screen's per-target effects, as written by scripts/fetch_cd4_effects.py. "
-        "Averaged into the primary source to denoise each target's own response.",
+        "--secondary", nargs="*", default=None,
+        help="Further screens' per-target effects, as written by scripts/fetch_cd4_effects.py "
+        "or scripts/fetch_xatlas_effects.py. Each is averaged into what has been built so far, "
+        "in the order given, to denoise each target's own response.",
     )
     transfer.add_argument(
-        "--secondary-weight", type=float, default=0.10,
-        help="How much of the blend the second source gets. Held out in both directions "
-        "between Replogle's lines, 0.10 improves all four local metrics and 0.50 is worse "
-        "than the primary alone on discrimination -- the second source is the weaker "
-        "measurement, so it is a correction, not an equal partner.",
+        "--secondary-weight", nargs="*", type=float, default=[0.10],
+        help="How much of the blend each further source gets: one value for all, or one per "
+        "--secondary. Held out in both directions between Replogle's lines, 0.10 improves all "
+        "four local metrics for CD4 and 0.50 is worse than the primary alone on discrimination "
+        "-- a weaker measurement is a correction, not an equal partner. HCT116 agrees with the "
+        "other screens about twice as well as they agree with each other, and held-out "
+        "discrimination kept improving to a weight of 0.2 to 0.5 (docs/findings.md section 16).",
     )
     transfer.add_argument(
         "--neighbor-embeddings", default=None,
@@ -141,20 +143,21 @@ def cmd_build_transfer(args: argparse.Namespace) -> int:
     fold_changes, covered = source_fold_changes(args.source, targets, gene_names)
     print(f"{covered.sum()}/{len(targets)} targets covered by {Path(args.source).name}")
 
-    blend_scale = None
+    secondary_reports: list[dict] = []
     if args.secondary:
-        second, second_covered, measured = secondary_fold_changes(
-            args.secondary, targets, gene_names
+        weights = list(args.secondary_weight)
+        if len(weights) == 1:
+            weights = weights * len(args.secondary)
+        if len(weights) != len(args.secondary):
+            raise SystemExit("--secondary-weight takes one value or one per --secondary")
+        fold_changes, covered, secondary_reports = blend_secondary_sources(
+            fold_changes, covered, list(zip(args.secondary, weights)), targets, gene_names
         )
-        print(f"{second_covered.sum()}/{len(targets)} covered by "
-              f"{Path(args.secondary).name} over {measured.sum():,} genes"
-              f" ({(second_covered & ~covered).sum()} of them new)")
-        fold_changes, covered, blend_scale = blend_fold_changes(
-            fold_changes, covered, second, second_covered, measured,
-            weight=args.secondary_weight,
-        )
-        print(f"blended at weight {args.secondary_weight} after scaling the second"
-              f" source by {blend_scale:.3f} to match effect size")
+        for report in secondary_reports:
+            print(f"{report['covered']}/{len(targets)} covered by {Path(report['path']).name} over "
+                  f"{report['genes_measured']:,} genes ({report['new_targets']} of them new); blended "
+                  f"at weight {report['weight']} after scaling by {report['scale']:.3f}")
+    blend_scale = secondary_reports[-1]["scale"] if secondary_reports else None
 
     neighbor_filled = neighbor_blended = None
     if args.neighbor_embeddings:
@@ -231,8 +234,9 @@ def cmd_build_transfer(args: argparse.Namespace) -> int:
             "cell_construction": args.cell_construction,
             "targets_covered": int(covered.sum()),
             "secondary": args.secondary,
-            "secondary_weight": args.secondary_weight if args.secondary else None,
+            "secondary_weight": [r["weight"] for r in secondary_reports] or None,
             "secondary_scale": blend_scale,
+            "secondary_reports": secondary_reports,
             "neighbor_embeddings": args.neighbor_embeddings,
             "neighbor_k": args.neighbor_k if args.neighbor_embeddings else None,
             "neighbor_temperature": args.neighbor_temperature if args.neighbor_embeddings else None,

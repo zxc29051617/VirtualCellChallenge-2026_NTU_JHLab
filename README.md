@@ -19,7 +19,7 @@ Current goals:
 
 - **Start here: [docs/state_of_play.md](docs/state_of_play.md)** — the submitted scores, the
   next experiment and why, and what has already been ruled out with the measurement that
-  ruled it out. Best score so far is **0.1040 (rank 377)** with `transfer_v5_blend.vcc`.
+  ruled it out. Best score so far is **0.1086** with `transfer_v9_hct116.vcc` (v5 scored 0.1040).
 
 - **2026-09-21 offline validation:** output/readback ablations, independent-control null
   tests, new-data target coverage, and a source-only flow/diffusion pilot are documented in
@@ -66,6 +66,14 @@ On this machine, invoke the official `vcc` binary directly:
 - `scripts/build_external_profiles.py` reduces it to per-perturbation mean profiles.
 - `scripts/evaluate_with_cell_eval.ps1` shows how to run the official evaluator once ground truth is available.
 - `scripts/package_submission.ps1` runs the official `vcc prep` packaging step.
+- `scripts/fetch_xatlas_effects.py` and `scripts/fetch_hpsc_effects.py` pull per-target effects for
+  the Challenge's targets from the HCT116 (X-Atlas/Orion) and stem-cell screens. Pass them to
+  `build-transfer --secondary <a.npz> <b.npz> --secondary-weight 0.10 0.25`. v9 does this.
+- `scripts/eval_source_pairs.py` and `scripts/eval_third_source.py` measure how well screens agree
+  and whether one improves a blend (findings section 16).
+- `scripts/build_bulk_profiles.py` rebuilds the K562/RPE1/K562gw profiles from figshare's
+  pseudobulk files (80-375 MB) instead of the 1-9 GB per-cell files.
+- `scripts/run_state_probe.py` runs Arc's STATE on a Challenge context (findings section 17).
 - `scripts/extract_scgpt_embeddings.py` caches scGPT's gene embeddings (see below).
 - `scripts/eval_neighbors.py` and `scripts/eval_gene_axis_fill.py` measure whether those
   embeddings carry usable signal. Read `docs/findings.md` section 15 before enabling them.
