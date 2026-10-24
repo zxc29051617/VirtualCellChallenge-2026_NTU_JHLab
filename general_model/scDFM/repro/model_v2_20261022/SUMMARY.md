@@ -271,3 +271,8 @@ reach 0.1699, jac 0.1183, nmae 0.9395), so call strategies can be compared witho
 - 10-24 afternoon: professor deck redone in oral-defence style (outline, section dividers, claim titles with figure evidence,
   references, backup slides, speaker notes on all 34 slides): deck/make_defense_pptx.py + deck/make_figures.py ->
   docs/VCC_defense_style_20261024.pptx (+ PDF). Checked slide by slide in LibreOffice renders; replaces the card-style deck.
+- 10-24 evening: reproduction test of general_model/README.md section 11 in a fresh clone from GitHub (raw downloads replaced by
+  the processed stats of this machine; HCT116/KOLF200 hold-outs not rebuildable here). Training data, H1 hold-out, signature
+  cache, H1 mock sets, v1 exports, AdaptNet totals (kappa 6.251 / 6.138 / 6.263) all bit-identical; the rebuilt
+  gm_final_v5.vcc has the same SHA-256 as the uploaded file (9a174d6e1c24...); H1 mock s0 0.3096 (v5) / 0.2751 (v1) and the
+  consensus_d200 benchmark identical. Measured: model env ~27 min (PyTorch download), first mock subset ~28 min.

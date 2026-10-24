@@ -778,7 +778,7 @@ cd ..
 用和 repo 裡相同的名稱會**覆蓋**原本的結果檔（例如上面第一行會覆蓋 `consensus_d200.json`），想保留的話先備份 `results/`。
 `RPE1=1` 代表把 RPE1 加進訓練資料；不加的話就是只用原本 14 個實驗。
 
-**模擬考**（在 `scDFM/` 裡執行；每組約 3～5 分鐘，評分程式約用 7 GB 記憶體，不要同時跑兩個）：
+**模擬考**（在 `scDFM/` 裡執行；評分程式約用 7 GB 記憶體，不要同時跑兩個。第一次跑每組約 30 分鐘，因為要先算 v1 的結果；之後每組約 10 分鐘）：
 
 ```bash
 cd scDFM
@@ -802,23 +802,23 @@ cd ..
 ### 11.8 重建期末上傳檔 v5
 
 ```bash
-# 步驟 1：共識模型（v1）的效果檔。AdaptNet 要用它的「目標基因本身＋鄰居基因」部分和整體大小（約 2 分鐘）
+# 步驟 1：共識模型（v1）的效果檔。AdaptNet 要用它的「目標基因本身＋鄰居基因」部分和整體大小（約 3 分鐘）
 cd scDFM
 D=$(readlink -f ../data/vcc2026_final); E=../data/stage3/effects
 VCC_DATA_DIR=$D .venv/bin/python -m vcc.gm export D vcc $E/gm_final_v1.npz per_celltype=False lam=3.0 kcap=1.0 alpha=3.0 \
   bulk_out=$E/gm_final_v1_bulk.npz shared_k=10 oc_out=$E/gm_final_v1_oc.npz
 VCC_DATA_DIR=$D .venv/bin/python -m vcc.gm export D vcc $E/gm_final_v1_d200.npz per_celltype=False lam=3.0 kcap=1.0 alpha=3.0 n0=200.0
 
-# 步驟 2：訓練 3 個 AdaptNet（亂數種子 0、1、2），預測 D、E、F 每個基因的總量 → gm_final_v4pre*（約 5 分鐘）
+# 步驟 2：訓練 3 個 AdaptNet（亂數種子 0、1、2），預測 D、E、F 每個基因的總量 → gm_final_v4pre*（約 4 分鐘）
 RPE1=1 SEEDS=0,1,2 .venv/bin/python -I repro/model_v2_20261022/build_v2.py v4
 cd ..
 
-# 步驟 3：產生 36 萬顆細胞並打包成 vccsub/out/gm_final_v5.vcc（約 15 分鐘，硬碟要有 40 GB 空閒）
+# 步驟 3：產生 36 萬顆細胞並打包成 vccsub/out/gm_final_v5.vcc（約 20 分鐘，硬碟要有 40 GB 空閒）
 PRECOMP=$(pwd)/data/stage3/effects/gm_final_v4pre RENDER=g1 SHAREDK=0 GAMMA=1 CTRLAXES=5 \
   TWPOW=0.5 CELLAGREE=1 CELLAMP=1.5 TOPFRAC=0.02 bash tools/final_pipeline.sh data/vcc2026_final gm_final_v5 D E F
 ```
 
-怎麼確認成功：
+怎麼確認成功（照這三步重建出來的檔案，和實際上傳的完全一樣，見 11.13）：
 
 - 步驟 2 會印出 `seed 0: trained on 15 contexts (K562, K562ess, VIPK562, HCT116, HEK293T, H1, CD4_Rest, CD4_Stim8hr, CD4_Stim48hr, HepG2, Jurkat, FengNF, FengF, KOLF, RPE1)`，
   以及 `D: AdaptNet totals input for 300/300 targets (kappa 6.251)` 這樣的行。kappa 是把 AdaptNet 的預測縮放到和共識模型一樣大的倍數
@@ -875,7 +875,23 @@ PRECOMP=$(pwd)/data/stage3/effects/gm_final_v4pre RENDER=g1 SHAREDK=0 GAMMA=1 CT
 - **KOLF** 的下載程式寫死了 figshare 檔案裡的位元組位置；如果作者重新上傳檔案，`tools/fetch_kolf.sh` 和 `tools/kolf_process.py` 要跟著改。
 - **資料來源可能變動**：GO（current 版）、Hugging Face、Zenodo、GEO 和主辦單位的下載都可能更新或下架。
 - **授權**：X-Atlas/Orion 是 CC BY-NC-SA 4.0，不能商業使用。
-- **顯示卡的微小隨機性**：重建出來的檔案不會和原本逐位元相同，但分數應該非常接近。
+- **顯示卡的微小隨機性**：換一張顯示卡或不同版本的驅動，AdaptNet 的結果可能有極小的差異，分數應該非常接近。
+  （在原本的機器上重跑則完全相同，見 11.13。）
+
+### 11.13 我們實際測試過的結果
+
+2026/10/24 在一個全新的資料夾，從 GitHub 下載這個 repo，照本節的步驟重跑。原始資料的下載（11.5）太大，改用原本機器上已經整理好的資料代替；
+HCT116、KOLF200 兩套留出資料需要的中間檔已經刪除，所以沒有重做。其餘結果和原本的比較：
+
+| 步驟 | 結果 |
+| --- | --- |
+| 11.3～11.4 下載程式、換路徑、建環境 | 成功（模型環境約 30 分鐘，大部分在下載 PyTorch） |
+| 11.6 訓練資料（15 個實驗，共 38,303 組擾動） | 和原本**完全相同** |
+| 11.6 H1 留出資料、來源一致度快取、H1 模擬考資料 | 和原本**完全相同** |
+| 11.8 v1 效果檔、AdaptNet 預測（kappa 6.251／6.138／6.263） | 和原本**完全相同** |
+| 11.8 期末上傳檔 `gm_final_v5.vcc` | 和實際上傳的檔案**一模一樣**（SHA-256 相同：`9a174d6e1c24…`） |
+| 11.7 H1 模擬考第 0 組（官方評分） | v5 設定 0.3096、v1 0.2751，和原本**完全相同** |
+| 11.7 基準測試（原方法） | 方向相似度 0.111、區分度 0.738，和原本**完全相同** |
 
 ---
 
