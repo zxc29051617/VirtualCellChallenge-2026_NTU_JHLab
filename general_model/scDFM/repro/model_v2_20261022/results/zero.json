@@ -1,0 +1,167 @@
+{
+ "method": "zero",
+ "overall": {
+  "dir": 0.0,
+  "pds": 0.5,
+  "skill": 0.0,
+  "scale": 0.0
+ },
+ "folds": {
+  "K562": {
+   "dir": 0.0,
+   "pds": 0.5,
+   "skill": 0.0,
+   "scale": 0.0
+  },
+  "XAtlas": {
+   "dir": 0.0,
+   "pds": 0.5,
+   "skill": 0.0,
+   "scale": 0.0
+  },
+  "H1": {
+   "dir": 0.0,
+   "pds": 0.5,
+   "skill": 0.0,
+   "scale": 0.0
+  },
+  "CD4": {
+   "dir": 0.0,
+   "pds": 0.5,
+   "skill": 0.0,
+   "scale": 0.0
+  },
+  "HepG2": {
+   "dir": 0.0,
+   "pds": 0.5,
+   "skill": 0.0,
+   "scale": 0.0
+  },
+  "Jurkat": {
+   "dir": 0.0,
+   "pds": 0.5,
+   "skill": 0.0,
+   "scale": 0.0
+  },
+  "iPSC": {
+   "dir": 0.0,
+   "pds": 0.5,
+   "skill": 0.0,
+   "scale": 0.0
+  }
+ },
+ "contexts": {
+  "K562": {
+   "K562": {
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 500
+   },
+   "K562ess": {
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 500
+   },
+   "VIPK562": {
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 500
+   }
+  },
+  "XAtlas": {
+   "HCT116": {
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 500
+   },
+   "HEK293T": {
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 500
+   }
+  },
+  "H1": {
+   "H1": {
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 298
+   }
+  },
+  "CD4": {
+   "CD4_Rest": {
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 500
+   },
+   "CD4_Stim8hr": {
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 500
+   },
+   "CD4_Stim48hr": {
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 500
+   }
+  },
+  "HepG2": {
+   "HepG2": {
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 500
+   }
+  },
+  "Jurkat": {
+   "Jurkat": {
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 500
+   }
+  },
+  "iPSC": {
+   "FengNF": {
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 61
+   },
+   "FengF": {
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 500
+   },
+   "KOLF": {
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 500
+   }
+  }
+ }
+}

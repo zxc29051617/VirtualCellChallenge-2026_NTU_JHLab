@@ -1,0 +1,18 @@
+{
+  "v": 4,
+  "createdOnFiles": {"v": 1, "at": "2026-10-24T00:20:00+08:00"},
+  "lists": "css",
+  "title": "虛擬細胞挑戰賽 進度報告",
+  "order": ["cover", "summary", "task", "scoring", "data", "model", "genenet", "render", "validation", "benchmark", "progress", "submissions", "findings", "tried", "limits", "compute"],
+  "sections": {
+    "intro": {"description": "封面與一頁重點", "start": "cover"},
+    "problem": {"description": "比賽要我們做什麼、怎麼評分", "start": "task"},
+    "method": {"description": "訓練資料、模型架構與產生細胞的方式", "start": "data"},
+    "results": {"description": "驗證方法、成績進步與期末提交", "start": "validation"},
+    "outlook": {"description": "發現、限制與下一步", "start": "findings"}
+  },
+  "faces": {
+    "noto-sans-tc": {"family": "Noto Sans TC", "href": "https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap"}
+  },
+  "designSystems": []
+}

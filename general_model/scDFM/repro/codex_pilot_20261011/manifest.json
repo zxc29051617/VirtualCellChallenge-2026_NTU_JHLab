@@ -1,0 +1,244 @@
+{
+ "seed": 20261011,
+ "source": "/home/zxc29051617/VCC/data/stage3/kolf_KOLF.h5ad",
+ "target_pool": "loco/KOLFbig/real.json (279)",
+ "targets_with_ge400_real_cells": 7,
+ "min_real_cells_used": 350,
+ "eligible": [
+  "ABCD1",
+  "AKAP1",
+  "ALG12",
+  "ASCC2",
+  "BCKDK",
+  "BCL6",
+  "CAPRIN2",
+  "ELK1",
+  "FZD2",
+  "MAPK7",
+  "MBD4",
+  "MYD88",
+  "PRKAB2",
+  "REV1",
+  "RNF141",
+  "SLC39A1",
+  "SNN",
+  "SPATA20",
+  "TEAD4",
+  "TRIM35",
+  "USP28",
+  "ZFP62"
+ ],
+ "targets": [
+  "ABCD1",
+  "ALG12",
+  "BCL6",
+  "CAPRIN2",
+  "ELK1",
+  "FZD2",
+  "MBD4",
+  "REV1",
+  "SLC39A1",
+  "SNN",
+  "TRIM35",
+  "USP28"
+ ],
+ "real_cells_per_target": {
+  "ABCD1": 397,
+  "ALG12": 385,
+  "BCL6": 507,
+  "CAPRIN2": 582,
+  "ELK1": 358,
+  "FZD2": 420,
+  "MBD4": 354,
+  "REV1": 378,
+  "SLC39A1": 402,
+  "SNN": 471,
+  "TRIM35": 397,
+  "USP28": 578
+ },
+ "truth_cells_per_target": 350,
+ "n_ctrl": 4000,
+ "pred_cells_per_target": 400,
+ "gen_seeds": [
+  0,
+  1,
+  2
+ ],
+ "effects": {
+  "own_cis": "/home/zxc29051617/VCC/data/stage3/effects/KOLFbig_gm_owncis.npz",
+  "gm_plain": "/home/zxc29051617/VCC/data/stage3/effects/KOLFbig_gm_l3k1_a3.0.npz",
+  "shuffled": "/home/zxc29051617/VCC/data/stage3/effects/KOLFbig_gm_shuf.npz"
+ },
+ "verify": {
+  "ABCD1": {
+   "own_equal_plain_shuf_owncis": true,
+   "n_own_cis_genes": 4,
+   "corr_plain_vs_shuffled": 0.06385040767081011,
+   "rows_identical_plain_shuffled": false
+  },
+  "ALG12": {
+   "own_equal_plain_shuf_owncis": true,
+   "n_own_cis_genes": 3,
+   "corr_plain_vs_shuffled": 0.002444342602700231,
+   "rows_identical_plain_shuffled": false
+  },
+  "BCL6": {
+   "own_equal_plain_shuf_owncis": true,
+   "n_own_cis_genes": 2,
+   "corr_plain_vs_shuffled": -0.01711026907506611,
+   "rows_identical_plain_shuffled": false
+  },
+  "CAPRIN2": {
+   "own_equal_plain_shuf_owncis": true,
+   "n_own_cis_genes": 1,
+   "corr_plain_vs_shuffled": -0.10533774062546432,
+   "rows_identical_plain_shuffled": false
+  },
+  "ELK1": {
+   "own_equal_plain_shuf_owncis": true,
+   "n_own_cis_genes": 4,
+   "corr_plain_vs_shuffled": 0.054024124099162206,
+   "rows_identical_plain_shuffled": false
+  },
+  "FZD2": {
+   "own_equal_plain_shuf_owncis": true,
+   "n_own_cis_genes": 1,
+   "corr_plain_vs_shuffled": 0.00653561479591327,
+   "rows_identical_plain_shuffled": false
+  },
+  "MBD4": {
+   "own_equal_plain_shuf_owncis": true,
+   "n_own_cis_genes": 3,
+   "corr_plain_vs_shuffled": -0.017361767931586565,
+   "rows_identical_plain_shuffled": false
+  },
+  "REV1": {
+   "own_equal_plain_shuf_owncis": true,
+   "n_own_cis_genes": 1,
+   "corr_plain_vs_shuffled": 0.07198499118886732,
+   "rows_identical_plain_shuffled": false
+  },
+  "SLC39A1": {
+   "own_equal_plain_shuf_owncis": true,
+   "n_own_cis_genes": 7,
+   "corr_plain_vs_shuffled": -0.005481274979759937,
+   "rows_identical_plain_shuffled": false
+  },
+  "SNN": {
+   "own_equal_plain_shuf_owncis": true,
+   "n_own_cis_genes": 2,
+   "corr_plain_vs_shuffled": 0.0329776769238346,
+   "rows_identical_plain_shuffled": false
+  },
+  "TRIM35": {
+   "own_equal_plain_shuf_owncis": true,
+   "n_own_cis_genes": 2,
+   "corr_plain_vs_shuffled": 0.2049098008894762,
+   "rows_identical_plain_shuffled": false
+  },
+  "USP28": {
+   "own_equal_plain_shuf_owncis": true,
+   "n_own_cis_genes": 1,
+   "corr_plain_vs_shuffled": 0.03255615013054192,
+   "rows_identical_plain_shuffled": false
+  }
+ },
+ "own_cis_check": {
+  "ABCD1": {
+   "plain_equals_owncis_on_own_cis_genes": true,
+   "max_abs_shuffled_minus_owncis_on_own_cis_genes": 0.5523523092269897
+  },
+  "ALG12": {
+   "plain_equals_owncis_on_own_cis_genes": true,
+   "max_abs_shuffled_minus_owncis_on_own_cis_genes": 0.18337500095367432
+  },
+  "BCL6": {
+   "plain_equals_owncis_on_own_cis_genes": true,
+   "max_abs_shuffled_minus_owncis_on_own_cis_genes": 0.0
+  },
+  "CAPRIN2": {
+   "plain_equals_owncis_on_own_cis_genes": true,
+   "max_abs_shuffled_minus_owncis_on_own_cis_genes": 0.0
+  },
+  "ELK1": {
+   "plain_equals_owncis_on_own_cis_genes": true,
+   "max_abs_shuffled_minus_owncis_on_own_cis_genes": 0.05712246894836426
+  },
+  "FZD2": {
+   "plain_equals_owncis_on_own_cis_genes": true,
+   "max_abs_shuffled_minus_owncis_on_own_cis_genes": 0.0
+  },
+  "MBD4": {
+   "plain_equals_owncis_on_own_cis_genes": true,
+   "max_abs_shuffled_minus_owncis_on_own_cis_genes": 0.19028735160827637
+  },
+  "REV1": {
+   "plain_equals_owncis_on_own_cis_genes": true,
+   "max_abs_shuffled_minus_owncis_on_own_cis_genes": 0.0
+  },
+  "SLC39A1": {
+   "plain_equals_owncis_on_own_cis_genes": true,
+   "max_abs_shuffled_minus_owncis_on_own_cis_genes": 0.38162586092948914
+  },
+  "SNN": {
+   "plain_equals_owncis_on_own_cis_genes": true,
+   "max_abs_shuffled_minus_owncis_on_own_cis_genes": 0.5233671069145203
+  },
+  "TRIM35": {
+   "plain_equals_owncis_on_own_cis_genes": true,
+   "max_abs_shuffled_minus_owncis_on_own_cis_genes": 0.05937826633453369
+  },
+  "USP28": {
+   "plain_equals_owncis_on_own_cis_genes": true,
+   "max_abs_shuffled_minus_owncis_on_own_cis_genes": 0.0
+  }
+ },
+ "own_cis_note": "own and cis terms are identical across the three effect files; the shuffled file adds the donor target's trans signature on top (also at this target's cis genes, which the donor did not mask)",
+ "effects_sha256": {
+  "own_cis": "ad6112274cd185f9f6da60a42997aff07617faa324324ed6f5b82f0e29c771e6",
+  "gm_plain": "350cd43a080c9bbf152722d4197c921a3711008f076fc0be1772bff8464f5961",
+  "shuffled": "0510c1fd6e43cdfd5cc3f5d92a86169794b77859b5c07da367fd98fa70fcabfa"
+ },
+ "kolf_exclusion_evidence": {
+  "source": "/home/zxc29051617/VCC/data/stage3/runq.log lines ~955-971 (runner job ended 2026-10-11 15:00:25)",
+  "fit_contexts": [
+   "CD4_Rest",
+   "CD4_Stim48hr",
+   "CD4_Stim8hr",
+   "FengF",
+   "FengNF",
+   "H1",
+   "HCT116",
+   "HEK293T",
+   "HepG2",
+   "Jurkat",
+   "K562",
+   "K562ess"
+  ],
+  "how": "each 'fit on' line (no KOLF) is immediately followed by 'wrote .../KOLFbig_gm_{owncis,shuf,l3k1_a3.0}.npz'; file mtimes 14:59-15:00 match; sha256 recorded",
+  "caveat_related_donor": "FengNF/FengF (HipSci iPSC screens, another lab) contain donor lines kolf_2/kolf_3 (69,723 non-fitness cells); KOLF2.1J derives from the HipSci KOLF2 donor. The KOLF2.1J screen itself is excluded, but a genetically related iPSC background is in training."
+ },
+ "strict": {
+  "training_contexts": [
+   "CD4_Rest",
+   "CD4_Stim48hr",
+   "CD4_Stim8hr",
+   "H1",
+   "HCT116",
+   "HEK293T",
+   "HepG2",
+   "Jurkat",
+   "K562",
+   "K562ess"
+  ],
+  "excluded": [
+   "KOLF",
+   "FengNF",
+   "FengF"
+  ],
+  "derangement": "numpy default_rng(0).permutation(279) re-drawn until no fixed point (vcc/gm.py)",
+  "check_original_shuffled_row0_is_plain_row_of_donor": true,
+  "check_strict_shuffled_row0_is_plain_row_of_donor": true,
+  "donor_evidence": "Feng 2025 cell metadata (data/external/feng2025/GenomeWideScreen_NonFitnessGenes_Cell-Metadata.tsv.gz, column Cell_Line) lists kolf_2 and kolf_3; KOLF2.1J derives from the HipSci KOLF2 donor (Pantazis et al. 2022, Cell Stem Cell)"
+ }
+}

@@ -1,0 +1,1003 @@
+{
+ "method": "zero",
+ "summary": {
+  "S1": {
+   "dir": 0.0,
+   "pds": 0.5,
+   "skill": 0.0,
+   "scale": 0.0
+  },
+  "S2": {
+   "dir": 0.0,
+   "pds": 0.5,
+   "skill": 0.0,
+   "scale": 0.0
+  }
+ },
+ "rows": {
+  "S1": [
+   {
+    "fold": 0,
+    "group": null,
+    "context": "K562",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 0,
+    "group": null,
+    "context": "K562ess",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 0,
+    "group": null,
+    "context": "VIPK562",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 0,
+    "group": null,
+    "context": "HCT116",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 0,
+    "group": null,
+    "context": "HEK293T",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 0,
+    "group": null,
+    "context": "H1",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 62
+   },
+   {
+    "fold": 0,
+    "group": null,
+    "context": "CD4_Rest",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 135
+   },
+   {
+    "fold": 0,
+    "group": null,
+    "context": "CD4_Stim8hr",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 135
+   },
+   {
+    "fold": 0,
+    "group": null,
+    "context": "CD4_Stim48hr",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 136
+   },
+   {
+    "fold": 0,
+    "group": null,
+    "context": "HepG2",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 213
+   },
+   {
+    "fold": 0,
+    "group": null,
+    "context": "Jurkat",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 0,
+    "group": null,
+    "context": "FengNF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 21
+   },
+   {
+    "fold": 0,
+    "group": null,
+    "context": "FengF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 169
+   },
+   {
+    "fold": 0,
+    "group": null,
+    "context": "KOLF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 1,
+    "group": null,
+    "context": "K562",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 1,
+    "group": null,
+    "context": "K562ess",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 1,
+    "group": null,
+    "context": "VIPK562",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 1,
+    "group": null,
+    "context": "HCT116",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 1,
+    "group": null,
+    "context": "HEK293T",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 1,
+    "group": null,
+    "context": "H1",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 63
+   },
+   {
+    "fold": 1,
+    "group": null,
+    "context": "CD4_Rest",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 147
+   },
+   {
+    "fold": 1,
+    "group": null,
+    "context": "CD4_Stim8hr",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 149
+   },
+   {
+    "fold": 1,
+    "group": null,
+    "context": "CD4_Stim48hr",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 148
+   },
+   {
+    "fold": 1,
+    "group": null,
+    "context": "HepG2",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 216
+   },
+   {
+    "fold": 1,
+    "group": null,
+    "context": "Jurkat",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 1,
+    "group": null,
+    "context": "FengNF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 27
+   },
+   {
+    "fold": 1,
+    "group": null,
+    "context": "FengF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 155
+   },
+   {
+    "fold": 1,
+    "group": null,
+    "context": "KOLF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 2,
+    "group": null,
+    "context": "K562",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 2,
+    "group": null,
+    "context": "K562ess",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 2,
+    "group": null,
+    "context": "VIPK562",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 2,
+    "group": null,
+    "context": "HCT116",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 2,
+    "group": null,
+    "context": "HEK293T",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 2,
+    "group": null,
+    "context": "H1",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 45
+   },
+   {
+    "fold": 2,
+    "group": null,
+    "context": "CD4_Rest",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 125
+   },
+   {
+    "fold": 2,
+    "group": null,
+    "context": "CD4_Stim8hr",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 127
+   },
+   {
+    "fold": 2,
+    "group": null,
+    "context": "CD4_Stim48hr",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 128
+   },
+   {
+    "fold": 2,
+    "group": null,
+    "context": "HepG2",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 211
+   },
+   {
+    "fold": 2,
+    "group": null,
+    "context": "Jurkat",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 2,
+    "group": null,
+    "context": "FengF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 177
+   },
+   {
+    "fold": 2,
+    "group": null,
+    "context": "KOLF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 3,
+    "group": null,
+    "context": "K562",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 3,
+    "group": null,
+    "context": "K562ess",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 3,
+    "group": null,
+    "context": "VIPK562",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 3,
+    "group": null,
+    "context": "HCT116",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 3,
+    "group": null,
+    "context": "HEK293T",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 3,
+    "group": null,
+    "context": "H1",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 67
+   },
+   {
+    "fold": 3,
+    "group": null,
+    "context": "CD4_Rest",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 139
+   },
+   {
+    "fold": 3,
+    "group": null,
+    "context": "CD4_Stim8hr",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 140
+   },
+   {
+    "fold": 3,
+    "group": null,
+    "context": "CD4_Stim48hr",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 138
+   },
+   {
+    "fold": 3,
+    "group": null,
+    "context": "HepG2",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 210
+   },
+   {
+    "fold": 3,
+    "group": null,
+    "context": "Jurkat",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 3,
+    "group": null,
+    "context": "FengNF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 28
+   },
+   {
+    "fold": 3,
+    "group": null,
+    "context": "FengF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 158
+   },
+   {
+    "fold": 3,
+    "group": null,
+    "context": "KOLF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 4,
+    "group": null,
+    "context": "K562",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 4,
+    "group": null,
+    "context": "K562ess",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 4,
+    "group": null,
+    "context": "VIPK562",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 4,
+    "group": null,
+    "context": "HCT116",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 4,
+    "group": null,
+    "context": "HEK293T",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 4,
+    "group": null,
+    "context": "H1",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 61
+   },
+   {
+    "fold": 4,
+    "group": null,
+    "context": "CD4_Rest",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 117
+   },
+   {
+    "fold": 4,
+    "group": null,
+    "context": "CD4_Stim8hr",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 118
+   },
+   {
+    "fold": 4,
+    "group": null,
+    "context": "CD4_Stim48hr",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 115
+   },
+   {
+    "fold": 4,
+    "group": null,
+    "context": "HepG2",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 211
+   },
+   {
+    "fold": 4,
+    "group": null,
+    "context": "Jurkat",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 4,
+    "group": null,
+    "context": "FengNF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 23
+   },
+   {
+    "fold": 4,
+    "group": null,
+    "context": "FengF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 189
+   },
+   {
+    "fold": 4,
+    "group": null,
+    "context": "KOLF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   }
+  ],
+  "S2": [
+   {
+    "fold": 0,
+    "group": "H1",
+    "context": "H1",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 62
+   },
+   {
+    "fold": 0,
+    "group": "XAtlas",
+    "context": "HCT116",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 0,
+    "group": "XAtlas",
+    "context": "HEK293T",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 0,
+    "group": "iPSC",
+    "context": "FengNF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 21
+   },
+   {
+    "fold": 0,
+    "group": "iPSC",
+    "context": "FengF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 169
+   },
+   {
+    "fold": 0,
+    "group": "iPSC",
+    "context": "KOLF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 1,
+    "group": "H1",
+    "context": "H1",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 63
+   },
+   {
+    "fold": 1,
+    "group": "XAtlas",
+    "context": "HCT116",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 1,
+    "group": "XAtlas",
+    "context": "HEK293T",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 1,
+    "group": "iPSC",
+    "context": "FengNF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 27
+   },
+   {
+    "fold": 1,
+    "group": "iPSC",
+    "context": "FengF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 155
+   },
+   {
+    "fold": 1,
+    "group": "iPSC",
+    "context": "KOLF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 2,
+    "group": "H1",
+    "context": "H1",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 45
+   },
+   {
+    "fold": 2,
+    "group": "XAtlas",
+    "context": "HCT116",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 2,
+    "group": "XAtlas",
+    "context": "HEK293T",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 2,
+    "group": "iPSC",
+    "context": "FengF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 177
+   },
+   {
+    "fold": 2,
+    "group": "iPSC",
+    "context": "KOLF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 3,
+    "group": "H1",
+    "context": "H1",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 67
+   },
+   {
+    "fold": 3,
+    "group": "XAtlas",
+    "context": "HCT116",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 3,
+    "group": "XAtlas",
+    "context": "HEK293T",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 3,
+    "group": "iPSC",
+    "context": "FengNF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 28
+   },
+   {
+    "fold": 3,
+    "group": "iPSC",
+    "context": "FengF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 158
+   },
+   {
+    "fold": 3,
+    "group": "iPSC",
+    "context": "KOLF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 4,
+    "group": "H1",
+    "context": "H1",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 61
+   },
+   {
+    "fold": 4,
+    "group": "XAtlas",
+    "context": "HCT116",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 4,
+    "group": "XAtlas",
+    "context": "HEK293T",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   },
+   {
+    "fold": 4,
+    "group": "iPSC",
+    "context": "FengNF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 23
+   },
+   {
+    "fold": 4,
+    "group": "iPSC",
+    "context": "FengF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 189
+   },
+   {
+    "fold": 4,
+    "group": "iPSC",
+    "context": "KOLF",
+    "dir": 0.0,
+    "pds": 0.5,
+    "skill": 0.0,
+    "scale": 0.0,
+    "n": 300
+   }
+  ]
+ }
+}

@@ -1,0 +1,29 @@
+{
+  "change": "Local cell generation uses original library depth and samples without replacement when possible",
+  "before_sha256": "652ceff1f870db191b4a1171cdc29202fc33e2f8a2b1b14287693a7e6f8e4ca2",
+  "after_sha256": "cb54aa6c3293eacf7ebd97c6be745795ed9b383ee9d4a1178f6eecb3f1bdf38a",
+  "old_mixed_fc_gene_means": [
+    9.9913330078125,
+    169.85667419433594,
+    100.0
+  ],
+  "new_mixed_fc_gene_means": [
+    9.98033332824707,
+    200.25100708007812,
+    100.0
+  ],
+  "expected_gene_means": [
+    10,
+    200,
+    100
+  ],
+  "checks": [
+    "Actual prediction loop: mixed down/up changes",
+    "Identity fold changes",
+    "Small control pool fallback",
+    "Finite nonnegative integer counts",
+    "Source compiles"
+  ],
+  "existing_scores_regenerated": false,
+  "submission_files_changed": false
+}

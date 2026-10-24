@@ -1,0 +1,9 @@
+{
+ "max_abs_diff": 8.169175916838967e-07,
+ "mean_abs_diff": 6.090156169166865e-09,
+ "ref_max_abs": 4.244906745472998,
+ "allclose_1e-4": true,
+ "shuffled_max_abs_diff": 8.169175916838967e-07,
+ "shuffled_allclose_1e-4": true,
+ "beta_max_abs_diff": 3.47323569904745e-09
+}

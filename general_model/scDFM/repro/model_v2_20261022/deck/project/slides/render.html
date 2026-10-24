@@ -1,0 +1,26 @@
+<section id="render" data-transition="fade" style="background:#F6F5F1;color:#16213A;font-family:'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<h2 style="font-size:60px;font-weight:700;line-height:1.15;color:#16213A">從預測到 400 顆細胞：三個步驟</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FDFCFA;border:1px solid #DCE2EA;border-radius:16px;padding:40px;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:64px;font-weight:700;color:#E9A35C;line-height:1">1</p>
+<h3 style="font-size:36px;font-weight:700;color:#16213A">算總量</h3>
+<p style="font-size:28px;line-height:1.5;color:#3B4658">模型預測每個基因在 400 顆細胞的總量變化；整體幅度依評分規則校準，把握度高的擾動給大一點</p>
+</div>
+<div style="flex:1;background:#FDFCFA;border:1px solid #DCE2EA;border-radius:16px;padding:40px;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:64px;font-weight:700;color:#E9A35C;line-height:1">2</p>
+<h3 style="font-size:36px;font-weight:700;color:#16213A">抽真實細胞當底</h3>
+<p style="font-size:28px;line-height:1.5;color:#3B4658">從新細胞的對照組隨機抽 400 顆真實細胞，保留真實的細胞差異和雜訊</p>
+</div>
+<div style="flex:1;background:#FDFCFA;border:1px solid #DCE2EA;border-radius:16px;padding:40px;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:64px;font-weight:700;color:#E9A35C;line-height:1">3</p>
+<h3 style="font-size:36px;font-weight:700;color:#16213A">調整計數</h3>
+<p style="font-size:28px;line-height:1.5;color:#3B4658">依預測調高或調低每顆細胞的基因計數，最後讓每個基因的總量剛好等於預測值</p>
+</div>
+</div>
+<div style="background:#EAEEF3;border-radius:16px;padding:32px 40px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:30px;font-weight:700;color:#16213A">為什麼要分開控制「總量」和「單顆細胞」</h3>
+<p style="font-size:28px;line-height:1.5;color:#3B4658">評分同時看平均表現（誤差、區分度）和單顆細胞的分布（哪些基因統計上顯著），兩者的最佳做法不同</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5E6878">VCC 2026 進度報告　·　8</p>
+<aside>模型輸出的是「每個基因平均會變多少」，但比賽要的是一顆一顆的細胞，所以我們有一套產生細胞的流程。第一步，算出每個基因在 400 顆細胞裡的總量；整體變化幅度要依評分規則校準，因為評分程式對「預測得太誇張」會扣分；把握度高的擾動給大一點、把握度低的給小一點。第二步，從新細胞自己的對照組隨機抽 400 顆真實細胞當底，這樣細胞之間的真實差異和雜訊都保留下來。第三步，依照預測，把每顆細胞的計數調高或調低，最後讓每個基因的總量剛好等於預測。之所以分開控制，是因為評分同時看平均表現和單顆細胞的統計顯著性，兩者的最佳做法不一樣。</aside>
+</section>

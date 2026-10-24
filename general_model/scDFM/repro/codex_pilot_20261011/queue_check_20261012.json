@@ -1,0 +1,16 @@
+{
+  "checked_utc": "2026-10-11T22:52:46.173126+00:00",
+  "queue_pid": 417071,
+  "queue_process_matches": true,
+  "scheduled_utc": "2026-10-12T00:02:00Z",
+  "files": {
+    "gm_cd4only.vcc": {
+      "exists": true,
+      "bytes": 3310766080
+    },
+    "gm_shuf.vcc": {
+      "exists": true,
+      "bytes": 3317217280
+    }
+  }
+}

@@ -1,0 +1,23 @@
+<section id="summary" data-transition="fade" style="background:#F6F5F1;color:#16213A;font-family:'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<h2 style="font-size:60px;font-weight:700;line-height:1.15;color:#16213A">一頁重點</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+<div style="background:#FDFCFA;border:1px solid #DCE2EA;border-radius:16px;padding:40px;display:flex;flex-direction:column;gap:16px">
+<h3 style="font-size:40px;font-weight:700;color:#2563A8">做了什麼</h3>
+<p style="font-size:30px;line-height:1.5;color:#3B4658">訓練一個通用模型（AdaptNet），用 15 個公開 CRISPRi 實驗、約 3.8 萬組「細胞 × 被關掉的基因」資料學習</p>
+</div>
+<div style="background:#FDFCFA;border:1px solid #DCE2EA;border-radius:16px;padding:40px;display:flex;flex-direction:column;gap:16px">
+<h3 style="font-size:40px;font-weight:700;color:#2563A8">怎麼驗證</h3>
+<p style="font-size:30px;line-height:1.5;color:#3B4658">訓練時藏起整種細胞或一批基因再預測；並用官方評分程式，在三種細胞上做「模擬考」</p>
+</div>
+<div style="background:#FDFCFA;border:1px solid #DCE2EA;border-radius:16px;padding:40px;display:flex;flex-direction:column;gap:16px">
+<h3 style="font-size:40px;font-weight:700;color:#2563A8">目前成績</h3>
+<p style="font-size:30px;line-height:1.5;color:#3B4658">H1 模擬考從原方法 0.272 進步到 0.306；期末版本 v5 已於 10/24 上傳（官方分數比賽結束才公布）</p>
+</div>
+<div style="background:#FDFCFA;border:1px solid #DCE2EA;border-radius:16px;padding:40px;display:flex;flex-direction:column;gap:16px">
+<h3 style="font-size:40px;font-weight:700;color:#C8691E">主要限制</h3>
+<p style="font-size:30px;line-height:1.5;color:#3B4658">「哪些基因會變、往哪個方向變」受資料限制：對非必需基因的方向只猜對約 55%</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5E6878">VCC 2026 進度報告　·　2</p>
+<aside>先給教授一頁總結。第一，我們訓練了一個通用模型，叫 AdaptNet，資料來自 15 個公開的 CRISPRi 基因關閉實驗，總共大約三萬八千組「在某種細胞裡關掉某個基因」的測量結果。第二，驗證方式是故意把整種細胞或一批基因藏起來，看模型能不能預測；另外用比賽官方的評分程式，在三種細胞上做模擬考。第三，模擬考從原本方法的 0.272 進步到 0.306，期末版本已經上傳，官方分數要等比賽結束才公布。第四，主要限制是：預測「哪些基因會變、往哪個方向變」的準確度，被現有公開資料限制住了。</aside>
+</section>

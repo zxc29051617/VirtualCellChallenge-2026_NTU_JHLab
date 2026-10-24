@@ -1,0 +1,44 @@
+{
+ "H1": {
+  "n_targets": 188,
+  "with_depmap": 184,
+  "alpha": 30,
+  "cos_transfer": 0.0748,
+  "cos_depmap": 0.0258,
+  "cos_blend0.25": 0.075,
+  "cos_blend0.5": 0.0657,
+  "cos_blend0.75": 0.041,
+  "pds_V6_transfer": 0.9271,
+  "pds_V6_depmap_only": 0.677,
+  "pds_V6_blend0.25": 0.9189,
+  "pds_V6_blend0.5": 0.9115
+ },
+ "KOLF200": {
+  "n_targets": 279,
+  "with_depmap": 279,
+  "alpha": 30,
+  "cos_transfer": 0.003,
+  "cos_depmap": 0.008,
+  "cos_blend0.25": 0.0032,
+  "cos_blend0.5": 0.007,
+  "cos_blend0.75": 0.0079,
+  "pds_V6_transfer": 0.629,
+  "pds_V6_depmap_only": 0.5115,
+  "pds_V6_blend0.25": 0.6273,
+  "pds_V6_blend0.5": 0.6184
+ },
+ "HCT116": {
+  "n_targets": 263,
+  "with_depmap": 263,
+  "alpha": 30,
+  "cos_transfer": 0.0135,
+  "cos_depmap": 0.0156,
+  "cos_blend0.25": 0.0177,
+  "cos_blend0.5": 0.0176,
+  "cos_blend0.75": 0.0149,
+  "pds_V6_transfer": 0.6965,
+  "pds_V6_depmap_only": 0.5327,
+  "pds_V6_blend0.25": 0.7001,
+  "pds_V6_blend0.5": 0.6948
+ }
+}

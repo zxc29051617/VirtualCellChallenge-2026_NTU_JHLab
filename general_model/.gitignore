@@ -1,0 +1,9 @@
+# data and model artefacts stay out of git (see README: data not in the repo)
+*.h5ad
+*.npz
+*.npy
+*.pt
+*.vcc
+*.parquet
+*.zip
+__pycache__/

@@ -1,0 +1,42 @@
+{
+ "started": "2026-10-13T16:18:48+08:00",
+ "state": "done",
+ "step": "8 SUMMARY.md written",
+ "budget": {
+  "compute_hours_max": 6,
+  "download_gb_max": 10,
+  "paid_cloud": false,
+  "leaderboard_submission": false
+ },
+ "steps": [
+  "1 read repo notes + SIGnature paper/code; pick pretrained model (SCimilarity preferred)",
+  "2 isolated env, download weights (<=10 GB), check preprocessing/gene ids/coverage",
+  "3 fixed control-cell samples per context, cache attributions",
+  "4 features (expression vs expression+attribution vs per-context-shuffled attribution)",
+  "5 learn small regularised source-weight models with inner leave-one-context-out validation",
+  "6 export effects for A/B/C/D (+A_shuf), 3 outer hold-outs",
+  "7 serial official scoring, 3 generation seeds",
+  "8 paired target-level statistics, SUMMARY.md"
+ ],
+ "done": [
+  "1 model: SCimilarity encoder (Zenodo 10.5281/zenodo.15729925, md5 7c572b62787ffa98c027b80bca270cdb), SIGnature repo c1546cb",
+  "2 env: isolated venv env/ (captum 0.8.0 + torch 2.7.1+cu126 and numpy/scanpy from the scDFM venv via .pth); downloads so far: 116 MB weights + SIGnature repo (a failed attempt to pip-install torch 2.14 fetched a partial amount, cancelled)",
+  "3 controls: 2000 fixed control cells for 9 contexts; attributions computed (IG, 120-320 cells/s)"
+ ],
+ "notes": [
+  "GPU/RAM shared with an unrelated YOLO training job (pid 1110867, not mine, left untouched)"
+ ],
+ "paused_at": "2026-10-15T21:59:31+0800",
+ "completed": [
+  "1 model + code",
+  "2 isolated env",
+  "3 controls sampled and attributions computed for 9 contexts"
+ ],
+ "not_done": [],
+ "results": "SIGnature_adds_value=False",
+ "resumed_at": "2026-10-19T01:43:07+0800",
+ "compute_used_before_pause_h": 0.7,
+ "last_scored": "KOLF200_A_shuf_seed2",
+ "updated": "2026-10-19T04:36:30+0800",
+ "finished": "2026-10-19T04:38:57+0800"
+}

@@ -1,0 +1,44 @@
+{
+ "H1": {
+  "held_out_group": [
+   "H1"
+  ],
+  "training": [
+   "CD4_Rest",
+   "CD4_Stim48hr",
+   "CD4_Stim8hr",
+   "FengF",
+   "FengNF",
+   "HCT116",
+   "HEK293T",
+   "HepG2",
+   "Jurkat",
+   "K562",
+   "K562ess",
+   "KOLF",
+   "VIPK562"
+  ],
+  "n_targets": 188
+ },
+ "KOLFbig": {
+  "held_out_group": [
+   "KOLF"
+  ],
+  "training": [
+   "CD4_Rest",
+   "CD4_Stim48hr",
+   "CD4_Stim8hr",
+   "FengF",
+   "FengNF",
+   "H1",
+   "HCT116",
+   "HEK293T",
+   "HepG2",
+   "Jurkat",
+   "K562",
+   "K562ess",
+   "VIPK562"
+  ],
+  "n_targets": 279
+ }
+}

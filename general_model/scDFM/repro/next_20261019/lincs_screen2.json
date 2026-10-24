@@ -1,0 +1,113 @@
+{
+ "H1": {
+  "none_W0.0": {
+   "n_with_lincs": 0,
+   "median_cos": 0.0691,
+   "pds_like_V6": 0.9271
+  },
+  "xpr_W0.5": {
+   "n_with_lincs": 77,
+   "median_cos": 0.0658,
+   "pds_like_V6": 0.9126
+  },
+  "xpr_W1.0": {
+   "n_with_lincs": 77,
+   "median_cos": 0.0511,
+   "pds_like_V6": 0.9125
+  },
+  "sh_W0.5": {
+   "n_with_lincs": 121,
+   "median_cos": 0.0491,
+   "pds_like_V6": 0.9238
+  },
+  "sh_W1.0": {
+   "n_with_lincs": 121,
+   "median_cos": 0.0326,
+   "pds_like_V6": 0.9188
+  },
+  "xpr+sh_W0.5": {
+   "n_with_lincs": 138,
+   "median_cos": 0.0538,
+   "pds_like_V6": 0.9203
+  },
+  "xpr+sh_W1.0": {
+   "n_with_lincs": 138,
+   "median_cos": 0.043,
+   "pds_like_V6": 0.9126
+  }
+ },
+ "KOLF200": {
+  "none_W0.0": {
+   "n_with_lincs": 0,
+   "median_cos": 0.0022,
+   "pds_like_V6": 0.629
+  },
+  "xpr_W0.5": {
+   "n_with_lincs": 71,
+   "median_cos": -0.0049,
+   "pds_like_V6": 0.6148
+  },
+  "xpr_W1.0": {
+   "n_with_lincs": 71,
+   "median_cos": -0.005,
+   "pds_like_V6": 0.6126
+  },
+  "sh_W0.5": {
+   "n_with_lincs": 112,
+   "median_cos": 0.0028,
+   "pds_like_V6": 0.6121
+  },
+  "sh_W1.0": {
+   "n_with_lincs": 112,
+   "median_cos": 0.0022,
+   "pds_like_V6": 0.599
+  },
+  "xpr+sh_W0.5": {
+   "n_with_lincs": 137,
+   "median_cos": 0.0017,
+   "pds_like_V6": 0.5959
+  },
+  "xpr+sh_W1.0": {
+   "n_with_lincs": 137,
+   "median_cos": 0.0001,
+   "pds_like_V6": 0.5948
+  }
+ },
+ "HCT116": {
+  "none_W0.0": {
+   "n_with_lincs": 0,
+   "median_cos": 0.0137,
+   "pds_like_V6": 0.6965
+  },
+  "xpr_W0.5": {
+   "n_with_lincs": 73,
+   "median_cos": 0.0125,
+   "pds_like_V6": 0.7001
+  },
+  "xpr_W1.0": {
+   "n_with_lincs": 73,
+   "median_cos": 0.0121,
+   "pds_like_V6": 0.7034
+  },
+  "sh_W0.5": {
+   "n_with_lincs": 105,
+   "median_cos": 0.0081,
+   "pds_like_V6": 0.6857
+  },
+  "sh_W1.0": {
+   "n_with_lincs": 105,
+   "median_cos": 0.0068,
+   "pds_like_V6": 0.6705
+  },
+  "xpr+sh_W0.5": {
+   "n_with_lincs": 130,
+   "median_cos": 0.012,
+   "pds_like_V6": 0.69
+  },
+  "xpr+sh_W1.0": {
+   "n_with_lincs": 130,
+   "median_cos": 0.0098,
+   "pds_like_V6": 0.6865
+  }
+ }
+}

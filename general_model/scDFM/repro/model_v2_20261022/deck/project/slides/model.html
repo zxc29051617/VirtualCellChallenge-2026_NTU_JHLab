@@ -1,0 +1,45 @@
+<section id="model" data-section="訓練資料、模型架構與產生細胞的方式" data-transition="fade" style="background:#F6F5F1;color:#16213A;font-family:'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<h2 style="font-size:60px;font-weight:700;line-height:1.15;color:#16213A">模型架構：AdaptNet（自己訓練的神經網路）</h2>
+<div style="display:flex;align-items:center;gap:16px">
+<div style="flex:1;background:#EAEEF3;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:30px;font-weight:700;color:#16213A">輸入</h3>
+<p style="font-size:26px;line-height:1.4;color:#3B4658">同一個基因在其他細胞被關掉的測量（多個來源）</p>
+</div>
+<x-shape kind="arrow-right" style="background:#2563A8;width:64px;height:32px"></x-shape>
+<div style="flex:1;background:#FDFCFA;border:2px solid #2563A8;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:30px;font-weight:700;color:#2563A8">① 來源加權</h3>
+<p style="font-size:26px;line-height:1.4;color:#3B4658">依細胞像不像、資料品質、來源之間是否一致</p>
+</div>
+<x-shape kind="arrow-right" style="background:#2563A8;width:64px;height:32px"></x-shape>
+<div style="flex:1;background:#FDFCFA;border:2px solid #2563A8;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:30px;font-weight:700;color:#2563A8">② 基因程式</h3>
+<p style="font-size:26px;line-height:1.4;color:#3B4658">拆成 200 組「會一起變動的基因」加細節</p>
+</div>
+<x-shape kind="arrow-right" style="background:#2563A8;width:64px;height:32px"></x-shape>
+<div style="flex:1;background:#FDFCFA;border:2px solid #2563A8;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:30px;font-weight:700;color:#2563A8">③ 依新細胞調整</h3>
+<p style="font-size:26px;line-height:1.4;color:#3B4658">看新細胞的對照組狀態，調整每組程式強弱</p>
+</div>
+<x-shape kind="arrow-right" style="background:#2563A8;width:64px;height:32px"></x-shape>
+<div style="flex:1;background:#16213A;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:30px;font-weight:700;color:#F6F5F1">輸出</h3>
+<p style="font-size:26px;line-height:1.4;color:#C9D3E0">新細胞中每個基因的變化量</p>
+</div>
+</div>
+<div style="display:flex;gap:32px">
+<div style="flex:1;border-top:4px solid #C8691E;padding:24px 0 0 0;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:30px;font-weight:700;color:#16213A">怎麼訓練</h3>
+<p style="font-size:26px;line-height:1.45;color:#3B4658">每一步隨機藏起一種細胞，要求模型只用其他細胞的資料預測它，等於一直在練習「新細胞」</p>
+</div>
+<div style="flex:1;border-top:4px solid #C8691E;padding:24px 0 0 0;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:30px;font-weight:700;color:#16213A">學什麼</h3>
+<p style="font-size:26px;line-height:1.45;color:#3B4658">預測誤差越小越好，同時讓不同擾動的預測彼此可以分辨（對比學習）</p>
+</div>
+<div style="flex:1;border-top:4px solid #C8691E;padding:24px 0 0 0;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:30px;font-weight:700;color:#16213A">為什麼小</h3>
+<p style="font-size:26px;line-height:1.45;color:#3B4658">約 2 萬個參數；大模型只會背下 15 種細胞，換新細胞就失準</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5E6878">VCC 2026 進度報告　·　6　·　期末版本：3 個不同亂數種子訓練的模型取平均</p>
+<aside>這是我們自己設計、自己訓練的模型 AdaptNet。核心想法：要預測「在新細胞裡關掉基因 X」，最好的線索是「其他細胞裡關掉 X 的實驗結果」。但每個來源的可信度不同，所以模型分三步：第一，替每個來源打分數加權，看那個細胞跟新細胞像不像、資料品質好不好、跟其他來源一不一致；第二，把反應拆成 200 組會一起變動的基因（基因程式），再加上細節；第三，根據新細胞對照組的狀態，調整每組程式的強弱。訓練時每一步都隨機藏起一種細胞，要模型只用其他細胞來預測它，這樣模型一直在練習預測「沒看過的細胞」。模型故意做得很小，大約兩萬個參數，因為我們試過大模型，它會把 15 種細胞背起來，換到新細胞反而更差。期末版本是用三個不同亂數種子訓練的模型取平均，讓結果更穩定。</aside>
+</section>

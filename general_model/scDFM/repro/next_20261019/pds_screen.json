@@ -1,0 +1,38 @@
+{
+ "H1": {
+  "base": 0.9006,
+  "mean_removed": 0.9046,
+  "pc1_removed": 0.9085,
+  "pc2_removed": 0.9104,
+  "pc3_removed": 0.9144,
+  "pc5_removed": 0.9231,
+  "pc10_removed": 0.9271,
+  "cis_x1.5": 0.9022,
+  "cis_x2.0": 0.9032,
+  "cis_x3.0": 0.9042
+ },
+ "KOLF200": {
+  "base": 0.5706,
+  "mean_removed": 0.5676,
+  "pc1_removed": 0.5555,
+  "pc2_removed": 0.6034,
+  "pc3_removed": 0.5986,
+  "pc5_removed": 0.6151,
+  "pc10_removed": 0.629,
+  "cis_x1.5": 0.5712,
+  "cis_x2.0": 0.5715,
+  "cis_x3.0": 0.5722
+ },
+ "HCT116": {
+  "base": 0.6469,
+  "mean_removed": 0.6508,
+  "pc1_removed": 0.6573,
+  "pc2_removed": 0.6541,
+  "pc3_removed": 0.6498,
+  "pc5_removed": 0.6873,
+  "pc10_removed": 0.6965,
+  "cis_x1.5": 0.6482,
+  "cis_x2.0": 0.649,
+  "cis_x3.0": 0.6502
+ }
+}

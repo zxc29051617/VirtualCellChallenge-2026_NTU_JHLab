@@ -1,0 +1,238 @@
+<title>VCC 2026 白話說明</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap">
+<style>
+/* Layout: one reading column (~46rem) like a lab notebook page; numbers in mono; thin rules between sections; two-up cards on wide screens. */
+:root {
+  --bg: #f2f6f5;        /* bench paper, faint teal bias */
+  --surface: #ffffff;
+  --ink: #16232a;
+  --muted: #586b71;
+  --line: #d3dfdd;
+  --accent: #0b7c75;    /* fluorescence teal */
+  --accent-soft: #d6eeeb;
+  --weak: #b4562d;      /* marks the weak scores */
+  --weak-soft: #f5e3da;
+  --display: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1618; --surface: #152125; --ink: #e2ebeb; --muted: #9bb0b3; --line: #29393d;
+    --accent: #4fc4ba; --accent-soft: #173a37; --weak: #e48b5f; --weak-soft: #3a2519; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1618; --surface: #152125; --ink: #e2ebeb; --muted: #9bb0b3; --line: #29393d;
+  --accent: #4fc4ba; --accent-soft: #173a37; --weak: #e48b5f; --weak-soft: #3a2519; color-scheme: dark;
+}
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.75; }
+.page { max-width: 46rem; margin: 0 auto; padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 44px; }
+h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.3; }
+h1 { font-size: clamp(1.9rem, 5vw, 2.5rem); letter-spacing: 0.02em; }
+h2 { font-size: 1.35rem; display: flex; align-items: baseline; gap: 0.6rem; }
+h2 .tag { font-family: var(--mono); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; color: var(--accent); text-transform: uppercase; }
+p { margin: 0; }
+section { display: flex; flex-direction: column; gap: 14px; padding-top: 28px; border-top: 1px solid var(--line); }
+header { display: flex; flex-direction: column; gap: 10px; }
+.lede { color: var(--muted); font-size: 1.02rem; }
+.meta { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); letter-spacing: 0.02em; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+strong { font-weight: 700; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+/* the task in three boxes */
+.flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 10px; align-items: stretch; }
+.flow .box { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; min-width: 0; }
+.flow .box b { display: block; font-size: 0.95rem; }
+.flow .box span { color: var(--muted); font-size: 0.88rem; line-height: 1.6; display: block; }
+.flow .arrow { align-self: center; color: var(--accent); font-family: var(--mono); font-size: 1.2rem; }
+@media (max-width: 640px) { .flow { grid-template-columns: 1fr; } .flow .arrow { justify-self: center; transform: rotate(90deg); } }
+
+.facts { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.facts div { display: flex; flex-direction: column; min-width: 0; }
+.facts .v { font-family: var(--mono); font-size: 1.15rem; font-weight: 500; font-variant-numeric: tabular-nums; }
+.facts .k { color: var(--muted); font-size: 0.82rem; }
+
+/* one real cell */
+.cell { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.cell .row { display: flex; flex-wrap: wrap; gap: 6px; }
+.cell .g { font-family: var(--mono); font-size: 0.82rem; background: var(--accent-soft); border-radius: 4px; padding: 2px 8px; white-space: nowrap; }
+.cell .g.zero { background: transparent; border: 1px dashed var(--line); color: var(--muted); }
+.cell small { color: var(--muted); font-size: 0.84rem; }
+
+/* three kinds of change */
+.kinds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.kinds div { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.kinds b { font-size: 0.98rem; }
+.kinds span { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+.kinds .hard { border-color: var(--accent); }
+@media (max-width: 640px) { .kinds { grid-template-columns: 1fr; } }
+
+/* bars drawn to scale */
+.bars { display: flex; flex-direction: column; gap: 10px; }
+.bar { display: grid; grid-template-columns: 8.5rem 1fr 3.4rem; gap: 10px; align-items: center; }
+.bar .lab { font-size: 0.92rem; min-width: 0; }
+.bar .lab small { display: block; color: var(--muted); font-size: 0.78rem; line-height: 1.4; }
+.bar .track { height: 12px; background: var(--accent-soft); border-radius: 3px; position: relative; overflow: hidden; }
+.bar .fill { position: absolute; inset: 0 auto 0 0; background: var(--accent); border-radius: 3px; }
+.bar.weak .track { background: var(--weak-soft); }
+.bar.weak .fill { background: var(--weak); }
+.bar .val { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 0.9rem; text-align: right; }
+.axis { display: grid; grid-template-columns: 8.5rem 1fr 3.4rem; gap: 10px; }
+.axis .ticks { position: relative; height: 1.2rem; font-family: var(--mono); font-size: 0.72rem; color: var(--muted); border-top: 1px solid var(--line); }
+.axis .ticks span { position: absolute; top: 2px; transform: translateX(-50%); }
+.axis .ticks span:first-child { transform: none; }
+.axis .ticks span:last-child { transform: translateX(-100%); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 0.84rem; color: var(--muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+@media (max-width: 520px) { .bar, .axis { grid-template-columns: 6.6rem 1fr 3rem; } }
+
+.note { background: var(--surface); border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 0.94rem; }
+
+/* timeline */
+.steps { display: flex; flex-direction: column; gap: 12px; }
+.step { display: grid; grid-template-columns: 3.4rem 1fr; gap: 12px; }
+.step .d { font-family: var(--mono); font-size: 0.82rem; color: var(--muted); padding-top: 3px; }
+.step .what { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.step .what p { font-size: 0.95rem; }
+.step .score { display: grid; grid-template-columns: 1fr 7.6rem; gap: 10px; align-items: center; }
+.step .score .track { height: 8px; background: var(--accent-soft); border-radius: 3px; position: relative; overflow: hidden; }
+.step .score .fill { position: absolute; inset: 0 auto 0 0; background: var(--accent); border-radius: 3px; }
+.step .score .val { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 0.84rem; text-align: right; white-space: nowrap; }
+
+ul.plain { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 6px; }
+ol.next { margin: 0; padding-left: 1.4rem; display: flex; flex-direction: column; gap: 10px; }
+ol.next li::marker { font-family: var(--mono); color: var(--accent); font-weight: 500; }
+
+dl.words { margin: 0; display: grid; grid-template-columns: 7rem 1fr; gap: 8px 14px; }
+dl.words dt { font-weight: 700; }
+dl.words dd { margin: 0; color: var(--muted); min-width: 0; }
+@media (max-width: 520px) { dl.words { grid-template-columns: 1fr; gap: 2px; } dl.words dd { margin-bottom: 8px; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .fill { animation: grow 0.7s ease-out both; transform-origin: left; }
+  @keyframes grow { from { transform: scaleX(0.2); } to { transform: scaleX(1); } }
+}
+</style>
+
+<main class="page">
+  <header>
+    <p class="meta">Arc Virtual Cell Challenge 2026 · 整理於 2026-10-22</p>
+    <h1>VCC 2026 白話說明</h1>
+    <p class="lede">這一頁用白話說明比賽在考什麼、我們怎麼做、6 項分數各代表什麼，以及現在進行到哪裡、接下來要做什麼。</p>
+  </header>
+
+  <section>
+    <h2>比賽在考什麼 <span class="tag">The task</span></h2>
+    <p>細胞裡有上萬個基因，每個基因被「讀到」的次數就是它的<strong>表現量</strong>，可以想成每個基因的音量。實驗用一種叫 CRISPRi 的工具，把某一個基因的音量<strong>調小</strong>，再看其他基因怎麼跟著變。</p>
+    <div class="flow" aria-label="題目的流程">
+      <div class="box"><b>給你：對照細胞</b><span>一種沒看過的細胞，每種給 18,400 個「沒動手腳」的細胞。</span></div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="box"><b>假設：關小一個基因</b><span>300 個目標基因，一次只關小其中一個。</span></div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="box"><b>要交：預測的細胞</b><span>每個目標基因交 400 個細胞，每個細胞寫出全部基因的讀數。</span></div>
+    </div>
+    <div class="facts">
+      <div><span class="v">18,533</span><span class="k">個基因</span></div>
+      <div><span class="v">300</span><span class="k">個目標基因</span></div>
+      <div><span class="v">× 400</span><span class="k">個細胞</span></div>
+      <div><span class="v">× 3</span><span class="k">種細胞</span></div>
+      <div><span class="v">= 360,000</span><span class="k">個預測細胞</span></div>
+    </div>
+    <div class="cell">
+      <small>真實的一個對照細胞（正式考試 D 細胞中的一個）：共讀到 <span class="num">26,165</span> 次，<span class="num">18,533</span> 個基因裡有 <span class="num">6,473</span> 個大於 0。</small>
+      <div class="row">
+        <span class="g">PRTN3 618</span><span class="g">SRGN 449</span><span class="g">ACTB 148</span><span class="g">AKT2 9</span><span class="g">ACLY 6</span><span class="g zero">ABCC1 0</span>
+      </div>
+      <small>ACLY、AKT2、ABCC1 都是正式考試的目標基因。例如題目「關小 ACLY」，我們就要猜這 400 個細胞裡 ACLY 會變少多少，其他上萬個基因又會怎麼變。</small>
+    </div>
+    <p><strong>A、B、C</strong> 是練習用的 3 種細胞，有排行榜可以看分數。<strong>D、E、F</strong> 是正式考試：分數要等公布得獎才會揭曉，每天能交 2 次，只算最後一次。</p>
+  </section>
+
+  <section>
+    <h2>我們的方法 <span class="tag">Our model</span></h2>
+    <p>我們不從零開始猜，而是<strong>借鏡別人做過的實驗</strong>：其他實驗室在別種細胞裡關小同一個基因時，其他基因怎麼變。我們把 14 份公開資料綜合起來，多份資料都一致的變化就比較可信，再套用到新的細胞上。</p>
+    <div class="kinds">
+      <div><b>① 自己變小</b><span>被關小的基因本身會下降，這部分最好猜。</span></div>
+      <div><b>② 鄰居一起變小</b><span>CRISPRi 會壓到 DNA 上附近的基因，鄰居也會跟著下降。</span></div>
+      <div class="hard"><b>③ 連鎖反應</b><span>遠處的上萬個基因因為連鎖反應跟著變，最難猜，也是分數差異最大的地方。</span></div>
+    </div>
+    <p>算出「平均會變多少」之後，我們拿對照細胞當底稿，按照預測的變化去修改，產生每個目標基因的 400 個細胞。</p>
+  </section>
+
+  <section>
+    <h2>6 項分數在看什麼 <span class="tag">Scoring</span></h2>
+    <p>每項分數的意思是：<strong>0 分</strong>代表跟「把 300 個題目都猜成同一個平均答案」一樣；<strong>1 分</strong>代表跟「把同樣的實驗重做一次」一樣準。總分是 6 項的平均。下面是我們在練習排行榜上最近一次的成績（總分 <span class="num">0.2391</span>）。</p>
+    <div class="bars" role="list" aria-label="6 項分數">
+      <div class="bar" role="listitem"><div class="lab">分辨力<small>300 個題目彼此分得出來嗎</small></div><div class="track"><div class="fill" style="width:78.5%"></div></div><div class="val">0.785</div></div>
+      <div class="bar" role="listitem"><div class="lab">整體誤差<small>平均讀數猜得準嗎</small></div><div class="track"><div class="fill" style="width:29.5%"></div></div><div class="val">0.295</div></div>
+      <div class="bar weak" role="listitem"><div class="lab">變化幅度<small>有變的基因，變多大</small></div><div class="track"><div class="fill" style="width:13.1%"></div></div><div class="val">0.131</div></div>
+      <div class="bar weak" role="listitem"><div class="lab">抓到多少<small>真的有變的，抓到幾成</small></div><div class="track"><div class="fill" style="width:19.2%"></div></div><div class="val">0.192</div></div>
+      <div class="bar weak" role="listitem"><div class="lab">方向正確<small>說會變的，方向對不對</small></div><div class="track"><div class="fill" style="width:2.2%"></div></div><div class="val">0.022</div></div>
+      <div class="bar weak" role="listitem"><div class="lab">名單重疊<small>「有變」名單重疊多少</small></div><div class="track"><div class="fill" style="width:0.9%"></div></div><div class="val">0.009</div></div>
+      <div class="axis" aria-hidden="true"><span></span><div class="ticks"><span style="left:0%">0</span><span style="left:50%">0.5</span><span style="left:100%">1</span></div><span></span></div>
+    </div>
+    <div class="legend"><span><i style="background:var(--accent)"></i>表現不錯</span><span><i style="background:var(--weak)"></i>弱項：都在看「哪些基因有變、往哪變、變多大」</span></div>
+    <p class="note">弱項的主要原因：我們猜「有變」的基因太多（每個題目約兩千個），變化幅度也猜得偏大。這是接下來最主要的改進方向。</p>
+  </section>
+
+  <section>
+    <h2>一路走來 <span class="tag">Practice board</span></h2>
+    <p>練習排行榜（A/B/C）上每次的進步，以及那次改了什麼。長條的長度依總分畫出，滿格是 0.25。</p>
+    <div class="steps">
+      <div class="step"><div class="d">10/13</div><div class="what"><p>通用模型第一版：綜合 14 份公開資料</p><div class="score"><div class="track"><div class="fill" style="width:59.3%"></div></div><div class="val">0.1482</div></div></div></div>
+      <div class="step"><div class="d">10/19</div><div class="what"><p>讓每個基因的總讀數剛好等於預測值</p><div class="score"><div class="track"><div class="fill" style="width:64.3%"></div></div><div class="val">0.1608 · 第 451 名</div></div></div></div>
+      <div class="step"><div class="d">10/19</div><div class="what"><p>去掉 300 個題目都共有的變化，讓題目彼此更好分辨</p><div class="score"><div class="track"><div class="fill" style="width:72.3%"></div></div><div class="val">0.1808 · 第 358 名</div></div></div></div>
+      <div class="step"><div class="d">10/20</div><div class="what"><p>把預測的變化縮小到剛好的大小，整體誤差第一次拿到分數</p><div class="score"><div class="track"><div class="fill" style="width:81.3%"></div></div><div class="val">0.2032 · 第 269 名</div></div></div></div>
+      <div class="step"><div class="d">10/20</div><div class="what"><p>細胞和總量分開調整</p><div class="score"><div class="track"><div class="fill" style="width:83.2%"></div></div><div class="val">0.2080 · 第 247 名</div></div></div></div>
+      <div class="step"><div class="d">10/21</div><div class="what"><p>更相信「多份資料都一致」的變化；細胞數多的實驗份量大一點</p><div class="score"><div class="track"><div class="fill" style="width:95.6%"></div></div><div class="val">0.2391 · 第 171 名</div></div></div></div>
+    </div>
+    <p>試過但沒有用的：用機器學習去學「怎麼組合資料」（在舊資料上很好，換到新細胞就變差）、加入 LINCS 資料庫、依細胞相似度調整權重。結論是：簡單、穩定的規則，比複雜的學習更能用在沒看過的細胞上。</p>
+  </section>
+
+  <section>
+    <h2>現在在哪裡 <span class="tag">10/22</span></h2>
+    <ul class="plain">
+      <li>正式考試開始了。D/E/F 的 300 個目標基因裡，有 <span class="num">171</span> 個是練習時沒出現過的。</li>
+      <li>這些新基因原本能參考的公開資料比較少，已經從三個大型公開資料集補齊。現在每個目標平均有 <span class="num">8</span> 份資料，跟練習時一樣多。</li>
+      <li>第一份正式檔案已經交出並評分成功（看不到分數），先當保底。截止時間是 11/5 23:59（台灣時間 11/6 早上 7:59）。</li>
+      <li>A/B/C 的正確答案目前還沒公布。</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>接下來 <span class="tag">Plan</span></h2>
+    <ol class="next">
+      <li><strong>做一份模擬考。</strong>用 Arc 研究所 2025 年公開的 H1 細胞資料：一樣是每個目標 400 個細胞，規格跟正式考試相同。把答案藏起來，讓模型預測，再用官方的評分程式打分。</li>
+      <li><strong>先檢查模擬考準不準。</strong>我們在練習排行榜上有十幾個版本的真實分數。如果模擬考排出的高低順序跟排行榜一致，就值得相信。</li>
+      <li><strong>改進弱項。</strong>針對「哪些基因有變、往哪變、變多大」調整。模擬考明確變好、其他檢查也沒有變差，才換掉正式那份。</li>
+    </ol>
+    <p>如果 A/B/C 的答案之後公布，它會是最好的模擬考，到時直接改用。</p>
+  </section>
+
+  <section>
+    <h2>你可以幫忙的事 <span class="tag">You</span></h2>
+    <ul class="plain">
+      <li>加入比賽的 Discord：<a href="https://discord.com/invite/f2aWGPXwej" target="_blank" rel="noopener">discord.com/invite/f2aWGPXwej</a>。答案公布、規則改變通常會先在那裡宣布，我看不到，你看到就告訴我。</li>
+      <li>這頁或我的回報有任何一句看不懂，就直接問我。</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>小字典 <span class="tag">Words</span></h2>
+    <dl class="words">
+      <dt>表現量</dt><dd>一個基因在細胞裡被讀到幾次，像音量大小。</dd>
+      <dt>目標基因</dt><dd>被 CRISPRi 關小的那個基因，也就是一個題目。</dd>
+      <dt>對照細胞</dt><dd>沒有關小任何基因的細胞，用來比較「關之前」的樣子。</dd>
+      <dt>公開資料</dt><dd>其他實驗室發表的類似實驗，我們拿來學「關掉某個基因會怎樣」。</dd>
+      <dt>模擬考</dt><dd>拿一份已知答案的資料，把答案藏起來，測試方法準不準。</dd>
+    </dl>
+  </section>
+</main>
