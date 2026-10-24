@@ -262,7 +262,7 @@ flowchart LR
 - **10x Flex**、Perturb-seq 等是不同的單細胞實驗方法，對我們來說只是資料來源不同。
 - **授權**：資料能怎麼使用。CC BY ＝ 註明出處就能用；NC ＝ 不能商業使用；SA ＝ 改作要用同樣授權；CC0 ＝ 完全公開。
 
-![15 個訓練實驗的擾動數](scDFM/repro/model_v2_20261022/deck/figs/fig_data.png)
+![15 個訓練實驗的擾動數](docs/figs/fig_data.png)
 
 另外用了兩個**基因知識庫**：STRING（蛋白質之間的交互作用網路）和 Gene Ontology（基因功能註解），
 用來推測「從沒被任何實驗關掉過的基因」。
@@ -345,7 +345,7 @@ flowchart LR
 GeneNet4 改用 STRING 和 Gene Ontology 找出**功能最像的 32 個基因**，用它們被關掉時的反應來推測，並學會該相信多少。
 期末考的 300 個基因都有測量資料，所以期末沒有用到這條路，但它讓模型可以處理「任何基因」。
 
-![有測量與沒測過的基因](scDFM/repro/model_v2_20261022/deck/figs/fig_genenet.png)
+![有測量與沒測過的基因](docs/figs/fig_genenet.png)
 
 沒測過的基因仍有一點訊號，但遠比有測量的基因弱。（這張圖的「區分度」是基準測試用的版本：0.5 ＝ 亂猜、1 ＝ 每個擾動都分得開，
 和第 3 節的換算分數是不同的尺度；「方向相似度」見第 9 節。）
@@ -435,7 +435,7 @@ v4 在 H1 進步很多，但在 HCT116、KOLF200 兩套模擬考的區分度掉�
 v5 把區分度拉回接近 v1（0.747、0.654），同時保留 AdaptNet 在整體誤差上的進步
 （原始分數 HCT116 1.019 → 0.915、KOLF200 1.099 → 1.046，越低越好），所以三套模擬考一起看最穩健。
 
-![每一步改動對模擬考總分的貢獻](scDFM/repro/model_v2_20261022/deck/figs/fig_ablation.png)
+![每一步改動對模擬考總分的貢獻](docs/figs/fig_ablation.png)
 
 **一句話**：貢獻最大的是「改用訓練的 AdaptNet 預測總量」（+0.019），其他改動各自再加一點。
 
@@ -445,7 +445,7 @@ v5 把區分度拉回接近 v1（0.747、0.654），同時保留 AdaptNet 在整
 | --- | --- | --- | --- | --- | --- | --- |
 | 0.871 | 0.165 | −0.022 | 0.548 | 0.075 | 0.202 | **0.306** |
 
-![v5 的六項換算分數](scDFM/repro/model_v2_20261022/deck/figs/fig_metrics_v5.png)
+![v5 的六項換算分數](docs/figs/fig_metrics_v5.png)
 
 **一句話**：區分度已經接近實驗重做一次的水準，但和「顯著基因」有關的方向排序、變化大小接近基準（第 10 節解釋原因）。
 
@@ -465,7 +465,7 @@ v5 把區分度拉回接近 v1（0.747、0.654），同時保留 AdaptNet 在整
 - 數字來源：`scDFM/repro/model_v2_20261022/results/` 裡的 `consensus_d200.json`、`adapt_b1_raw.json`、`genenet4_rpe1.json`
   （GeneNet4 對有測量的基因就是用 AdaptNet，所以這一列可以當作「AdaptNet＋RPE1」）。
 
-![藏起細胞類型時的比較](scDFM/repro/model_v2_20261022/deck/figs/fig_benchmark.png)
+![藏起細胞類型時的比較](docs/figs/fig_benchmark.png)
 
 ### 驗證期公開排行榜（A、B、C）
 
@@ -485,7 +485,7 @@ AdaptNet 是驗證期結束後才完成的，所以排行榜上沒有它的成�
 - 我們用模擬實驗證明：如果方向全部猜對，這幾項分數會大幅提升，所以問題不在產生細胞的方式，而在資料能提供的資訊。
 - 相對地，**區分度的換算分數已達 0.87**（1 ＝ 實驗重複水準），也就是從基準到實驗重複之間的路已經走了約 87%。
 
-![最有把握的 10 個基因的方向猜對率](scDFM/repro/model_v2_20261022/deck/figs/fig_sign_accuracy.png)
+![最有把握的 10 個基因的方向猜對率](docs/figs/fig_sign_accuracy.png)
 
 ### 試過但沒採用（詳細數字在 `scDFM/repro/model_v2_20261022/SUMMARY.md`）
 
@@ -551,7 +551,6 @@ uv run --no-project --with numpy python repro/model_v2_20261022/mock_raw.py 0,1,
 uv run --no-project --with numpy python repro/model_v2_20261022/mock_raw.py 0,1,2,3 kolf200_current kolf200_v4 kolf200_v4_ax5
 ```
 
-給教授的簡報在 `docs/VCC_defense_style_20261024.pdf`，GitHub 網頁上可以直接打開。
 
 ### 11.2 需要的電腦
 
@@ -891,9 +890,8 @@ general_model/
 ├── README.md                     ← 這份文件
 ├── requirements.txt              ← 模型環境的套件版本
 ├── docs/
-│   ├── VCC_defense_style_20261024.pptx     ← 給教授的口試風格簡報（34 頁，每頁有講稿備註）
-│   ├── VCC_defense_style_20261024.pdf      ← 同一份簡報的 PDF
-│   └── STAGE3_PLAN.md
+│   ├── figs/                   ← 這份文件用到的結果圖，以及畫圖的程式 make_figures.py
+│   └── STAGE3_PLAN.md          ← 早期的階段計畫
 ├── tools/                        ← 期末流程與資料處理
 │   ├── final_pipeline.sh         ← 總指揮：預測 → 總量 → 細胞 → 打包 → 檢查
 │   ├── make_bulk_effects.py      ← 每個基因的總量（對照組方向、目標權重、評分規則校準）
@@ -921,8 +919,7 @@ general_model/
         │   ├── build_v2.py       ← 為 D/E/F 訓練並預測
         │   ├── mock_exam.py      ← 模擬考
         │   ├── mse_proxy.py、de_sim.py ← 快速試算
-        │   ├── results/、mock/   ← 基準測試與模擬考的結果（JSON）
-        │   └── deck/             ← 簡報的產生程式（make_defense_pptx.py）與圖（make_figures.py、figs/）
+        │   └── results/、mock/   ← 基準測試與模擬考的結果（JSON）
         ├── next_20261019/        ← A/B/C 時期的流程實驗（run.log 是逐日紀錄）
         ├── signature_20261013/   ← 來源加權實驗、一致度快取的產生程式
         └── *.md                  ← 早期的計畫、資料調查、方法紀錄
@@ -1062,7 +1059,7 @@ A：重的工作（評分程式、打包、訓練）一次只跑一個；打包�
 | 10/21 | 改良總量（細胞數多的來源權重較大、來源一致度、目標權重）：0.239（驗證期最佳，第 165 名） |
 | 10/22 | 期末開始（D、E、F）；上傳 v1 保底；開始訓練 AdaptNet |
 | 10/23 | H1 模擬考確認 AdaptNet 較好，上傳 v2；GeneNet4、RPE1 資料；診斷顯著基因分數的瓶頸；上傳 v4 |
-| 10/24 | 三套模擬考確認「只移除 5 個對照組方向」較穩健，上傳 v5；給教授的口試風格簡報 |
+| 10/24 | 三套模擬考確認「只移除 5 個對照組方向」較穩健，上傳 v5 |
 
 ---
 
@@ -1099,4 +1096,3 @@ A：重的工作（評分程式、打包、訓練）一次只跑一個；打包�
 | GENCODE v46 | <https://www.gencodegenes.org> |
 | STRING v12、Gene Ontology | <https://string-db.org>、<https://geneontology.org> |
 
-給教授的簡報（`docs/VCC_defense_style_20261024.pdf`）最後也有一頁參考文獻。

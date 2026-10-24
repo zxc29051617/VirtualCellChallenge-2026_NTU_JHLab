@@ -1,6 +1,7 @@
-"""Figures for the defence-style deck (2026-10-24). All numbers are from SUMMARY.md / the mock and benchmark results.
+"""Result figures used in general_model/README.md (2026-10-24). All numbers are from
+scDFM/repro/model_v2_20261022/SUMMARY.md and the mock-exam / benchmark result files.
 
-    <python with matplotlib> make_figures.py <out_dir>
+    <python with matplotlib> docs/figs/make_figures.py docs/figs        (from general_model/)
 """
 import os, sys
 import matplotlib

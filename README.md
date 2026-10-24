@@ -9,8 +9,7 @@
 > | [`general_model/`](general_model/) | 期末使用的通用模型 AdaptNet（v5，2026/10/24 上傳，H1 模擬考 0.306）；驗證期用其中的共識模型拿到公開排行榜 0.239（第 165 名／1,635 隊） | **先看這個**：[general_model/README.md](general_model/README.md) 寫給初學者，從背景知識、評分方式、模型、結果到怎麼從零重跑都有 |
 > | 其他所有檔案 | 隊友最早的基準流程（最佳 0.109） | 保留作紀錄，可以先跳過 |
 >
-> 給教授的口試風格簡報：[PDF](general_model/docs/VCC_defense_style_20261024.pdf)（可以直接在 GitHub 上看）、
-> [PowerPoint](general_model/docs/VCC_defense_style_20261024.pptx)。本頁以下是舊流程的說明（英文）。
+> 本頁以下是舊流程的說明（英文）。
 
 
 ---
