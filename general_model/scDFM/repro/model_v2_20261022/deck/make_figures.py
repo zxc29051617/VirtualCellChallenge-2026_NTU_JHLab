@@ -100,7 +100,7 @@ fig, ax = plt.subplots(figsize=(8, 6.2))
 ys = list(range(len(ctx)))[::-1]
 ax.barh(ys, [c[1] for c in ctx], color=[cmap[c[2]] for c in ctx], height=0.68)
 for y, c in zip(ys, ctx): ax.text(c[1] + 120, y, f"{c[1]:,}", va="center", fontsize=12, color="#2B2D42")
-ax.set_yticks(ys); ax.set_yticklabels([c[0] for c in ctx], fontsize=12.5); ax.set_xlim(0, 13200); ax.set_xlabel("擾動數（被關掉的基因數）")
+ax.set_yticks(ys); ax.set_yticklabels([c[0] for c in ctx], fontsize=12.5); ax.set_xlim(0, 13200); ax.set_xlabel("使用的擾動數（每個被關掉的基因算一組）")
 ax.legend(handles=[Patch(color=v, label=k) for k, v in cmap.items()], frameon=False, loc="lower right", fontsize=12.5, title="細胞類別", title_fontsize=12.5)
 fig.tight_layout(); save(fig, "fig_data.png")
 

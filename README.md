@@ -1,12 +1,21 @@
 # Virtual Cell Challenge 2026
 
-> **最新進度（2026/10）：請先看 [general_model/README.md](general_model/README.md)。**
+> ## 從這裡開始
 >
-> 2026/10/09 起重新開發的通用擾動預測模型（AdaptNet）放在 `general_model/`，期末算分的版本是 v5（2026/10/24 上傳）：
-> H1 模擬考 0.306（原方法 0.272），驗證期公開排行榜最佳 0.239（第 165 名 / 1,635 隊），高於本頁以下舊流程的 0.109。
-> 那份說明是寫給初學者的，從背景知識、評分方式、模型、驗證到怎麼執行都有。給教授的口試風格簡報在
-> `general_model/docs/VCC_defense_style_20261024.pptx`（另有同名 PDF）。本頁以下是舊流程的說明，保留作紀錄。
+> 這個 repo 有兩部分：
+>
+> | 位置 | 是什麼 | 要不要看 |
+> | --- | --- | --- |
+> | [`general_model/`](general_model/) | 期末使用的通用模型 AdaptNet（v5，2026/10/24 上傳，H1 模擬考 0.306）；驗證期用其中的共識模型拿到公開排行榜 0.239（第 165 名／1,635 隊） | **先看這個**：[general_model/README.md](general_model/README.md) 寫給初學者，從背景知識、評分方式、模型、結果到怎麼從零重跑都有 |
+> | 其他所有檔案 | 隊友最早的基準流程（最佳 0.109） | 保留作紀錄，可以先跳過 |
+>
+> 給教授的口試風格簡報：[PDF](general_model/docs/VCC_defense_style_20261024.pdf)（可以直接在 GitHub 上看）、
+> [PowerPoint](general_model/docs/VCC_defense_style_20261024.pptx)。本頁以下是舊流程的說明（英文）。
 
+
+---
+
+## 舊流程（隊友最早的基準，保留作紀錄）
 
 This repository is set up for the 2026 Virtual Cell Challenge with a deliberately simple first-stage baseline.
 
@@ -25,7 +34,7 @@ Current goals:
 
 ## Current status
 
-- **Start here: [docs/state_of_play.md](docs/state_of_play.md)** — the submitted scores, the
+- Old-pipeline notes: [docs/state_of_play.md](docs/state_of_play.md) — the submitted scores, the
   next experiment and why, and what has already been ruled out with the measurement that
   ruled it out. Best score so far is **0.1086** with `transfer_v9_hct116.vcc` (v5 scored 0.1040).
 

@@ -9,7 +9,7 @@ for n in sorted(f[:-4] for f in os.listdir(f"{SIG}/cache_abc_backup_20261022") i
     pairs = [(i, tb[t]) for i, t in enumerate(ta) if t in tb]
     x = np.concatenate([Ya[i] for i, _ in pairs]); y = np.concatenate([Yb[j] for _, j in pairs]); ok = np.isfinite(x) & np.isfinite(y)
     print(f"cache {n:13s}: rows {len(ta)} -> {len(tb)}, shared {len(pairs)}, max |diff| {np.abs(x[ok] - y[ok]).max():.2e}, corr {np.corrcoef(x[ok], y[ok])[0, 1]:.5f}", flush=True)
-out = "/home/zxc29051617/.claude/jobs/3cf1662b/tmp/abc_after_fill.npz"
+out = "/home/zxc29051617/VCC/data/stage3/effects/abc_after_fill.npz"
 subprocess.run(["/home/zxc29051617/VCC/scDFM/.venv/bin/python", "-m", "vcc.gm", "export", "A", "vcc", out, "per_celltype=False", "lam=3.0", "kcap=1.0", "alpha=3.0"],
                cwd="/home/zxc29051617/VCC/scDFM", env={**os.environ, "VCC_DATA_DIR": "/home/zxc29051617/VCC/data/vcc2026"}, check=True, stdout=subprocess.DEVNULL)
 z0 = np.load(f"{E}/VCC_gm_vip.npz", allow_pickle=True); z1 = np.load(out, allow_pickle=True)

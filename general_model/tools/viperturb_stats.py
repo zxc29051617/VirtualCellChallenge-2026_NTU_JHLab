@@ -13,10 +13,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import rds_stream as R
 
 RDS = "/home/zxc29051617/VCC/data/external/viperturb/genome_wide_filtered.rds"
-SKEL = "/home/zxc29051617/.claude/jobs/3cf1662b/tmp/vip_skel.pkl"
+SKEL = "/home/zxc29051617/VCC/data/external/viperturb/vip_skel.pkl"   # pass 1 output, built here if missing
 SPOOL = "/home/zxc29051617/VCC/data/external/viperturb/rna_i.int32"
 OUT = "/home/zxc29051617/VCC/data/stage3/stats_ext/VIPK562.npz"
 t0 = time.time()
+if not os.path.exists(SKEL):                       # pass 1: parse the RDS once, keep everything but the big vectors
+    pickle.dump(R.skeleton(RDS), open(SKEL, "wb"))
 o = pickle.load(open(SKEL, "rb"))
 md = o.attr["meta.data"]; cols = dict(zip(md.attr["names"].value, md.value))
 gene = np.array(cols["gene"].value)

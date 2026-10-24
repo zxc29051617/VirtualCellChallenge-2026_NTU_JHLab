@@ -59,7 +59,7 @@ def from_raw(ctx, path):
 
 def vip_controls():
     sys.path.insert(0, f"{ROOT}/tools"); import rds_stream as R
-    o = pickle.load(open("/home/zxc29051617/.claude/jobs/3cf1662b/tmp/vip_skel.pkl", "rb"))
+    o = pickle.load(open("/home/zxc29051617/VCC/data/external/viperturb/vip_skel.pkl", "rb"))
     md = o.attr["meta.data"]; cols = dict(zip(md.attr["names"].value, md.value)); gene = np.array(cols["gene"].value)
     rna = o.attr["assays"].value[0]; cnt = rna.attr["layers"].value[0]
     p = np.asarray(cnt.attr["p"].value, np.int64); feat = np.array(rna.attr["features"].attr["dimnames"].value[0].value)

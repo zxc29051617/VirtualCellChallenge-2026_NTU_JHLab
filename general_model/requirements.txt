@@ -9,6 +9,7 @@ numba==0.68.0
 polars==1.32.0
 scikit-learn==1.9.1
 h5py==3.16.0
+pyarrow==25.0.1     # parquet files (X-Atlas)
 openpyxl
 # scorer environment (evalenv, separate Python 3.11): cell-eval2==0.18.0, pdex==0.3.0
-# upload tool: vcc-cli==0.3.0 (uv tool install vcc-cli)
+# upload tool: vcc-cli==0.3.0 (uv tool install vcc-cli==0.3.0)
