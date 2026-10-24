@@ -32,7 +32,7 @@
 13. [名詞解釋](#13-名詞解釋)
 14. [常見問題](#14-常見問題)
 15. [時間軸](#15-時間軸)
-16. [參考文獻與資料來源](#16-參考文獻與資料來源)
+16. [論文與資料來源](#16-論文與資料來源)
 
 ---
 
@@ -889,9 +889,10 @@ PRECOMP=$(pwd)/data/stage3/effects/gm_final_v4pre RENDER=g1 SHAREDK=0 GAMMA=1 CT
 general_model/
 ├── README.md                     ← 這份文件
 ├── requirements.txt              ← 模型環境的套件版本
+├── papers/                       ← 讀過、用到的論文 PDF 和說明（第 16 節）
 ├── docs/
-│   ├── figs/                   ← 這份文件用到的結果圖，以及畫圖的程式 make_figures.py
-│   └── STAGE3_PLAN.md          ← 早期的階段計畫
+│   ├── figs/                     ← 這份文件用到的結果圖，以及畫圖的程式 make_figures.py
+│   └── STAGE3_PLAN.md            ← 早期的階段計畫
 ├── tools/                        ← 期末流程與資料處理
 │   ├── final_pipeline.sh         ← 總指揮：預測 → 總量 → 細胞 → 打包 → 檢查
 │   ├── make_bulk_effects.py      ← 每個基因的總量（對照組方向、目標權重、評分規則校準）
@@ -1063,36 +1064,37 @@ A：重的工作（評分程式、打包、訓練）一次只跑一個；打包�
 
 ---
 
-## 16. 參考文獻與資料來源
+## 16. 論文與資料來源
 
-### 論文與方法
+PDF 和每篇的詳細說明都放在 [`papers/`](papers/)。這裡只列這個專案**真的讀過、或實際用到**的論文。
 
-| 簡稱 | 出處 | 在本專案的角色 |
+### 讀過的論文
+
+| 論文 | 我們怎麼用 | 結論 |
 | --- | --- | --- |
-| Replogle 2022 | Replogle et al., *Cell* (2022)：全基因組 Perturb-seq | K562、K562ess、RPE1 資料 |
-| Nadig 2025 | Nadig et al., *Nature Genetics* (2025) | HepG2、Jurkat 資料 |
-| GEARS | Roohani et al., *Nature Biotechnology* (2024) | 相關研究：用基因知識圖預測擾動 |
-| CPA | Lotfollahi et al., *Molecular Systems Biology* (2023) | 相關研究：拆開細胞狀態和擾動效果 |
-| scGPT | Cui et al., *Nature Methods* (2024) | 相關研究：單細胞基礎模型 |
-| State | Adduri et al., *bioRxiv* (2025) | 相關研究：主辦單位 Arc 的模型 |
-| scDFM | Yu et al., *ICLR* (2026) | 本專案一開始重現的生成模型 |
-| 線性基準 | Ahlmann-Eltze et al., *Nature Methods* (2025) | 深度模型尚未穩定勝過簡單基準，啟發我們從小模型做起 |
-| STRING v12 | Szklarczyk et al., *Nucleic Acids Research* (2023) | 蛋白交互網路（GeneNet4） |
-| Gene Ontology | Gene Ontology Consortium, *Genetics* (2023) | 基因功能註解（GeneNet4） |
+| scDFM（Yu et al., *ICLR* 2026） | 專案的起點：先重現，再改成多細胞種類版本預測沒看過的細胞 | 在新細胞上學不到擾動訊號（等於亂猜），所以改走小模型 |
+| PerturbCellRL（Wu et al., arXiv 2026） | 評估能不能用強化學習進一步微調 scDFM | 只測單一細胞種類、區分度多半變差；沒有採用 |
+| SIGnature（Gold et al., *Nature Biotechnology* 2026） | 用它的基因重要性分數當來源可信度的特徵（45 次官方評分） | 沒有比原本的特徵更好，放棄 |
 
-### 資料下載位置
+### 比賽的官方文件
 
-| 資料 | 位置 |
+| 文件 | 用途 |
 | --- | --- |
-| 比賽資料、評分程式 | <https://virtualcellchallenge.org>（`vcc` 工具）、cell-eval2（PyPI） |
-| Replogle 2022（K562、RPE1） | figshare，檔案編號見 `tools/download_list.tsv` 和 11.5 |
-| Nadig 2025（HepG2、Jurkat） | GEO GSE264667 |
-| X-Atlas/Orion（HCT116、HEK293T） | <https://huggingface.co/datasets/Xaira-Therapeutics/X-Atlas-Orion> |
-| VCC 2025（H1） | <https://storage.googleapis.com/arc-institute-virtual-cell-atlas/virtual-cell-challenge/2025/> |
-| CD4 T 細胞（Marson lab） | <https://genome-scale-tcell-perturb-seq.s3.amazonaws.com/marson2025_data/GWCD4i.pseudobulk_merged.h5ad> |
-| Feng 2025（誘導多能幹細胞） | figshare 27989294 |
-| KOLF2.1J | figshare+ 27261219（檔案 64650261） |
-| VIPerturb-seq（K562） | Zenodo 18460279 |
-| GENCODE v46 | <https://www.gencodegenes.org> |
-| STRING v12、Gene Ontology | <https://string-db.org>、<https://geneontology.org> |
+| Virtual Cell Challenge 2026（Arc & Goodarzi, *Cell* 2026） | 比賽設計與規則（可以使用任何合適的資料） |
+| The vcc2026 Metric Suite（官方評分規格） | 六項分數的算法 |
 
+### 資料來源
+
+| 資料 | 論文或出處 | 下載位置 |
+| --- | --- | --- |
+| K562、K562ess、RPE1 | Replogle et al., *Cell* (2022) | figshare，檔案編號見 `tools/download_list.tsv` 和 11.5 |
+| HepG2、Jurkat | Nadig et al., *Nature Genetics* (2025) | GEO GSE264667 |
+| HCT116、HEK293T | X-Atlas/Orion（Xaira Therapeutics，CC BY-NC-SA 4.0） | <https://huggingface.co/datasets/Xaira-Therapeutics/X-Atlas-Orion> |
+| H1 | Virtual Cell Challenge 2025 | <https://storage.googleapis.com/arc-institute-virtual-cell-atlas/virtual-cell-challenge/2025/> |
+| CD4 T 細胞 | Marson lab 全基因組 CRISPRi | <https://genome-scale-tcell-perturb-seq.s3.amazonaws.com/marson2025_data/GWCD4i.pseudobulk_merged.h5ad> |
+| FengNF、FengF | Feng et al. (2025) | figshare 27989294 |
+| KOLF | KOLF2.1J 全基因組 CRISPRi，*Nature Biotechnology* (2026) | figshare+ 27261219（檔案 64650261） |
+| VIPK562 | VIPerturb-seq（Satija lab, 2026） | Zenodo 18460279 |
+| 神經細胞（只做過測試） | scPerturb（Peidli et al., *Nature Methods* 2024） | Zenodo 13350497 |
+| 基因知識 | STRING v12（Szklarczyk et al., *Nucleic Acids Research* 2023）、Gene Ontology、GENCODE v46 | <https://string-db.org>、<https://geneontology.org>、<https://www.gencodegenes.org> |
+| 比賽資料、評分程式 | Arc Institute | <https://virtualcellchallenge.org>（`vcc` 工具）、cell-eval2（PyPI） |
