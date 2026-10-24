@@ -48,7 +48,7 @@ Current goals:
   averaged into an overall score. Matching the baseline scores 0.
 - **There is no local ground truth**, for any context. Scoring a prediction locally against
   challenge data is not possible; the organizers hold the perturbed cells. Local evaluation
-  requires an external public perturbation dataset — see `參考文獻/README.md`.
+  requires an external public perturbation dataset — see `papers/README.md`.
 - The `vcc` profile in `cell-eval` v0.8.2 computes the 2025 three-metric panel, not the 2026
   six-metric panel, so it does not reproduce the leaderboard score.
 

@@ -3,7 +3,7 @@
 Primary source: Arc Virtual Cell Initiative Team and Goodarzi, H. (2026). "Virtual Cell
 Challenge 2026: Benchmarking zero-shot generalization across cellular contexts." *Cell* 189,
 5827–5830. doi:10.1016/j.cell.2026.08.004 (open access, CC BY-NC-ND). Local copy in
-`參考文獻/`.
+`papers/`.
 
 Corroborated against the live leaderboard API (`https://virtualcellchallenge.org/api/leaderboard`)
 and the installed `cell-eval` source. Verified 2026-09-14.
@@ -37,7 +37,7 @@ Consequences for this workspace:
   counts in `dataset/manifest.json` describe data the organizers hold, not data we have.
 - Local scoring of a prediction is therefore impossible using challenge data alone.
 - Participants may use public perturbation datasets or their own data. Building a local
-  evaluation loop requires such an external dataset — see `參考文獻/README.md`.
+  evaluation loop requires such an external dataset — see `papers/README.md`.
 
 ## Official submission constraints
 
@@ -128,7 +128,7 @@ late submission replaces a better earlier one.
 
 ### Scores are scaled between a baseline and a replicate
 
-From the official metric spec (`參考文獻/vcc2026 Metric Suite (official spec).pdf`). Writing
+From the official metric spec (`papers/vcc2026 Metric Suite (official spec).pdf`). Writing
 `u` for a metric's aggregate over the panel:
 
 ```
@@ -242,7 +242,7 @@ Further reading cited by the Commentary:
 - Wei, Z., et al. (2026). Benchmarking algorithms for generalizable single-cell perturbation
   response prediction. *Nat. Methods* 23, 451–464. doi:10.1038/s41592-025-02980-0
 - Adduri, A.K., et al. (2025). Predicting cellular responses to perturbation across diverse
-  contexts with State. bioRxiv. doi:10.1101/2025.06.26.661135 — local copy in `參考文獻/`
+  contexts with State. bioRxiv. doi:10.1101/2025.06.26.661135 — local copy in `papers/`
 - Virtual Cell Challenge 2025 Wrap-Up: Winners and Reflections.
   arcinstitute.org/news/virtual-cell-challenge-2025-wrap-up
 

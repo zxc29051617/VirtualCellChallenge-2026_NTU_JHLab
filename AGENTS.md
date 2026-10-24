@@ -55,7 +55,7 @@ $uv = "D:\anaconda3\Scripts\uv.exe"
   currently validation controls only.
 - `scripts/` — driver scripts (PowerShell + Python).
 - `docs/` — `challenge_brief.md`, `validation_strategy.md`,
-  `參考文獻/README.md`.
+  `papers/README.md`.
 - `artifacts/` — evaluation output, not committed.
 
 ## Notes
