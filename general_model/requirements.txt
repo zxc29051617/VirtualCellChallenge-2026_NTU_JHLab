@@ -1,0 +1,14 @@
+# model environment (scDFM/.venv, Python 3.11.17) - versions on the original machine
+torch==2.7.1        # CUDA 12.6 build
+numpy==2.2.6
+scipy==1.16.1
+pandas==2.3.1
+anndata==0.12.1
+scanpy==1.11.4
+numba==0.68.0
+polars==1.32.0
+scikit-learn==1.9.1
+h5py==3.16.0
+openpyxl
+# scorer environment (evalenv, separate Python 3.11): cell-eval2==0.18.0, pdex==0.3.0
+# upload tool: vcc-cli==0.3.0 (uv tool install vcc-cli)
