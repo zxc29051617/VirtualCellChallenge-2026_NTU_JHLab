@@ -31,6 +31,9 @@ p.add_argument("--top-frac", type=float, default=None,
                help="dual render: fraction of a target's cells (largest counts) that receive added counts (default 0.1)")
 p.add_argument("--effects-bulk", nargs="+", default=None,
                help="dual only: effects at the bulk amplitude, same layout as --effects")
+p.add_argument("--require-all", action="store_true",
+               help="stop if any target has no effect or an effect file has non-finite values (default: warn and write"
+                    " unperturbed control cells for missing targets)")
 a = p.parse_args()
 if a.render != "current":
     sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scDFM"))
@@ -47,6 +50,12 @@ if a.limit_targets:
     perts = perts[:a.limit_targets]
 def load_effects(path):
     z = np.load(path, allow_pickle=True)
+    assert len(z["targets"]) == len(z["lfc"]), f"{path}: {len(z['targets'])} targets but {len(z['lfc'])} rows"
+    bad = int((~np.isfinite(z["lfc"])).sum())
+    if bad:
+        msg = f"{path}: {bad:,} non-finite entries (treated as no change)"
+        if a.require_all: raise SystemExit(msg)
+        print("WARNING " + msg, flush=True)
     return {t: np.clip(np.nan_to_num(v), -a.clip, a.clip) for t, v in zip(z["targets"], z["lfc"]) if not np.isnan(v).all()}
 def load_spec(spec):
     if len(spec) == 1 and "=" not in spec[0]:
@@ -55,7 +64,12 @@ def load_spec(spec):
 eff = load_spec(a.effects)
 bulk = load_spec(a.effects_bulk) if a.render in ("dual", "dual_lib") else None
 for c in a.contexts:
-    print(f"context {c}: {sum(t in eff[c] for t in perts)}/{len(perts)} targets with an effect", flush=True)
+    n_eff = sum(t in eff[c] for t in perts)
+    print(f"context {c}: {n_eff}/{len(perts)} targets with an effect", flush=True)
+    if n_eff < len(perts):
+        msg = f"context {c}: {len(perts) - n_eff} targets have no effect and would be written as unperturbed control cells"
+        if a.require_all: raise SystemExit(msg)
+        print("WARNING " + msg, flush=True)
 
 os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
 w = PredictionWriter(a.out, genes, a.contexts, perts, cells_per_pert=400)

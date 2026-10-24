@@ -13,9 +13,13 @@ p = argparse.ArgumentParser(); p.add_argument("url"); p.add_argument("out")
 p.add_argument("--workers", type=int, default=128); p.add_argument("--part-mb", type=int, default=8)
 a = p.parse_args()
 size = int(urllib.request.urlopen(urllib.request.Request(a.url, method="HEAD"), timeout=60).headers["Content-Length"])
-P = a.part_mb << 20; nparts = -(-size // P); tmp, done_path = a.out + ".part", a.out + ".done"
-if not os.path.exists(tmp):
+P = a.part_mb << 20; nparts = -(-size // P); tmp, done_path, meta_path = a.out + ".part", a.out + ".done", a.out + ".meta"
+meta = f"{a.url} {size} {P}\n"                          # progress is only reused for this exact download
+if not os.path.exists(tmp) or not os.path.exists(meta_path) or open(meta_path).read() != meta:
+    for f_ in (done_path, tmp):
+        if os.path.exists(f_): os.remove(f_)
     with open(tmp, "wb") as fh: fh.truncate(size)
+    open(meta_path, "w").write(meta)
 done = set(int(x) for x in open(done_path).read().split()) if os.path.exists(done_path) else set()
 todo = [k for k in range(nparts) if k not in done]
 lock = threading.Lock(); fd = os.open(tmp, os.O_WRONLY); got = [0]; t0 = time.time(); last = [t0]
@@ -49,5 +53,5 @@ with ThreadPoolExecutor(a.workers) as ex:
 os.close(fd); dlog.close()
 done = set(int(x) for x in open(done_path).read().split())
 assert len(done) == nparts, f"{nparts - len(done)} parts missing; rerun to continue"
-os.replace(tmp, a.out); os.remove(done_path)
+os.replace(tmp, a.out); os.remove(done_path); os.remove(meta_path)
 print(f"done: {a.out} ({size/1e9:.2f} GB) in {(time.time()-t0)/60:.1f} min", flush=True)

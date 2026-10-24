@@ -26,3 +26,12 @@ TRASH-FILES.md
 data/*.h5ad
 submissions/*.h5ad
 submissions/*.vcc
+
+# credentials: never commit (added 2026-10-24)
+.env
+.env.*
+*.pem
+*.key
+id_rsa*
+credentials*.json
+*token*.txt

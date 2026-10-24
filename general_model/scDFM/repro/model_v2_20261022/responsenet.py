@@ -95,7 +95,14 @@ class Net(nn.Module):
         return self.a * cons + r @ self.E_out.T
 
 
+_CUT_NOTED = [False]
+
+
 def batch(S, zfun_t, q_rows, src_lists, tids, smax=13):
+    """At most smax sources per target (the first smax are used; v1-v5 were built this way)."""
+    if not _CUT_NOTED[0] and any(len(s) > smax for s in src_lists):
+        _CUT_NOTED[0] = True
+        print(f"note: some targets have more than {smax} sources; only the first {smax} are used", flush=True)
     Bn = len(q_rows); R = torch.full((Bn, smax), -1, dtype=torch.long, device=DEV)
     for i, s in enumerate(src_lists): R[i, :len(s)] = torch.tensor(s[:smax], device=DEV)
     smask = R >= 0; Rc = R.clamp(min=0)

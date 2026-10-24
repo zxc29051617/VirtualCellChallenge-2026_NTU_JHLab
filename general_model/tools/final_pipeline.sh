@@ -108,7 +108,7 @@ fi
 FREE=$(df --output=avail -B1G "$ROOT" | tail -n 1 | tr -d ' ')
 if [ "$FREE" -lt 40 ]; then echo "only ${FREE} GB free: building and packing needs ~37 GB at its peak (h5ad + temporary copy + .vcc)"; exit 1; fi
 log "build cells"
-(cd $ROOT/vccsub && $ROOT/scDFM/.venv/bin/python -I make_effect_submission.py --data "$DATA" --effects $CELLSPEC \
+(cd $ROOT/vccsub && $ROOT/scDFM/.venv/bin/python -I make_effect_submission.py --data "$DATA" --effects $CELLSPEC ${STRICT:+--require-all} \
    --contexts "${CTX[@]}" $BULK_ARGS ${TOPFRAC:+--top-frac $TOPFRAC} \
    --out out/$NAME.h5ad)
 if [ -n "${NOPACK:-}" ]; then log "done: $ROOT/vccsub/out/$NAME.h5ad (NOPACK: not packed)"; exit 0; fi

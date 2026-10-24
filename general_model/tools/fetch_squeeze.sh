@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail                  # stop at the first failed download
 cd /home/zxc29051617/VCC/data/external
 P="python3 -I /home/zxc29051617/VCC/tools/pget.py"
 G=https://ftp.ncbi.nlm.nih.gov/geo/series/GSE264nnn/GSE264667/suppl

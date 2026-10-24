@@ -819,8 +819,11 @@ cd ..
 
 # 步驟 3：產生 36 萬顆細胞並打包成 vccsub/out/gm_final_v5.vcc（約 20 分鐘，硬碟要有 40 GB 空閒）
 PRECOMP=$(pwd)/data/stage3/effects/gm_final_v4pre RENDER=g1 SHAREDK=0 GAMMA=1 CTRLAXES=5 \
-  TWPOW=0.5 CELLAGREE=1 CELLAMP=1.5 TOPFRAC=0.02 bash tools/final_pipeline.sh data/vcc2026_final gm_final_v5 D E F
+  TWPOW=0.5 CELLAGREE=1 CELLAMP=1.5 TOPFRAC=0.02 STRICT=1 bash tools/final_pipeline.sh data/vcc2026_final gm_final_v5 D E F
 ```
+
+`STRICT=1` 代表「任何目標基因缺預測、或預測裡有無效數值，就立刻停下來」。做要上傳的檔案時一定要加，
+否則程式只會印警告，並把缺預測的基因寫成沒處理過的細胞。
 
 怎麼確認成功（照這三步重建出來的檔案，和實際上傳的完全一樣，見 11.13）：
 
@@ -855,6 +858,7 @@ PRECOMP=$(pwd)/data/stage3/effects/gm_final_v4pre RENDER=g1 SHAREDK=0 GAMMA=1 CT
 | `CELLAGREE` | 空 | `1` | `1` | 細胞層乘上來源一致度 |
 | `TOPFRAC` | `0.1` | `0.02` | `0.02` | 總量差額放進每個基因讀數最高的幾 % 細胞 |
 | `NOPACK` | 空 | | | 設成 1 就只產生細胞、不打包成 `.vcc` |
+| `STRICT` | 空 | | `1` | 設成 1 時，缺預測或有無效數值就停下來（做上傳檔一定要加） |
 
 （`SHAREDK`、`GAMMA`、`CTRLAXES` 只有在 `RENDER=g1` 時有作用。）
 
@@ -878,6 +882,8 @@ PRECOMP=$(pwd)/data/stage3/effects/gm_final_v4pre RENDER=g1 SHAREDK=0 GAMMA=1 CT
 - **CD4 的彙總**最早是在租用的雲端主機上做的；11.5 的本機做法應該得到相同結果，但沒有逐位元比對過。
 - **KOLF** 的下載程式寫死了 figshare 檔案裡的位元組位置；如果作者重新上傳檔案，`tools/fetch_kolf.sh` 和 `tools/kolf_process.py` 要跟著改。
 - **資料來源可能變動**：GO（current 版）、Hugging Face、Zenodo、GEO 和主辦單位的下載都可能更新或下架。
+- **每個目標最多用 13 個來源**：超過的部分不會使用（程式會印出提醒）。期末 300 個目標都沒有超過，但之後加入更多資料時要注意。
+- **下載**：下載腳本遇到失敗會立刻停下來並回報錯誤；下載中斷後重跑會從斷點繼續，換了下載設定則會重新開始。
 - **授權**：X-Atlas/Orion 是 CC BY-NC-SA 4.0，不能商業使用；比賽有獎金，是否算商業使用尚未向資料提供者確認。
   Feng 2025 的計數資料授權在不同頁面標示不同（MIT 或 CC BY 4.0），也待確認。
 - **顯示卡的微小隨機性**：換一張顯示卡或不同版本的驅動，AdaptNet 的結果可能有極小的差異，分數應該非常接近。

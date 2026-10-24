@@ -24,10 +24,14 @@ if a.range:
     base, total = lo_, min(hi_, total) - lo_
 CH = a.chunk_mb << 20
 n = (total + CH - 1) // CH
-done_path = a.out + ".done"
-done = set(int(x) for x in open(done_path).read().split()) if os.path.exists(done_path) else set()
-if not os.path.exists(a.out + ".part"):
+done_path, meta_path = a.out + ".done", a.out + ".meta"
+meta = f"{a.url} {base} {total} {CH}\n"                  # progress is only reused for this exact download
+if not os.path.exists(a.out + ".part") or not os.path.exists(meta_path) or open(meta_path).read() != meta:
+    for f_ in (done_path, a.out + ".part"):
+        if os.path.exists(f_): os.remove(f_)
     with open(a.out + ".part", "wb") as f: f.truncate(total)
+    open(meta_path, "w").write(meta)
+done = set(int(x) for x in open(done_path).read().split()) if os.path.exists(done_path) else set()
 lock = threading.Lock(); t0 = time.time(); got = [0]
 state = {"url": url, "t": time.time()}
 
@@ -61,5 +65,5 @@ with ThreadPoolExecutor(a.conns) as ex:
             el = time.time() - t0
             print(f"  {len(done)}/{n} chunks  {got[0]/el/2**20:.1f} MiB/s", flush=True)
 assert len(done) == n
-os.replace(a.out + ".part", a.out); os.remove(done_path)
+os.replace(a.out + ".part", a.out); os.remove(done_path); os.remove(meta_path)
 print(f"done {a.out} in {time.time()-t0:.0f}s", flush=True)

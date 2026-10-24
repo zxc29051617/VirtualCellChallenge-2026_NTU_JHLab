@@ -9,3 +9,16 @@
 __pycache__/
 # third-party code cloned for experiments (SIGnature, clone it from its own repository)
 scDFM/repro/signature_20261013/ext/
+# local environments and outputs
+scDFM/.venv/
+evalenv/
+rdsenv/
+vccsub/out/
+# credentials: never commit
+.env
+.env.*
+*.pem
+*.key
+id_rsa*
+credentials*.json
+*token*.txt

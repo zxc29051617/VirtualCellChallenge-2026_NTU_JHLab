@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail                  # stop at the first failed download
 # Fetch stage-3 raw single-cell CRISPRi files into data/external (resumable).
 LIST=$(dirname "$(readlink -f "$0")")/download_list.tsv       # the list ships with the code (tools/)
 mkdir -p /home/zxc29051617/VCC/data/external && cd /home/zxc29051617/VCC/data/external

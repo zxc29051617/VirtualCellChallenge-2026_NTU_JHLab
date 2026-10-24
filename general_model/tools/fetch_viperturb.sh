@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail                  # stop at the first failed download
 # VIPerturb-seq (Satija lab 2026, Zenodo 18460279, CC BY 4.0): genome-wide K562 CRISPRi in 10x Flex, all 300 VCC targets.
 cd /home/zxc29051617/VCC/data/external/viperturb
 P="python3 -I /home/zxc29051617/VCC/tools/pget.py"

@@ -94,9 +94,9 @@ def adaptnet_effects(model, d, k, cells_from_a=False, cells_blend=0.0):
 
 
 def overall(res):
-    rec = {r.get("metric", r.get("member", "")): r for r in res["scaled"]}
-    vals = [float(r.get("score", r.get("scaled", np.nan))) for r in res["scaled"] if str(r.get("metric", r.get("member", ""))) != "overall"]
-    return float(np.nanmean(vals)) if vals else float("nan")
+    """Mean of the six scaled members (from_replicate), as the leaderboard ranks."""
+    vals = [float(r["from_replicate"]) for r in res["scaled"]]
+    return float(np.mean(vals)) if vals else float("nan")
 
 
 # variant B (2026-10-22 late): AdaptNet with the full detail (beta 1) and minimal processing -- no panel shared removal

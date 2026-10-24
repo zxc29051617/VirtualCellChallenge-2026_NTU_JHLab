@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail                  # stop at the first failed download
 # Feng 2025 hiPSC genome-scale CRISPRi, fitness-gene set (adds 31 VCC targets to the non-fitness set already here)
 cd /home/zxc29051617/VCC/data/external
 P="python3 -I /home/zxc29051617/VCC/tools/pget.py"
