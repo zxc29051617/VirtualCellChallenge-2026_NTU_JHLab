@@ -14,7 +14,7 @@
 
 ---
 
-## 舊流程（隊友最早的基準，保留作紀錄）
+## 舊流程（最早的基準，保留作紀錄）
 
 This repository is set up for the 2026 Virtual Cell Challenge with a deliberately simple first-stage baseline.
 
