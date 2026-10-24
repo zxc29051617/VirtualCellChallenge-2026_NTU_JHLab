@@ -1,0 +1,45 @@
+{
+ "note": "noise term on the ln-ratio scale; see var_scale_check.py",
+ "contexts": {
+  "TianNeuron2021": {
+   "n": 166,
+   "yy": 15371.781870329372,
+   "v_old": 10930.178933680058,
+   "v_new": 18446.61569761279,
+   "noise_share_old": 0.7110547772459287,
+   "noise_share_new": 1.20003106036903
+  }
+ },
+ "methods": {
+  "outer_neuron_adapt": {
+   "dir_old": 0.011065991748868768,
+   "dir": NaN,
+   "skill_old": -0.14617945986140013,
+   "skill": NaN,
+   "pds": 0.5514056224899598,
+   "folds": {
+    "Neuron": NaN
+   }
+  },
+  "outer_neuron_adapt_strictpca": {
+   "dir_old": 0.011881162924631409,
+   "dir": NaN,
+   "skill_old": -0.1469845614810925,
+   "skill": NaN,
+   "pds": 0.558123402701716,
+   "folds": {
+    "Neuron": NaN
+   }
+  },
+  "outer_neuron_consensus": {
+   "dir_old": 0.011690649945697976,
+   "dir": NaN,
+   "skill_old": -0.20359495082939683,
+   "skill": NaN,
+   "pds": 0.5427528294998174,
+   "folds": {
+    "Neuron": NaN
+   }
+  }
+ }
+}

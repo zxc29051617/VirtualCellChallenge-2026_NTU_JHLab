@@ -313,7 +313,10 @@ reach 0.1699, jac 0.1183, nmae 0.9395), so call strategies can be compared witho
 - Leave-genes-out without the centring leak (audit H1; CLEAN_CENTRING=1: every fold re-centres the training contexts on
   the common mode of their training rows only, bench.centred_on; GeneNet's inner calibration likewise; randomized SVDs
   seeded without touching the caller's RNG): knn_combo S1 0.115 / 0.605 -> 0.118 / 0.606, S2 0.024 / 0.558 -> 0.024 /
-  0.558 (blend and GeneNet4 S2 re-running; S1 truth now uses the training-only common mode).
-- Queued (one job at a time, lowest priority, each waits for free memory as the machine is shared): AdaptNet
-  no-RPE1 reference re-run, v5 + STRICT_PCA=1 on the H1 / HCT116 / KOLF200 official mocks (name v5_strictpca, compare
-  with v4_ax5), GeneNet4 + RPE1 S2 without the leak. No upload without the user's OK; v5 stays the counting entry.
+  0.558; blend S1 0.130 / 0.600 -> 0.135 / 0.603, S2 0.027 / 0.557 -> 0.027 / 0.557 (S1 truth now uses the
+  training-only common mode). -> the leak did not inflate the gene benchmark; GeneNet4 S2 re-running.
+- adapt_b1_check (run_clean_checks.py adapt, default PCA, no RPE1) equals adapt_b1_raw exactly, so both strict-PCA
+  comparisons above are matched pairs. On the ln scale the strict runs read 0.162 (vs 0.156) and 0.185 (vs 0.181).
+- Queued (one job at a time, lowest priority, each waits for free memory as the machine is shared): v5 + STRICT_PCA=1
+  on the H1 / HCT116 / KOLF200 official mocks (name v5_strictpca, compare with v4_ax5), then GeneNet4 + RPE1 S2 without
+  the leak. No upload without the user's OK; v5 stays the counting entry.

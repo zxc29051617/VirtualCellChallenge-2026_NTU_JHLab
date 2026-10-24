@@ -52,9 +52,9 @@ for fold, held_list in B.FOLDS.items():
                 per_src[t][0] += (y[ok] * yt[ok]).sum(); per_src[t][1] += (yt[ok] ** 2).sum() - vt[ok].sum()
             k = n > 0; m = np.zeros_like(y); m[k] = s[k] / n[k]; vm = np.zeros_like(y); vm[k] = sv[k] / n[k] ** 2
             cross += (y * m).sum(); mm += (m ** 2).sum() - vm.sum(); noisy_pp += (m ** 2).sum()
-        hh = max(hh, 1e-9)
-        best = max(((c / np.sqrt(hh * tt), t) for t, (c, tt) in per_src.items() if tt > 0), default=(np.nan, None))
-        r = dict(mean=cross / np.sqrt(hh * max(mm, 1e-9)), best1=float(best[0]), best1_source=best[1],
+        if hh <= 0: hh = np.nan                          # the estimated noise exceeds the response: undefined
+        best = max(((c / np.sqrt(hh * tt), t) for t, (c, tt) in per_src.items() if tt > 0 and hh > 0), default=(np.nan, None))
+        r = dict(mean=cross / np.sqrt(hh * mm) if mm > 0 else np.nan, best1=float(best[0]), best1_source=best[1],
                  noisy=cross / np.sqrt(hh * max(noisy_pp, 1e-9)), n=len(targets))
         res.setdefault(fold, {})[h] = r
         print(f"{fold:7s} {h:15s} mean {r['mean']:.3f}  best1 {r['best1']:.3f} ({best[1]})  noisy {r['noisy']:.3f}  "

@@ -54,7 +54,9 @@ for f in sorted(glob.glob(f"{HERE}/results/*.json")):
     new = {}
     for fold, fm in r["contexts"].items():
         for h, v in fm.items():
-            t = terms[h]; s1 = max(t["yy"] - t["v_old"], 1e-9); s2 = max(t["yy"] - t["v_new"], 1e-9)
+            t = terms[h]; s1 = t["yy"] - t["v_old"]; s2 = t["yy"] - t["v_new"]
+            if s1 <= 0 or s2 <= 0:                       # the estimated noise exceeds the response: undefined
+                new.setdefault(fold, []).append((np.nan, np.nan)); continue
             sse = t["v_old"] + (1 - v["skill"]) * s1
             new.setdefault(fold, []).append((v["dir"] * np.sqrt(s1 / s2), 1 - (sse - t["v_new"]) / s2))
     d2 = float(np.mean([np.mean([a for a, _ in x]) for x in new.values()]))
