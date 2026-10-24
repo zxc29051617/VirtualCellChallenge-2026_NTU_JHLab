@@ -42,7 +42,7 @@ fig.tight_layout(w_pad=3); save(fig, "fig_benchmark.png")
 # 2. mock exam progress --------------------------------------------------------------------------------------
 fig, ax = plt.subplots(figsize=(10, 4.4))
 labels = ["原方法\n（v1）", "訓練模型\n預測總量（v2）", "＋RPE1\n資料（v3）", "設定調整＋\n3 模型平均（v4）", "移除 5 個\n雜訊方向（v5）"]
-vals = [0.272, 0.291, 0.293, 0.306, 0.306]
+vals = [0.272, 0.291, 0.293, 0.305, 0.306]
 b = ax.bar(labels, vals, color=[GRAY, "#8FA6C2", "#6D8BB2", "#3F6FA6", NAVY], width=0.62); bar_labels(ax, b, dy=0.0008)
 ax.set_ylim(0.25, 0.315); ax.set_ylabel("H1 模擬考總分"); ax.set_yticks([0.25, 0.27, 0.29, 0.31])
 ax.text(-0.45, 0.3135, "註：縱軸從 0.25 開始", fontsize=12, color=GRAY)

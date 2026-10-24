@@ -11,7 +11,7 @@ AdaptNet learns that trade-off per target instead of fixing it:
   detail weight    beta = sigmoid(MLP_b(target features)),  overall size alpha = softplus(MLP_a(target features))
                    target features: number of sources, mean agreement, mean knockdown, program and detail size
   prediction       yhat = alpha * ((sum_s w_s A_s) * g) V^T + alpha * beta * sum_s w_s R_s   (A_s = program coefficients)
-About 20k trainable weights. Episodes and loss as responsenet.py (MSE relative to 0.4 x consensus, plus the within-context
+About 8.4k trainable weights (8,363; the program matrix V is a fixed buffer). Episodes and loss as responsenet.py (MSE relative to 0.4 x consensus, plus the within-context
 contrastive term).
 """
 import time

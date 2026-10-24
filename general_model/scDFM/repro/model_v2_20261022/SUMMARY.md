@@ -34,7 +34,7 @@ Per fold (consensus_d200 -> AdaptNet seed 0):
 
 ## AdaptNet (adaptnet.py)
 Fixed top-200 programs per fold; learned per-source weights, per-target detail weight beta and size alpha, and
-program gains from the new cell's control profile (~20k weights, 1,500 steps, ~1 min per fold on the RTX 4060 Ti).
+program gains from the new cell's control profile (~8.4k trainable weights, 1,500 steps, ~1 min per fold on the RTX 4060 Ti).
 Loss: MSE relative to 0.4 x consensus plus a within-context contrastive term (pds). Two seeds agree.
 
 ## Next
