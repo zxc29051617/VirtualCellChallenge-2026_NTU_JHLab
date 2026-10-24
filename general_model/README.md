@@ -421,7 +421,8 @@ general_model/
 ├── README.md                     ← 這份文件
 ├── requirements.txt              ← 模型環境的套件版本
 ├── docs/
-│   ├── VCC_progress_report_20261024.pptx   ← 給教授的進度簡報（每頁有講稿備註）
+│   ├── VCC_defense_style_20261024.pptx     ← 給教授的口試風格簡報（34 頁，每頁有講稿備註）
+│   ├── VCC_defense_style_20261024.pdf      ← 同一份簡報的 PDF
 │   └── STAGE3_PLAN.md
 ├── tools/                        ← 期末流程與資料處理
 │   ├── final_pipeline.sh         ← 總指揮：預測 → 總量 → 細胞 → 打包 → 檢查
@@ -451,7 +452,7 @@ general_model/
         │   ├── mock_exam.py      ← 模擬考
         │   ├── mse_proxy.py、de_sim.py ← 快速試算
         │   ├── results/、mock/   ← 基準測試與模擬考的結果
-        │   └── deck/             ← 簡報的原始檔與產生程式
+        │   └── deck/             ← 簡報的產生程式（make_defense_pptx.py）與圖（make_figures.py、figs/）
         ├── next_20261019/        ← A/B/C 時期的流程實驗（run.log 是逐日紀錄）
         ├── signature_20261013/   ← 來源加權實驗、一致度快取的產生程式
         └── *.md                  ← 早期的計畫、資料調查、方法紀錄
@@ -517,4 +518,4 @@ A：重的工作（評分程式、打包、訓練）一次只跑一個；打包�
 | 10/21 | 改良總量（深度加權、一致度、目標權重）：0.239（驗證期最佳，第 165 名） |
 | 10/22 | 期末開始（D、E、F）；上傳 v1 保底；開始訓練 AdaptNet |
 | 10/23 | H1 模擬考確認 AdaptNet 較好，上傳 v2；GeneNet4、RPE1 資料；診斷 DE 分數瓶頸；上傳 v4 |
-| 10/24 | 三套模擬考確認「只移除 5 個對照組方向」較穩健，上傳 v5；給教授的進度簡報 |
+| 10/24 | 三套模擬考確認「只移除 5 個對照組方向」較穩健，上傳 v5；給教授的口試風格簡報 |

@@ -268,3 +268,6 @@ reach 0.1699, jac 0.1183, nmae 0.9395), so call strategies can be compared witho
   gm_final_v5 = v4 with CTRLAXES=5 (same gm_final_v4pre inputs).
 - 10-24 00:24: gm_final_v5 uploaded (user OK) and scored without error: entry 9uhqF2Pvw5jKXcjLlpkB, now the counting
   final entry (vccsub/out/gm_final_v5.vcc). Progress deck for the professor: deck/project (artifact 1oFtaxuSjLczEm8McQjDkm).
+- 10-24 afternoon: professor deck redone in oral-defence style (outline, section dividers, claim titles with figure evidence,
+  references, backup slides, speaker notes on all 34 slides): deck/make_defense_pptx.py + deck/make_figures.py ->
+  docs/VCC_defense_style_20261024.pptx (+ PDF). Checked slide by slide in LibreOffice renders; replaces the card-style deck.
