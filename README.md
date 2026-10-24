@@ -1,5 +1,13 @@
 # Virtual Cell Challenge 2026
 
+> **最新進度（2026/10）：請先看 [general_model/README.md](general_model/README.md)。**
+>
+> 2026/10/09 起重新開發的通用擾動預測模型（AdaptNet）放在 `general_model/`，期末算分的版本是 v5（2026/10/24 上傳）：
+> H1 模擬考 0.306（原方法 0.272），驗證期公開排行榜最佳 0.239（第 165 名 / 1,635 隊），高於本頁以下舊流程的 0.109。
+> 那份說明是寫給初學者的，從背景知識、評分方式、模型、驗證到怎麼執行都有。給教授的進度簡報在
+> `general_model/docs/VCC_progress_report_20261024.pptx`。本頁以下是舊流程的說明，保留作紀錄。
+
+
 This repository is set up for the 2026 Virtual Cell Challenge with a deliberately simple first-stage baseline.
 
 The 2026 task is **zero-shot**: predict CRISPRi knockdown responses in cell lines never seen
