@@ -7,3 +7,5 @@
 *.parquet
 *.zip
 __pycache__/
+# third-party code cloned for experiments (SIGnature, clone it from its own repository)
+scDFM/repro/signature_20261013/ext/
