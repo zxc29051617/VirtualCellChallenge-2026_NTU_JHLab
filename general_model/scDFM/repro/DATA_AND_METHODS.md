@@ -4,6 +4,11 @@ For the finalist description the rules require: datasets used in training, proce
 components including anything blended with model outputs**, training/inference approach, compute.
 Updated 2026-10-13 for the general model (`vcc/gm.py`), which every submission since 10-11 uses.
 
+**Historical record (2026-10-13).** It describes the consensus model of the A/B/C phase (50 control axes, no trained
+network). The final D/E/F entry gm_final_v5 adds AdaptNet gene totals (3 seeds, RPE1 as an extra source), 5 control
+axes and the cell rendering; the current description is `general_model/README.md` (sections 5-7 and 11.8). The data
+table below still holds (Feng counts: figshare 27989294 v2, MIT, checked 2026-10-24).
+
 ## 1. Training data (public CRISPRi screens; no challenge perturbation data exists or is used)
 | context(s) | dataset | perturbations used | source | licence |
 | --- | --- | --- | --- | --- |

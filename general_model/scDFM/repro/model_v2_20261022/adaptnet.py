@@ -14,7 +14,7 @@ AdaptNet learns that trade-off per target instead of fixing it:
 About 8.4k trainable weights (8,363; the program matrix V is a fixed buffer). Episodes and loss as responsenet.py (MSE relative to 0.4 x consensus, plus the within-context
 contrastive term).
 """
-import time
+import os, time
 import numpy as np, torch, torch.nn as nn, torch.nn.functional as F
 import bench as B, responsenet as RN
 
@@ -80,7 +80,8 @@ def train(train_ctx, steps=1500, bs=96, lr=3e-3, seed=0, k=200, nce=1.0, tau=0.1
     (CP50k): the scorer compares log1p(CP50k) pseudobulks, where a ln-ratio error on gene g moves the value by ~x/(1+x)
     times that error, so barely expressed genes hardly count (ew 1 = exactly that weighting)."""
     torch.manual_seed(seed); rng = np.random.default_rng(seed); t0 = time.time()
-    S = store if store is not None else RN.Store(train_ctx); zf = RN.ctx_pca(list(B.data()))   # store: reuse (e.g. genes dropped)
+    S = store if store is not None else RN.Store(train_ctx)                                     # store: reuse (e.g. genes dropped)
+    zf = RN.ctx_pca(list(train_ctx) if os.environ.get("STRICT_PCA") == "1" else list(B.data())); S.zf = zf
     SH = shared_components(S, orth) if orth > 0 else None
     if ew > 0:                                                       # per-context gene weights from the control profiles
         X = np.expm1(np.stack([B.data()[n]["ctrl"].astype(np.float64) for n in S.ctx_names]))
@@ -140,7 +141,8 @@ def predict(model, held, targets):
 def predict_ctrl(model, ctrl, targets):
     """Trans response (ln ratio, targets x genes) for a new cell type given only its control profile log1p(CP50k)."""
     net, S, Z = model; out = np.zeros((len(targets), S.G), np.float32)
-    zq = torch.tensor(RN.ctx_pca(list(B.data()))(np.asarray(ctrl, np.float64)), dtype=torch.float32, device=DEV)
+    zf = getattr(S, "zf", None) or RN.ctx_pca(list(B.data()))
+    zq = torch.tensor(zf(np.asarray(ctrl, np.float64)), dtype=torch.float32, device=DEV)
     for lo in range(0, len(targets), 48):
         tl = targets[lo:lo + 48]; src = [S.occ.get(S.tid.get(p, -1), []) for p in tl]; ok = [i for i, s in enumerate(src) if s]
         if not ok: continue

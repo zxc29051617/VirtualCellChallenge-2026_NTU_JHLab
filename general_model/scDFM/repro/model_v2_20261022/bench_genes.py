@@ -27,6 +27,17 @@ def gene_folds():
     return {allp[i]: int(k % N_FOLD) for k, i in enumerate(perm)}
 
 
+class _nullctx:
+    def __enter__(self): return self
+    def __exit__(self, *exc): return False
+
+
+def _svd(M, q):
+    """randomized SVD with a fixed seed (2026-10-24, reproducible runs); the caller's random state is left untouched."""
+    with torch.random.fork_rng(devices=[M.device] if M.is_cuda else []):
+        torch.manual_seed(0); return torch.svd_lowrank(M, q=q, niter=4)
+
+
 _COEXP = {}
 
 
@@ -41,7 +52,7 @@ def coexp_embedding():
         X = sp.csr_matrix(ad.read_h5ad(f).X).astype(np.float32); idx = rng.choice(X.shape[0], min(2000, X.shape[0]), replace=False); X = X[idx]
         X = sp.diags(1e4 / np.maximum(np.asarray(X.sum(1)).ravel(), 1)) @ X; X.data = np.log1p(X.data)
         D = torch.tensor(X.toarray(), device=DEV); blocks.append(D - D.mean(0, keepdim=True))
-    M = torch.cat(blocks); _, S, V = torch.svd_lowrank(M, q=K_COEXP, niter=4)
+    M = torch.cat(blocks); _, S, V = _svd(M, K_COEXP)
     E = (V * S).cpu().numpy(); E /= np.maximum(np.linalg.norm(E, axis=1, keepdims=True), 1e-9)
     _COEXP["e"] = E; return E
 
@@ -51,7 +62,7 @@ def resp_programs(train_rows):
     rng = np.random.default_rng(0); X = []
     for c, rows in train_rows.items():
         r = rng.choice(rows, min(1500, len(rows)), replace=False); X.append(np.nan_to_num(B.data()[c]["Y"][r].astype(np.float32)))
-    _, S, V = torch.svd_lowrank(torch.tensor(np.vstack(X), device=DEV), q=K_RESP, niter=4)
+    _, S, V = _svd(torch.tensor(np.vstack(X), device=DEV), K_RESP)
     return V.cpu().numpy(), S.cpu().numpy()
 
 
@@ -93,15 +104,20 @@ def knn(emb, train_rows, c, targets, k=20, own_context=True):
     return out
 
 
+CLEAN = os.environ.get("CLEAN_CENTRING") == "1"      # 2026-10-24: centre with the fold's training rows only (bench.centred_on)
+
+
 def run(name, fn, settings=("S1", "S2"), quiet=False):
     t0 = time.time(); res = {}
     for st in settings:
         for fold in range(N_FOLD):
             for hg in ([None] if st == "S1" else S2_GROUPS):
                 train_rows, tests = setup(fold, hg)
-                for c, tg in tests.items():
-                    P = fn(train_rows, c, tg, st)
-                    res.setdefault(st, []).append(dict(fold=fold, group=hg, context=c, **B.score(c, tg, P)))
+                if CLEAN: _RP.clear()
+                with (B.centred_on(train_rows) if CLEAN else _nullctx()):
+                    for c, tg in tests.items():
+                        P = fn(train_rows, c, tg, st)
+                        res.setdefault(st, []).append(dict(fold=fold, group=hg, context=c, **B.score(c, tg, P)))
     summ = {st: {k: float(np.mean([r[k] for r in rs])) for k in ("dir", "pds", "skill", "scale")} for st, rs in res.items()}
     json.dump(dict(method=name, summary=summ, rows=res), open(f"{HERE}/results/genes_{name}.json", "w"), indent=1)
     if not quiet:

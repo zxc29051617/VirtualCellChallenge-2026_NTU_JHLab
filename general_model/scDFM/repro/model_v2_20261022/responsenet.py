@@ -16,7 +16,7 @@ Model:
 Loss: mean squared error over the query's usable trans genes. One model per benchmark fold (bench.py), trained only
 on that fold's training contexts.
 """
-import time
+import os, time
 import numpy as np, torch, torch.nn as nn
 import bench as B
 
@@ -61,7 +61,9 @@ _PCA = {}
 
 
 def ctx_pca(contexts):
-    """8-d context coordinates from control profiles only (the 14 sources + challenge contexts A-F as extra points)."""
+    """8-d context coordinates from control profiles only (the 14 sources + challenge contexts A-F as extra points).
+    STRICT_PCA=1 (2026-10-24, Codex audit): fit on the given training contexts only, without any held-out or A-F controls."""
+    if os.environ.get("STRICT_PCA") == "1": return _ctx_pca_strict(contexts)
     if "f" in _PCA: return _PCA["f"]
     import anndata as ad, scipy.sparse as sp
     D = B.data(); prof = {n: D[n]["ctrl"].astype(np.float64) for n in contexts if not B.is_extra(n)}   # basis from the original contexts only
@@ -74,6 +76,16 @@ def ctx_pca(contexts):
     basis = Vt[:K_CTX]; sd = (P - mu) @ basis.T; sd = sd.std(0) + 1e-6
     _PCA["f"] = lambda x: ((x - mu) @ basis.T) / sd
     return _PCA["f"]
+
+
+def _ctx_pca_strict(contexts):
+    key = ("strict",) + tuple(sorted(n for n in contexts if not B.is_extra(n)))
+    if key in _PCA: return _PCA[key]
+    D = B.data(); P = np.stack([D[n]["ctrl"].astype(np.float64) for n in key[1:]])
+    mu = P.mean(0); U, S, Vt = np.linalg.svd(P - mu, full_matrices=False)
+    basis = Vt[:K_CTX]; sd = ((P - mu) @ basis.T).std(0) + 1e-6
+    _PCA[key] = lambda x: ((x - mu) @ basis.T) / sd
+    return _PCA[key]
 
 
 class Net(nn.Module):

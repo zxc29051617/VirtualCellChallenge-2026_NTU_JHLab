@@ -276,3 +276,44 @@ reach 0.1699, jac 0.1183, nmae 0.9395), so call strategies can be compared witho
   cache, H1 mock sets, v1 exports, AdaptNet totals (kappa 6.251 / 6.138 / 6.263) all bit-identical; the rebuilt
   gm_final_v5.vcc has the same SHA-256 as the uploaded file (9a174d6e1c24...); H1 mock s0 0.3096 (v5) / 0.2751 (v1) and the
   consensus_d200 benchmark identical. Measured: model env ~27 min (PyTorch download), first mock subset ~28 min.
+
+## 10-24 night: validation clean-up after the Codex audit (workspace `CODEX_AUDIT_20261024.md`)
+- Robustness fixes, no change to results (commit 1f62bd4): downloads only reuse `.done`/`.part` with a matching `.meta`
+  (url/size/chunk), fetch scripts stop on the first failure, `make_effect_submission.py --require-all` (STRICT=1 in
+  final_pipeline.sh) stops on missing targets or non-finite effects, the 13-source cap prints a note, mock_exam.overall
+  reads `from_replicate`, credential patterns in .gitignore. Fresh clone of that commit: AdaptNet totals inputs
+  bit-identical and gm_final_v5.vcc rebuilt with STRICT=1 has the uploaded SHA-256 (9a174d6e1c24...).
+- Noise term of the 7-fold metrics (audit M2): bench.score's variance is the delta-method variance of log1p(CP50k), but
+  y = ln((x_p + 0.5)/(x_c + 0.5)) - common mode; on that scale the perturbed side's variance is ((1 + x_p)/(0.5 + x_p))^2
+  larger and the control side cancels with the common mode. var_scale_check.py re-scores every saved result exactly
+  from its JSON (only the noise term moves; pds and comparisons within a context do not): noise share of sum y^2 per
+  context 0.13-0.54 -> 0.21-0.83; dir +19 % for every method (consensus_d200 0.111 -> 0.131, AdaptNet b1 0.131 -> 0.156,
+  GeneNet4+RPE1 0.152 -> 0.181, AdaptNet+RPE1 ens3 0.154 -> 0.182; gains +18 % -> +19 %, +37 % -> +38 %). On shallow
+  data the ln-scale delta method overstates the noise (TianNeuron2021: 0.71 -> 1.20 of sum y^2, impossible), so the two
+  scales bracket the truth; tables keep the old scale (results/var_scale.json).
+- How much could transfer at all (ceiling_check.py): noise-corrected cosine between the hidden response and the plain
+  mean of the sources' true responses, same targets and genes as bench. With RPE1: 0.193 (ln-scale noise) / 0.135
+  (log1p scale) vs AdaptNet+RPE1 ens3 0.182 / 0.154 = 94 % / 113 %; without RPE1 0.169 / 0.113 vs AdaptNet b1 0.156 /
+  0.131 (consensus_d200 0.131 / 0.111). Per fold (ln scale, RPE1): K562 0.185, XAtlas 0.068, H1 0.250, CD4 0.067, HepG2
+  0.381, Jurkat 0.336, iPSC 0.065; AdaptNet is at or above it except where the signal is strong (H1 0.210, HepG2 0.334,
+  Jurkat 0.320). The single best source picked with the answer: 0.201 / 0.139. -> with these public experiments the
+  transferable part of the direction is used up; non-essential panels carry ~0.07 even without noise.
+- Outer test data: TianNeuron2021 rebuilt from a fresh Zenodo 13350497 download (TianKampmann2021_CRISPRi.h5ad) with
+  sc_build.py is identical to the stored npz (README 11.7 recipe). Feng licence: figshare 27989294 v2 says MIT (API,
+  10-24), README table fixed. Old `vcc.gm loco` and DATA_AND_METHODS.md marked as historical.
+- Context PCA from the training contexts only (audit M1; STRICT_PCA=1, responsenet._ctx_pca_strict: no held-out, A-F or
+  D/E/F controls), AdaptNet seed 0, beta 1, run_clean_checks.py: 0.131 / 0.762 -> 0.136 / 0.765 (dir / pds); with RPE1
+  0.152 / 0.766 -> 0.156 / 0.769 (every fold equal or better except iPSC -0.001 dir). The default-PCA RPE1 run reproduces
+  genenet4_rpe1.json to 4e-8. -> the transductive basis did not inflate the benchmark; strict is equal or better
+  everywhere, so v5 + STRICT_PCA=1 is checked on the three official mocks (below) as the one candidate change.
+- Untouched outer test: TianNeuron2021 (166 targets, never used to select anything) as a scored context (NEURON=outer,
+  ONLY_FOLDS=Neuron), training on all 14 + RPE1: consensus_d200 0.012 / 0.543, AdaptNet 0.011 / 0.551, AdaptNet strict
+  PCA 0.012 / 0.558; plain-mean reference (log1p-scale noise; ln-scale noise exceeds the signal here) 0.007, best single
+  source 0.014. -> nothing transfers to these neurons for any method; the mock exams (H1 reference 0.25) are an easy case.
+- Leave-genes-out without the centring leak (audit H1; CLEAN_CENTRING=1: every fold re-centres the training contexts on
+  the common mode of their training rows only, bench.centred_on; GeneNet's inner calibration likewise; randomized SVDs
+  seeded without touching the caller's RNG): knn_combo S1 0.115 / 0.605 -> 0.118 / 0.606, S2 0.024 / 0.558 -> 0.024 /
+  0.558 (blend and GeneNet4 S2 re-running; S1 truth now uses the training-only common mode).
+- Queued (one job at a time, lowest priority, each waits for free memory as the machine is shared): AdaptNet
+  no-RPE1 reference re-run, v5 + STRICT_PCA=1 on the H1 / HCT116 / KOLF200 official mocks (name v5_strictpca, compare
+  with v4_ax5), GeneNet4 + RPE1 S2 without the leak. No upload without the user's OK; v5 stays the counting entry.

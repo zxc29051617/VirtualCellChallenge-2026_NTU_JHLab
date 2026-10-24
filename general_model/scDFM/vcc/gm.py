@@ -12,6 +12,8 @@ Learned from the training contexts:
 At prediction time the model sees only the target name and the new context's controls.
 
     python -m vcc.gm loco                       # leave-one-cell-type-out on every context group
+(historical protocol: here HCT116 / HEK293T and FengNF / FengF / KOLF are separate groups, so a same-screen sibling can
+still be a source; the strict 7-fold benchmark with sibling groups hidden together is repro/model_v2_20261022/bench.py)
 """
 import os, sys
 import numpy as np

@@ -6,7 +6,7 @@ import bench as B, bench_genes as BG, genenet as GN
 name = sys.argv[1]; KW = {}
 _C = {}
 def get(train, drop=()):
-    key = (tuple(sorted(train)), len(drop))
+    key = (tuple(sorted(train)), hash(frozenset(drop)))
     if key not in _C:
         _C.clear(); torch.cuda.empty_cache(); _C[key] = GN.train(list(train), drop_targets=drop, log=False, **KW)
     return _C[key]

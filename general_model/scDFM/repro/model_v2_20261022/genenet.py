@@ -11,7 +11,7 @@ gene's own measurements are dropped, so the gates learn the never-perturbed case
 signal) + within-batch contrastive term. A Store built without some genes / cell types gives the leave-genes-out and
 leave-cell-type-out versions (bench_genes.py S2, bench.py).
 """
-import time
+import os, time
 import numpy as np, torch, torch.nn as nn, torch.nn.functional as F
 import bench as B, responsenet as RN, adaptnet as AN, bench_genes as BG
 
@@ -155,6 +155,10 @@ def train(train_ctx, drop_targets=(), calibrate=True, seed=0, log=True, **kw):
         D = B.data(); drop = set(drop_targets); rng = np.random.default_rng(seed + 100)
         genes = sorted(set().union(*(set(D[c]["perts"]) for c in train_ctx)) - drop)
         inner = set(rng.choice(genes, len(genes) // 5, replace=False).tolist())
+        clean = os.environ.get("CLEAN_CENTRING") == "1"           # 2026-10-24: inner held-out genes stay out of the centring
+        rows_in = {c: np.array([j for j, p in enumerate(D[c]["perts"]) if p not in drop and p not in inner]) for c in train_ctx}
+        cc = B.centred_on(rows_in) if clean else None
+        if cc: cc.__enter__()
         m_in = _train(train_ctx, drop | inner, seed=seed, log=False, train_self=False, **kw)
         num = den = 0.0
         for c in train_ctx:
@@ -166,6 +170,7 @@ def train(train_ctx, drop_targets=(), calibrate=True, seed=0, log=True, **kw):
                 y = D[c]["Y"][D[c]["row"][p]].astype(np.float64); m = B.trans_mask(p, base) & np.isfinite(y)
                 num += float((P[i][m] * y[m]).sum()); den += float((P[i][m] ** 2).sum())
         scale = num / max(den, 1e-12)
+        if cc: cc.__exit__(None, None, None)
         del m_in; torch.cuda.empty_cache()
         if log: print(f"    calibration on {len(inner)} held-out training genes: never-perturbed size x{scale:.3f}", flush=True)
     model = _train(train_ctx, drop_targets, seed=seed, log=log, **kw)

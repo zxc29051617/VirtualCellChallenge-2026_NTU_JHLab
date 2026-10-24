@@ -33,10 +33,33 @@ if os.environ.get("RPE1") == "1":                    # Replogle RPE1 essential s
     FOLDS["RPE1"] = ["RPE1"]; CONTEXTS += ["RPE1"]; SKIP_EVAL.add("RPE1"); EXTRA.add("RPE1")
 if os.environ.get("NEURON") == "1":                  # Tian 2021 CRISPRi in iPSC-induced neurons (sc_build.py, scPerturb)
     FOLDS["Neuron"] = ["TianNeuron2021"]; CONTEXTS += ["TianNeuron2021"]; SKIP_EVAL.add("Neuron"); EXTRA.add("TianNeuron2021")
+elif os.environ.get("NEURON") == "outer":            # 2026-10-24: neurons as an untouched outer test (scored, never a source)
+    FOLDS["Neuron"] = ["TianNeuron2021"]; CONTEXTS += ["TianNeuron2021"]
+ONLY_FOLDS = set(filter(None, os.environ.get("ONLY_FOLDS", "").split(",")))   # score only these folds (empty = all)
 is_extra = lambda c: c in EXTRA or c.startswith("ELEM")
 OWN, KCAP, LAM, X_MIN, N_EVAL = -1.9, 1.0, 3.0, 0.25, 500
 
 _D = {}
+
+
+class centred_on:
+    """2026-10-24 (Codex audit): leave-genes-out without leakage. Inside the block, every context in train_rows has its
+    responses re-centred on the common mode of those training rows only (L = Y + cm, Y' = L - mean of L over the training
+    rows), so held-out genes never enter the centring; contexts not in train_rows keep their own centring."""
+    def __init__(self, train_rows): self.rows = train_rows; self.saved = {}
+
+    def __enter__(self):
+        D = data()
+        for c, rows in self.rows.items():
+            d = D[c]; L = d["Y"].astype(np.float32) + d["cm"][None, :].astype(np.float32)
+            with np.errstate(all="ignore"): cm = np.nanmean(L[np.asarray(rows, int)], 0).astype(np.float32)
+            self.saved[c] = (d["Y"], d["cm"]); d["Y"] = (L - cm[None, :]).astype(np.float16); d["cm"] = cm
+        return self
+
+    def __exit__(self, *exc):
+        D = data()
+        for c, (Y, cm) in self.saved.items(): D[c]["Y"], D[c]["cm"] = Y, cm
+        return False
 
 
 def data():
@@ -124,7 +147,7 @@ def run(name, fn, quiet=False, post=None):
     """post: optional function applied to each hidden context's prediction panel before scoring (e.g. post_shared)."""
     t0 = time.time(); res = {}
     for fold, held_list in FOLDS.items():
-        if fold in SKIP_EVAL: continue
+        if fold in SKIP_EVAL or (ONLY_FOLDS and fold not in ONLY_FOLDS): continue
         train = [c for c in CONTEXTS if c not in held_list]
         for held in held_list:
             targets = eval_targets(held, train)
