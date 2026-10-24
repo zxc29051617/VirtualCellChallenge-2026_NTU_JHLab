@@ -1,0 +1,24 @@
+{
+ "started": "2026-10-11T16:18:54+08:00",
+ "state": "done",
+ "step": "7/7 summary written",
+ "steps": [
+  "1 select 12 targets (seed 20261011) from the 22 with >=350 real cells (only 7 have >=400) from loco/KOLFbig/real.json",
+  "2 build real set (350 truth cells/target \u2014 only 7 targets have >=400 \u2014 and 4000 NTC) and pilot real bundle (cell-eval2 0.18.0 vcc2026, pdex)",
+  "3 verify existing hold-out-KOLF effect files (plain, own+cis, shuffled) and KOLF exclusion",
+  "4 generate predictions: 4 groups x seeds 0/1/2, shared per-target control indices, original-library up formula",
+  "5 score serially (threads<=4)",
+  "6 per-target raw/scaled metrics, paired full-vs-shuffled, cross-seed stability",
+  "7 SUMMARY.md + manifest",
+  "8 strict donor control (train without KOLF, FengNF, FengF): strict plain + strict shuffled x 3 seeds"
+ ],
+ "deviation": "only 7/279 targets have >=400 real cells in kolf_KOLF.h5ad; 12 targets drawn (seed 20261011) from the 22 with >=350, truth 350 cells/target; predictions 400/target",
+ "kolf_exclusion_verified": "runq.log lines 959/965/971: fit lists for KOLFbig_gm_owncis/shuf/l3k1_a3.0 exclude KOLF",
+ "prep_done": true,
+ "gen_done": true,
+ "last_scored": "strict_shuffled_seed2",
+ "updated": "2026-10-11T16:29:37+0800",
+ "scoring_done": true,
+ "original_4x3_done": true,
+ "finished": "2026-10-11T16:30:23+0800"
+}

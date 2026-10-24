@@ -1,0 +1,59 @@
+{
+ "H1": {
+  "c1_mse": true,
+  "c2_pds": true,
+  "c3_pairing": true,
+  "avg_V1": 0.3573,
+  "avg_V5": 0.3269,
+  "avg_not_lower": false,
+  "pds_V5_minus_V1": [
+   0.0265,
+   0.0102,
+   0.0432
+  ],
+  "pds_V5_minus_V5s": [
+   0.3855,
+   0.3386,
+   0.4323
+  ]
+ },
+ "KOLF200": {
+  "c1_mse": true,
+  "c2_pds": true,
+  "c3_pairing": true,
+  "avg_V1": 0.1615,
+  "avg_V5": 0.1555,
+  "avg_not_lower": false,
+  "pds_V5_minus_V1": [
+   0.055,
+   0.0203,
+   0.0888
+  ],
+  "pds_V5_minus_V5s": [
+   0.1105,
+   0.0619,
+   0.1594
+  ]
+ },
+ "HCT116": {
+  "c1_mse": true,
+  "c2_pds": true,
+  "c3_pairing": true,
+  "avg_V1": 0.2547,
+  "avg_V5": 0.4786,
+  "avg_not_lower": true,
+  "pds_V5_minus_V1": [
+   0.0493,
+   0.0114,
+   0.0866
+  ],
+  "pds_V5_minus_V5s": [
+   0.2164,
+   0.1637,
+   0.2686
+  ]
+ },
+ "PASS": false,
+ "criteria_i_iii_on_2_of_3": true,
+ "avg_not_lower_on_2_of_3": false
+}

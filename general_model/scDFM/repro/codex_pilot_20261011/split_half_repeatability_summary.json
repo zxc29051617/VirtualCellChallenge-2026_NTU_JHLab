@@ -1,0 +1,9 @@
+{
+  "median_target_mean_pearson": 0.2907304022446886,
+  "median_target_mean_cosine": 0.2934443450387717,
+  "genes_used": 11314,
+  "targets": 12,
+  "random_splits": 10,
+  "description": "Independent half-controls and half-perturbed cells; log1p CP50000 effects; all 12 target genes excluded; control-expressed genes only",
+  "limitation": "Exploratory within-screen split-cell repeatability, not biological replication or an official score ceiling"
+}

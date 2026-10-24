@@ -1,0 +1,75 @@
+{
+ "raw": {
+  "pds_cosine": 0.8999999999999999,
+  "expr_mse_unbiased_capped_norm": 0.8329109067354664,
+  "de_wilcoxon_lfc_nmae": 0.9400642029174208,
+  "de_wilcoxon_direction_fidelity_yield_raw": 0.5528942992491022,
+  "de_wilcoxon_direction_reach_raw": 0.1618896478171539,
+  "de_wilcoxon_sig_jaccard": 0.118130661719929
+ },
+ "scaled": [
+  {
+   "metric": "de_wilcoxon_lfc_nmae",
+   "from_baseline": -0.0181139980949711,
+   "from_replicate": -0.0305098043505478,
+   "anchor_source": "real_bundle",
+   "anchor_digest": "be4255a2bfa303a89dd0304214171b31d6a24edd44b41b9a110e7a4888be6047",
+   "real_bundle_id": "bundle",
+   "real_bundle_digest": "5765aeb986a4fb94505c3dc0ad2ab4798c32c6648ff733b84fa5861a76368707"
+  },
+  {
+   "metric": "expr_mse_unbiased_capped_norm",
+   "from_baseline": 0.11938287049211,
+   "from_replicate": 0.1200177306517542,
+   "anchor_source": "real_bundle",
+   "anchor_digest": "be4255a2bfa303a89dd0304214171b31d6a24edd44b41b9a110e7a4888be6047",
+   "real_bundle_id": "bundle",
+   "real_bundle_digest": "5765aeb986a4fb94505c3dc0ad2ab4798c32c6648ff733b84fa5861a76368707"
+  },
+  {
+   "metric": "de_wilcoxon_direction_fidelity_yield_raw",
+   "from_baseline": 0.4550719747500117,
+   "from_replicate": 0.5470211695750236,
+   "anchor_source": "real_bundle",
+   "anchor_digest": "be4255a2bfa303a89dd0304214171b31d6a24edd44b41b9a110e7a4888be6047",
+   "real_bundle_id": "bundle",
+   "real_bundle_digest": "5765aeb986a4fb94505c3dc0ad2ab4798c32c6648ff733b84fa5861a76368707"
+  },
+  {
+   "metric": "de_wilcoxon_direction_reach_raw",
+   "from_baseline": 0.0341463475468435,
+   "from_replicate": 0.0349065411997081,
+   "anchor_source": "real_bundle",
+   "anchor_digest": "be4255a2bfa303a89dd0304214171b31d6a24edd44b41b9a110e7a4888be6047",
+   "real_bundle_id": "bundle",
+   "real_bundle_digest": "5765aeb986a4fb94505c3dc0ad2ab4798c32c6648ff733b84fa5861a76368707"
+  },
+  {
+   "metric": "de_wilcoxon_sig_jaccard",
+   "from_baseline": 0.1104606871822677,
+   "from_replicate": 0.2693690465280989,
+   "anchor_source": "real_bundle",
+   "anchor_digest": "be4255a2bfa303a89dd0304214171b31d6a24edd44b41b9a110e7a4888be6047",
+   "real_bundle_id": "bundle",
+   "real_bundle_digest": "5765aeb986a4fb94505c3dc0ad2ab4798c32c6648ff733b84fa5861a76368707"
+  },
+  {
+   "metric": "pds_cosine",
+   "from_baseline": 0.8006756756756754,
+   "from_replicate": 0.8220603537981267,
+   "anchor_source": "real_bundle",
+   "anchor_digest": "be4255a2bfa303a89dd0304214171b31d6a24edd44b41b9a110e7a4888be6047",
+   "real_bundle_id": "bundle",
+   "real_bundle_digest": "5765aeb986a4fb94505c3dc0ad2ab4798c32c6648ff733b84fa5861a76368707"
+  },
+  {
+   "metric": "avg_score",
+   "from_baseline": NaN,
+   "from_replicate": 0.2938108395670273,
+   "anchor_source": "real_bundle",
+   "anchor_digest": "be4255a2bfa303a89dd0304214171b31d6a24edd44b41b9a110e7a4888be6047",
+   "real_bundle_id": "bundle",
+   "real_bundle_digest": "5765aeb986a4fb94505c3dc0ad2ab4798c32c6648ff733b84fa5861a76368707"
+  }
+ ]
+}

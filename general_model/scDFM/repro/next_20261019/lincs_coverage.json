@@ -1,0 +1,242 @@
+{
+ "trt_xpr|VCC300": {
+  "targets_covered": 82,
+  "of": 300,
+  "signatures": 2300,
+  "cell_lines": 20,
+  "top_cell_lines": {
+   "A375": 253,
+   "ES2": 221,
+   "A549": 221,
+   "U251MG": 217,
+   "HT29": 179,
+   "PC3": 179,
+   "YAPC": 179,
+   "BICR6": 179,
+   "AGS": 179,
+   "MCF7": 147,
+   "KELLY": 38,
+   "KYSE30": 38
+  }
+ },
+ "trt_xpr|H1": {
+  "targets_covered": 77,
+  "of": 188,
+  "signatures": 2387,
+  "cell_lines": 25,
+  "top_cell_lines": {
+   "ES2": 236,
+   "A549": 236,
+   "A375": 232,
+   "U251MG": 216,
+   "BICR6": 165,
+   "HT29": 165,
+   "PC3": 165,
+   "AGS": 165,
+   "YAPC": 165,
+   "MCF7": 138,
+   "KYSE30": 51,
+   "HS944T": 51
+  }
+ },
+ "trt_xpr|HCT116": {
+  "targets_covered": 73,
+  "of": 263,
+  "signatures": 2084,
+  "cell_lines": 19,
+  "top_cell_lines": {
+   "A375": 223,
+   "ES2": 198,
+   "A549": 198,
+   "U251MG": 198,
+   "PC3": 161,
+   "YAPC": 161,
+   "BICR6": 161,
+   "HT29": 161,
+   "AGS": 161,
+   "MCF7": 129,
+   "KYSE30": 37,
+   "KELLY": 37
+  }
+ },
+ "trt_xpr|KOLF200": {
+  "targets_covered": 71,
+  "of": 279,
+  "signatures": 2040,
+  "cell_lines": 20,
+  "top_cell_lines": {
+   "A375": 225,
+   "ES2": 196,
+   "A549": 196,
+   "U251MG": 192,
+   "HT29": 157,
+   "PC3": 157,
+   "AGS": 157,
+   "BICR6": 157,
+   "YAPC": 157,
+   "MCF7": 127,
+   "KELLY": 35,
+   "KYSE30": 35
+  }
+ },
+ "trt_sh|VCC300": {
+  "targets_covered": 127,
+  "of": 300,
+  "signatures": 5450,
+  "cell_lines": 20,
+  "top_cell_lines": {
+   "VCAP": 776,
+   "PC3": 739,
+   "MCF7": 627,
+   "HT29": 536,
+   "A375": 522,
+   "A549": 479,
+   "HA1E": 465,
+   "HCC515": 431,
+   "HEPG2": 374,
+   "NPC": 137,
+   "ASC": 126,
+   "SKL": 59
+  }
+ },
+ "trt_sh|H1": {
+  "targets_covered": 125,
+  "of": 188,
+  "signatures": 6947,
+  "cell_lines": 22,
+  "top_cell_lines": {
+   "PC3": 935,
+   "MCF7": 840,
+   "VCAP": 760,
+   "A375": 686,
+   "HT29": 639,
+   "A549": 624,
+   "HA1E": 563,
+   "HCC515": 527,
+   "HEPG2": 500,
+   "NPC": 257,
+   "ASC": 232,
+   "SKL": 130
+  }
+ },
+ "trt_sh|HCT116": {
+  "targets_covered": 110,
+  "of": 263,
+  "signatures": 4725,
+  "cell_lines": 20,
+  "top_cell_lines": {
+   "VCAP": 659,
+   "PC3": 636,
+   "MCF7": 543,
+   "HT29": 475,
+   "A375": 445,
+   "A549": 420,
+   "HA1E": 406,
+   "HCC515": 378,
+   "HEPG2": 326,
+   "NPC": 119,
+   "ASC": 115,
+   "SKL": 53
+  }
+ },
+ "trt_sh|KOLF200": {
+  "targets_covered": 116,
+  "of": 279,
+  "signatures": 5156,
+  "cell_lines": 20,
+  "top_cell_lines": {
+   "PC3": 707,
+   "VCAP": 684,
+   "MCF7": 600,
+   "HT29": 513,
+   "A375": 493,
+   "A549": 458,
+   "HA1E": 444,
+   "HCC515": 411,
+   "HEPG2": 356,
+   "NPC": 137,
+   "ASC": 126,
+   "SKL": 59
+  }
+ },
+ "trt_sh.cgs|VCC300": {
+  "targets_covered": 122,
+  "of": 300,
+  "signatures": 1068,
+  "cell_lines": 15,
+  "top_cell_lines": {
+   "PC3": 153,
+   "MCF7": 146,
+   "A375": 107,
+   "A549": 106,
+   "HA1E": 104,
+   "VCAP": 103,
+   "HT29": 96,
+   "HEPG2": 90,
+   "HCC515": 76,
+   "NPC": 29,
+   "ASC": 20,
+   "HEKTE": 15
+  }
+ },
+ "trt_sh.cgs|H1": {
+  "targets_covered": 121,
+  "of": 188,
+  "signatures": 1249,
+  "cell_lines": 16,
+  "top_cell_lines": {
+   "PC3": 184,
+   "MCF7": 180,
+   "A375": 118,
+   "A549": 115,
+   "HA1E": 114,
+   "HEPG2": 108,
+   "HT29": 105,
+   "VCAP": 99,
+   "HCC515": 77,
+   "NPC": 48,
+   "ASC": 39,
+   "HEKTE": 25
+  }
+ },
+ "trt_sh.cgs|HCT116": {
+  "targets_covered": 105,
+  "of": 263,
+  "signatures": 918,
+  "cell_lines": 15,
+  "top_cell_lines": {
+   "PC3": 130,
+   "MCF7": 126,
+   "A375": 92,
+   "A549": 92,
+   "HA1E": 90,
+   "VCAP": 89,
+   "HT29": 83,
+   "HEPG2": 77,
+   "HCC515": 66,
+   "NPC": 26,
+   "ASC": 19,
+   "HEKTE": 11
+  }
+ },
+ "trt_sh.cgs|KOLF200": {
+  "targets_covered": 112,
+  "of": 279,
+  "signatures": 1004,
+  "cell_lines": 15,
+  "top_cell_lines": {
+   "PC3": 144,
+   "MCF7": 138,
+   "A549": 101,
+   "A375": 100,
+   "HA1E": 97,
+   "VCAP": 94,
+   "HT29": 90,
+   "HEPG2": 84,
+   "HCC515": 71,
+   "NPC": 29,
+   "ASC": 20,
+   "HEKTE": 14
+  }
+ }
+}

@@ -1,0 +1,44 @@
+{
+ "experiment": "SIGnature attribution features for source weighting",
+ "date": "2026-10-19",
+ "model": {
+  "name": "SCimilarity encoder",
+  "weights": "Zenodo 10.5281/zenodo.15729925 scimilarity.tar.gz",
+  "md5": "7c572b62787ffa98c027b80bca270cdb",
+  "n_model_genes": 28231,
+  "attribution": "Integrated Gradients, zero baseline, captum 0.8.0, 50 steps (default), target_sum 1e3, batch 200, abs value (SIGnature package behaviour)",
+  "preprocessing": "SCimilarityWrapper.preprocess_adata: align to model gene order, normalize_total 1e4, log1p; input = raw counts on the 18,533-gene challenge axis (symbols); 17,457 genes have a model symbol"
+ },
+ "signature_repo": "https://github.com/Genentech/SIGnature @ c1546cb9857acb3d91e50d19233a7b2a28bf54d6",
+ "controls": "2000 fixed control cells per context with single-cell data (seed [20261013, index]); see controls/availability.json",
+ "outer_sets": {
+  "H1": {
+   "real_h5ad": "data/stage3/loco/H1/real.h5ad",
+   "bundle": "data/stage3/loco/H1/bundle",
+   "n_targets": 188,
+   "n_ctrl": 4000,
+   "n_pert_cells": 14991,
+   "bundle_anchor_sha256": "a46ab290c9b099cbeb89e867b9603fb06cce73f99289b1d2735de6870f912cf8",
+   "bundle_baseline_sha256": "c920a0a1e89ca0708b868de5a57e0502374ed0b8d634f2a347cca130f9358e63"
+  },
+  "HCT116": {
+   "real_h5ad": "data/stage3/loco/HCT116/real.h5ad",
+   "bundle": "data/stage3/loco/HCT116/bundle",
+   "n_targets": 263,
+   "n_ctrl": 4000,
+   "n_pert_cells": 48486,
+   "bundle_anchor_sha256": "bc898bdda73887838ca11d45169edeefe2f2ab681e036dcce804ea3ecec579c7",
+   "bundle_baseline_sha256": "96536bd20bd71530800ce6469934957eeba8dd239aa75e1a3eb730eb1892fbe1"
+  },
+  "KOLF200": {
+   "real_h5ad": "data/stage3/loco/KOLF200/real.h5ad",
+   "bundle": "data/stage3/loco/KOLF200/bundle",
+   "n_targets": 279,
+   "n_ctrl": 4000,
+   "n_pert_cells": 51785,
+   "bundle_anchor_sha256": "c188fb80188486bf968b0791311f3594b27be80e9adfda8323821a8e60c9b0ea",
+   "bundle_baseline_sha256": "de82f08ebbe7273078cd77558481df19763df87cec2a9327ad6049611351a067"
+  }
+ },
+ "scorer": "cell-eval2 0.18.0, preset vcc2026, de.backend=pdex"
+}

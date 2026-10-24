@@ -1,0 +1,41 @@
+<section id="task" data-section="比賽要我們做什麼、怎麼評分" data-transition="fade" style="background:#F6F5F1;color:#16213A;font-family:'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<h2 style="font-size:60px;font-weight:700;line-height:1.15;color:#16213A">比賽任務：預測「關掉一個基因」後細胞的樣子</h2>
+<div style="display:flex;align-items:center;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div style="background:#EAEEF3;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:32px;font-weight:700;color:#16213A">輸入 1：新細胞的對照組</h3>
+<p style="font-size:26px;line-height:1.4;color:#3B4658">約 18,400 顆沒被處理過的細胞</p>
+</div>
+<div style="background:#EAEEF3;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:32px;font-weight:700;color:#16213A">輸入 2：要關掉的基因</h3>
+<p style="font-size:26px;line-height:1.4;color:#3B4658">用 CRISPRi 降低它的表現（每種細胞 300 個）</p>
+</div>
+</div>
+<x-shape kind="arrow-right" style="background:#2563A8;width:96px;height:48px"></x-shape>
+<div style="background:#16213A;border-radius:16px;padding:40px;width:300px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:40px;font-weight:700;color:#F6F5F1">我們的模型</h3>
+<p style="font-size:26px;line-height:1.4;color:#C9D3E0">AdaptNet</p>
+</div>
+<x-shape kind="arrow-right" style="background:#2563A8;width:96px;height:48px"></x-shape>
+<div style="flex:1;background:#FDFCFA;border:2px solid #2563A8;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:32px;font-weight:700;color:#2563A8">輸出：預測的細胞</h3>
+<p style="font-size:26px;line-height:1.4;color:#3B4658">每個被關掉的基因，產生 400 顆細胞、每顆 18,533 個基因的讀數</p>
+</div>
+</div>
+<div style="display:flex;gap:32px">
+<div style="flex:1;border-top:4px solid #C8691E;padding:24px 0 0 0;display:flex;flex-direction:column;gap:8px">
+<p style="font-size:40px;font-weight:700;color:#16213A">3 種新細胞</p>
+<p style="font-size:26px;color:#3B4658">期末考 D、E、F，模型從沒看過</p>
+</div>
+<div style="flex:1;border-top:4px solid #C8691E;padding:24px 0 0 0;display:flex;flex-direction:column;gap:8px">
+<p style="font-size:40px;font-weight:700;color:#16213A">36 萬顆細胞</p>
+<p style="font-size:26px;color:#3B4658">3 × 300 個基因 × 400 顆</p>
+</div>
+<div style="flex:1;border-top:4px solid #C8691E;padding:24px 0 0 0;display:flex;flex-direction:column;gap:8px">
+<p style="font-size:40px;font-weight:700;color:#16213A">11/05 截止</p>
+<p style="font-size:26px;color:#3B4658">只算最後一次上傳，分數最後才公布</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5E6878">VCC 2026 進度報告　·　3</p>
+<aside>比賽的任務是這樣：主辦單位給我們一種新的細胞，但只給「沒被處理過」的對照組細胞，大約一萬八千四百顆。再告訴我們要關掉哪 300 個基因。關掉的方法叫 CRISPRi，可以把某個基因的表現大幅降低。我們要預測：每關掉一個基因，這種細胞會變成什麼樣子，而且要產生 400 顆細胞、每顆細胞 18,533 個基因的讀數。期末考有 D、E、F 三種細胞，總共 36 萬顆細胞，11 月 5 日截止，只算最後一次上傳，分數要比賽結束才公布。重點是：這三種細胞我們完全沒有它們被擾動過的資料，所以是「零樣本」預測。</aside>
+</section>

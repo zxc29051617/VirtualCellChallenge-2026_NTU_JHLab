@@ -1,0 +1,309 @@
+2026-10-19 14:35:33 check H1 target ACAT2: {"V0": {"exact_totals": null, "bulk_log2fc_on_trans_genes": 0.37687861919403076, "cell_meanlog_shift_on_trans_genes": 0.021050408482551575}, "V1": {"exact_totals": true, "bulk_log2fc_on_trans_genes": 0.3496350347995758, "cell_meanlog_shift_on_trans_genes": 0.02118659019470215}, "V2": {"exact_totals": true, "bulk_log2fc_on_trans_genes": 0.11735694855451584, "cell_meanlog_shift_on_trans_genes": 0.010200724005699158}}
+2026-10-19 14:35:33 check H1 target ACLY: {"V0": {"exact_totals": null, "bulk_log2fc_on_trans_genes": 0.37851160764694214, "cell_meanlog_shift_on_trans_genes": 0.03558320552110672}, "V1": {"exact_totals": true, "bulk_log2fc_on_trans_genes": 0.3632698655128479, "cell_meanlog_shift_on_trans_genes": 0.036909863352775574}, "V2": {"exact_totals": true, "bulk_log2fc_on_trans_genes": 0.12230519205331802, "cell_meanlog_shift_on_trans_genes": 0.019399210810661316}}
+2026-10-19 14:35:34 check H1 target ACTN1: {"V0": {"exact_totals": null, "bulk_log2fc_on_trans_genes": 0.3286227583885193, "cell_meanlog_shift_on_trans_genes": 0.014571797102689743}, "V1": {"exact_totals": true, "bulk_log2fc_on_trans_genes": 0.3370767831802368, "cell_meanlog_shift_on_trans_genes": 0.015556864440441132}, "V2": {"exact_totals": true, "bulk_log2fc_on_trans_genes": 0.1141710877418518, "cell_meanlog_shift_on_trans_genes": 0.006933409720659256}}
+2026-10-19 14:36:14 screens: coexp (no signal), structure (best uniform amplitude reaches only 0.94-1.0 of no-change on hold-outs), HPA line matching (A Jurkat, B HeLa, C CAL-33; background only). Renderer check: V1 exact totals OK; V2 bulk ~1/3, cell-level ~1/2.
+2026-10-19 14:39:10 check H1 target ACAT2: {"V0": {"exact_totals": null, "bulk_log2fc_on_trans_genes": 0.37687861919403076, "cell_meanlog_shift_on_trans_genes": 0.021050408482551575}, "V1": {"exact_totals": true, "bulk_log2fc_on_trans_genes": 0.3496350347995758, "cell_meanlog_shift_on_trans_genes": 0.02118659019470215}, "V2": {"exact_totals": true, "bulk_log2fc_on_trans_genes": 0.11735694855451584, "cell_meanlog_shift_on_trans_genes": 0.010200724005699158}, "V3": {"exact_totals": true, "bulk_log2fc_on_trans_genes": 0.11735694855451584, "cell_meanlog_shift_on_trans_genes": 0.010194439440965652}}
+2026-10-19 14:39:12 check H1 target ACLY: {"V0": {"exact_totals": null, "bulk_log2fc_on_trans_genes": 0.37851160764694214, "cell_meanlog_shift_on_trans_genes": 0.03558320552110672}, "V1": {"exact_totals": true, "bulk_log2fc_on_trans_genes": 0.3632698655128479, "cell_meanlog_shift_on_trans_genes": 0.036909863352775574}, "V2": {"exact_totals": true, "bulk_log2fc_on_trans_genes": 0.12230519205331802, "cell_meanlog_shift_on_trans_genes": 0.019399210810661316}, "V3": {"exact_totals": true, "bulk_log2fc_on_trans_genes": 0.12230519205331802, "cell_meanlog_shift_on_trans_genes": 0.021666839718818665}}
+2026-10-19 14:39:13 check H1 target ACTN1: {"V0": {"exact_totals": null, "bulk_log2fc_on_trans_genes": 0.3286227583885193, "cell_meanlog_shift_on_trans_genes": 0.014571797102689743}, "V1": {"exact_totals": true, "bulk_log2fc_on_trans_genes": 0.3370767831802368, "cell_meanlog_shift_on_trans_genes": 0.015556864440441132}, "V2": {"exact_totals": true, "bulk_log2fc_on_trans_genes": 0.1141710877418518, "cell_meanlog_shift_on_trans_genes": 0.006933409720659256}, "V3": {"exact_totals": true, "bulk_log2fc_on_trans_genes": 0.1141710877418518, "cell_meanlog_shift_on_trans_genes": 0.008085474371910095}}
+2026-10-19 14:40:21 score 1/27: H1_V1_seed0 avg 0.3571 raw mse 1.193 raw pds 0.9005 (gen 36s, total 245s)
+2026-10-19 14:44:21 score 2/27: H1_V2_seed0 avg 0.3374 raw mse 0.864 raw pds 0.9066 (gen 62s, total 240s)
+2026-10-19 14:48:12 score 3/27: H1_V2s_seed0 avg 0.0953 raw mse 0.998 raw pds 0.5558 (gen 60s, total 231s)
+2026-10-19 14:51:26 score 4/27: KOLF200_V1_seed0 avg 0.1602 raw mse 1.139 raw pds 0.5706 (gen 35s, total 189s)
+2026-10-19 14:54:45 score 5/27: KOLF200_V2_seed0 avg 0.1175 raw mse 1.171 raw pds 0.5684 (gen 70s, total 199s)
+2026-10-19 14:58:05 score 6/27: KOLF200_V2s_seed0 avg 0.0700 raw mse 1.190 raw pds 0.4964 (gen 72s, total 200s)
+2026-10-19 15:02:46 score 7/27: HCT116_V1_seed0 avg 0.2520 raw mse 3.602 raw pds 0.6472 (gen 40s, total 272s)
+2026-10-19 15:07:31 score 8/27: HCT116_V2_seed0 avg 0.4020 raw mse 1.252 raw pds 0.6543 (gen 74s, total 286s)
+2026-10-19 15:12:18 score 9/27: HCT116_V2s_seed0 avg -0.1090 raw mse 1.568 raw pds 0.4988 (gen 74s, total 286s)
+2026-10-19 15:16:23 score 10/27: H1_V1_seed1 avg 0.3567 raw mse 1.193 raw pds 0.9005 (gen 39s, total 240s)
+2026-10-19 15:20:24 score 11/27: H1_V2_seed1 avg 0.3390 raw mse 0.864 raw pds 0.9066 (gen 66s, total 241s)
+2026-10-19 15:24:21 score 12/27: H1_V2s_seed1 avg 0.0937 raw mse 0.998 raw pds 0.5558 (gen 61s, total 236s)
+2026-10-19 15:27:15 score 13/27: KOLF200_V1_seed1 avg 0.1621 raw mse 1.139 raw pds 0.5706 (gen 34s, total 168s)
+2026-10-19 15:30:39 score 14/27: KOLF200_V2_seed1 avg 0.1180 raw mse 1.171 raw pds 0.5684 (gen 75s, total 204s)
+2026-10-19 15:33:55 score 15/27: KOLF200_V2s_seed1 avg 0.0719 raw mse 1.190 raw pds 0.4964 (gen 69s, total 197s)
+2026-10-19 15:38:26 score 16/27: HCT116_V1_seed1 avg 0.2587 raw mse 3.630 raw pds 0.6472 (gen 39s, total 262s)
+2026-10-19 15:43:09 score 17/27: HCT116_V2_seed1 avg 0.4008 raw mse 1.252 raw pds 0.6543 (gen 73s, total 282s)
+2026-10-19 15:47:49 score 18/27: HCT116_V2s_seed1 avg -0.1013 raw mse 1.568 raw pds 0.4988 (gen 72s, total 280s)
+2026-10-19 15:51:47 score 19/27: H1_V1_seed2 avg 0.3582 raw mse 1.193 raw pds 0.9005 (gen 36s, total 231s)
+2026-10-19 15:55:51 score 20/27: H1_V2_seed2 avg 0.3390 raw mse 0.864 raw pds 0.9066 (gen 61s, total 244s)
+2026-10-19 15:59:49 score 21/27: H1_V2s_seed2 avg 0.0943 raw mse 0.998 raw pds 0.5558 (gen 61s, total 238s)
+2026-10-19 16:12:25 score 22/27: KOLF200_V1_seed2 avg 0.1622 raw mse 1.139 raw pds 0.5706 (gen 34s, total 172s)
+2026-10-19 16:15:50 score 23/27: KOLF200_V2_seed2 avg 0.1186 raw mse 1.171 raw pds 0.5684 (gen 69s, total 205s)
+2026-10-19 16:19:17 score 24/27: KOLF200_V2s_seed2 avg 0.0706 raw mse 1.190 raw pds 0.4964 (gen 69s, total 207s)
+2026-10-19 16:23:58 score 25/27: HCT116_V1_seed2 avg 0.2535 raw mse 3.601 raw pds 0.6472 (gen 39s, total 273s)
+2026-10-19 16:38:46 resume after the cell-eval2 of HCT116_V2_seed2 was SIGKILLed (out of memory during the V1 upload)
+2026-10-19 16:44:04 score 26/27: HCT116_V2_seed2 avg 0.4002 raw mse 1.252 raw pds 0.6543 (gen 74s, total 293s)
+2026-10-19 16:48:50 score 27/27: HCT116_V2s_seed2 avg -0.1188 raw mse 1.568 raw pds 0.4988 (gen 79s, total 286s)
+2026-10-19 16:48:50 render scoring finished (V1,V2,V2s)
+2026-10-19 17:29:36 pre-registered (before any V5 score): V5 vs V1 pass rule per set: (i) raw panel mse V5 <= V1 all seeds; (ii) per-target pds V5-V1 mean >= -0.01 and CI low >= -0.02; (iii) V5 avg > V5s avg all seeds and pds V5-V5s CI low > 0; PASS if (i)-(iii) hold on >= 2 of 3 sets AND overall avg V5 >= V1 on >= 2 of 3 sets. k=10 fixed from the screen (plateau 5-20 on all three sets).
+2026-10-19 17:33:15 score 1/18: H1_V5_seed0 avg 0.3268 raw mse 1.124 raw pds 0.9270 (gen 36s, total 218s)
+2026-10-19 17:36:48 score 2/18: H1_V5s_seed0 avg 0.0912 raw mse 1.377 raw pds 0.5414 (gen 41s, total 212s)
+2026-10-19 17:39:39 score 3/18: KOLF200_V5_seed0 avg 0.1548 raw mse 1.127 raw pds 0.6256 (gen 37s, total 166s)
+2026-10-19 17:42:28 score 4/18: KOLF200_V5s_seed0 avg 0.0838 raw mse 1.178 raw pds 0.5150 (gen 37s, total 169s)
+2026-10-19 17:46:54 score 5/18: HCT116_V5_seed0 avg 0.4770 raw mse 0.852 raw pds 0.6966 (gen 41s, total 257s)
+2026-10-19 17:51:09 score 6/18: HCT116_V5s_seed0 avg -0.1384 raw mse 1.601 raw pds 0.4802 (gen 47s, total 256s)
+2026-10-19 17:54:58 score 7/18: H1_V5_seed1 avg 0.3264 raw mse 1.125 raw pds 0.9270 (gen 37s, total 221s)
+2026-10-19 17:58:33 score 8/18: H1_V5s_seed1 avg 0.0916 raw mse 1.378 raw pds 0.5414 (gen 39s, total 215s)
+2026-10-19 18:01:32 score 9/18: KOLF200_V5_seed1 avg 0.1557 raw mse 1.127 raw pds 0.6256 (gen 38s, total 172s)
+2026-10-19 18:04:17 score 10/18: KOLF200_V5s_seed1 avg 0.0860 raw mse 1.178 raw pds 0.5150 (gen 36s, total 165s)
+2026-10-19 18:08:59 score 11/18: HCT116_V5_seed1 avg 0.4775 raw mse 0.852 raw pds 0.6966 (gen 41s, total 274s)
+2026-10-19 18:13:15 score 12/18: HCT116_V5s_seed1 avg -0.1360 raw mse 1.601 raw pds 0.4802 (gen 48s, total 256s)
+2026-10-19 18:17:06 score 13/18: H1_V5_seed2 avg 0.3277 raw mse 1.125 raw pds 0.9270 (gen 36s, total 224s)
+2026-10-19 18:20:38 score 14/18: H1_V5s_seed2 avg 0.0931 raw mse 1.378 raw pds 0.5414 (gen 38s, total 211s)
+2026-10-19 18:23:30 score 15/18: KOLF200_V5_seed2 avg 0.1561 raw mse 1.127 raw pds 0.6256 (gen 37s, total 166s)
+2026-10-19 18:26:17 score 16/18: KOLF200_V5s_seed2 avg 0.0849 raw mse 1.178 raw pds 0.5150 (gen 37s, total 166s)
+2026-10-19 18:30:59 score 17/18: HCT116_V5_seed2 avg 0.4814 raw mse 0.852 raw pds 0.6966 (gen 41s, total 273s)
+2026-10-19 18:35:19 score 18/18: HCT116_V5s_seed2 avg -0.1380 raw mse 1.601 raw pds 0.4802 (gen 52s, total 260s)
+2026-10-19 18:35:19 render scoring finished (V5,V5s)
+2026-10-19 18:38:39 V5 FAILED the pre-registered rule (avg lower than V1 on H1 -0.030 and KOLF200 -0.006; HCT116 +0.224 via its unreliable mse scale); pds better everywhere. Pre-registered for V6 (before any V6 score): same rule as V5, vs V1.
+2026-10-19 18:42:50 score 1/18: H1_V6_seed0 avg 0.3452 raw mse 1.104 raw pds 0.9270 (gen 59s, total 249s)
+2026-10-19 18:46:48 score 2/18: H1_V6s_seed0 avg 0.0980 raw mse 1.357 raw pds 0.5414 (gen 66s, total 238s)
+2026-10-19 18:50:12 score 3/18: KOLF200_V6_seed0 avg 0.1741 raw mse 1.127 raw pds 0.6256 (gen 69s, total 199s)
+2026-10-19 18:53:31 score 4/18: KOLF200_V6s_seed0 avg 0.0996 raw mse 1.178 raw pds 0.5150 (gen 71s, total 199s)
+2026-10-19 18:58:30 score 5/18: HCT116_V6_seed0 avg 0.4761 raw mse 0.852 raw pds 0.6966 (gen 72s, total 291s)
+2026-10-19 19:03:07 score 6/18: HCT116_V6s_seed0 avg -0.1353 raw mse 1.601 raw pds 0.4802 (gen 75s, total 277s)
+2026-10-19 19:07:14 score 7/18: H1_V6_seed1 avg 0.3446 raw mse 1.103 raw pds 0.9270 (gen 60s, total 239s)
+2026-10-19 19:11:12 score 8/18: H1_V6s_seed1 avg 0.0986 raw mse 1.356 raw pds 0.5414 (gen 63s, total 238s)
+2026-10-19 19:14:40 score 9/18: KOLF200_V6_seed1 avg 0.1741 raw mse 1.127 raw pds 0.6256 (gen 73s, total 201s)
+2026-10-19 19:18:01 score 10/18: KOLF200_V6s_seed1 avg 0.0982 raw mse 1.178 raw pds 0.5150 (gen 72s, total 201s)
+2026-10-19 19:23:04 score 11/18: HCT116_V6_seed1 avg 0.4787 raw mse 0.852 raw pds 0.6966 (gen 71s, total 295s)
+2026-10-19 19:27:40 score 12/18: HCT116_V6s_seed1 avg -0.1320 raw mse 1.601 raw pds 0.4802 (gen 74s, total 276s)
+2026-10-19 19:31:43 score 13/18: H1_V6_seed2 avg 0.3449 raw mse 1.106 raw pds 0.9270 (gen 59s, total 236s)
+2026-10-19 19:35:42 score 14/18: H1_V6s_seed2 avg 0.0991 raw mse 1.359 raw pds 0.5414 (gen 62s, total 238s)
+2026-10-19 19:39:05 score 15/18: KOLF200_V6_seed2 avg 0.1771 raw mse 1.127 raw pds 0.6256 (gen 69s, total 198s)
+2026-10-19 19:42:23 score 16/18: KOLF200_V6s_seed2 avg 0.1006 raw mse 1.178 raw pds 0.5150 (gen 70s, total 198s)
+2026-10-19 19:47:38 score 17/18: HCT116_V6_seed2 avg 0.4824 raw mse 0.852 raw pds 0.6966 (gen 71s, total 306s)
+2026-10-19 19:52:28 score 18/18: HCT116_V6s_seed2 avg -0.1407 raw mse 1.601 raw pds 0.4802 (gen 84s, total 290s)
+2026-10-19 19:52:28 render scoring finished (V6,V6s)
+2026-10-19 21:40:58 D/E/F pipeline rehearsal (RENDER=v6) on A/B/C: 13.5 min, nnz 2,091,756,423 identical to uploaded gm_v1_vip_v6; effects identical (bulk 4.8e-7)
+2026-10-19 21:46:58 V7 safety check (pre-registered, user's three criteria vs V6): raw panel mse lower than V6; per-target pds V7-V6 not clearly lower (mean >= -0.01, CI low >= -0.02); V7a avg > V7as; 1 seed. Leaderboard decides the scale.
+2026-10-19 21:51:25 score 1/9: H1_V7a_seed0 avg 0.3409 raw mse 0.875 raw pds 0.9290 (gen 60s, total 265s)
+2026-10-19 21:55:39 score 2/9: H1_V7b_seed0 avg 0.3072 raw mse 0.945 raw pds 0.9290 (gen 75s, total 254s)
+2026-10-19 21:59:44 score 3/9: H1_V7as_seed0 avg 0.0899 raw mse 1.002 raw pds 0.5414 (gen 66s, total 245s)
+2026-10-19 22:03:15 score 4/9: KOLF200_V7a_seed0 avg 0.1467 raw mse 1.157 raw pds 0.6303 (gen 71s, total 203s)
+2026-10-19 22:06:39 score 5/9: KOLF200_V7b_seed0 avg 0.1280 raw mse 1.174 raw pds 0.6242 (gen 74s, total 204s)
+2026-10-19 22:10:00 score 6/9: KOLF200_V7as_seed0 avg 0.0793 raw mse 1.183 raw pds 0.5167 (gen 71s, total 201s)
+2026-10-19 22:15:15 score 7/9: HCT116_V7a_seed0 avg 0.4788 raw mse 1.209 raw pds 0.6960 (gen 72s, total 306s)
+2026-10-19 22:20:09 score 8/9: HCT116_V7b_seed0 avg 0.3802 raw mse 1.389 raw pds 0.6982 (gen 79s, total 294s)
+2026-10-19 22:25:05 score 9/9: HCT116_V7as_seed0 avg -0.1360 raw mse 1.585 raw pds 0.4782 (gen 78s, total 295s)
+2026-10-19 22:25:05 render scoring finished (V7a,V7b,V7as)
+2026-10-19 22:25:25 V7 FAILS the user's criterion (raw mse improves): H1 better (V7a 0.875 vs V6 1.104) but KOLF200 (1.157 vs 1.127) and HCT116 (1.209 vs 0.852) worse; shrinking the totals lowers the scorer's correction budget. No upload of V7.
+2026-10-19 22:42:23 DepMap descriptor model (ridge alpha 1 / MLP 2x256, trained on 18-33k perturbations per hold-out, inner LOGO CV): no gain over transfer on hold-outs (pds blend0.25: H1 -0.008..-0.014, KOLF -0.002..+0.005, HCT116 +0.004..+0.010; DepMap-only much worse). Dropped.
+2026-10-19 23:09:10 cis-measured screen: no gain (kernel already good: cis cosine 0.34-0.61; measured not better on KOLF/HCT116; pds unchanged). Dropped.
+2026-10-19 23:39:04 LINCS (xpr 154 targets/27 lines, sh.cgs 231/17; extracted in the cloud) as extra sources: no gain (pds H1 0.913-0.924 vs 0.927, KOLF 0.595-0.615 vs 0.629, HCT116 0.671-0.703 vs 0.697; landmark-only also no gain). Dropped.
+2026-10-20 00:20 #348 budget/claim probes (cloud, official scorer INFO logs), ratio = budget/claim (correction scaled when < 1):
+  H1 (claim 0.26): V6 >= 1, V7a 0.56, V7b 0.14 | HCT116 (claim 0.64): V6 0.93, V7a 0.23, V7b 0.06 | KOLF200 (claim 2.17): V6 0.27, V7a 0.07, V7b 0.02
+  Budget scales with the square of the totals' scale (V6 ~0.6 -> V7a ~0.15 -> V7b ~0.04); the claim scales with the REAL data's sampling noise
+  (few/shallow cells -> large claim). A/B/C have 400 deep cells per target -> small claim expected -> V7a likely keeps the full correction there.
+2026-10-20 00:41:43 pre-registered for V8 (before any V8 score), vs V6: raw panel mse V8 <= V6 all seeds; per-target pds V8-V6 mean >= -0.01 and CI low >= -0.02; V8 avg > V8s all seeds and pds CI > 0; PASS if these hold on >= 2 of 3 sets AND avg V8 >= V6 on >= 2 of 3 sets. m = 50 fixed from the screen (30-50 plateau).
+2026-10-20 01:33:02 V8 (control axes removed from totals) FAILS the pre-registered rule: raw mse V8 > V6 on H1 (1.121 vs 1.104) and HCT116 (0.937 vs 0.852); pds up everywhere (per-target +0.009 [0.000,0.018] / +0.018 [-0.002,0.039] / +0.032 [0.010,0.054]); avg H1 -0.007, KOLF +0.004, HCT116 +0.038. Not uploaded; revisit after the V7a leaderboard result.
+2026-10-20 02:18:15 score 1/3: H1_V9_seed0 avg 0.3321 raw mse 0.895 raw pds 0.9375 (gen 71s, total 282s)
+2026-10-20 02:21:56 score 2/3: KOLF200_V9_seed0 avg 0.1512 raw mse 1.156 raw pds 0.6469 (gen 81s, total 214s)
+2026-10-20 02:27:22 score 3/3: HCT116_V9_seed0 avg 0.4980 raw mse 1.251 raw pds 0.7260 (gen 84s, total 316s)
+2026-10-20 02:27:22 render scoring finished (V9)
+2026-10-20 02:45:38 score 1/3: H1_V10_seed0 avg 0.3483 raw mse 1.090 raw pds 0.9270 (gen 61s, total 265s)
+2026-10-20 02:49:20 score 2/3: KOLF200_V10_seed0 avg 0.1928 raw mse 1.127 raw pds 0.6256 (gen 72s, total 210s)
+2026-10-20 02:54:42 score 3/3: HCT116_V10_seed0 avg 0.4759 raw mse 0.852 raw pds 0.6966 (gen 73s, total 313s)
+2026-10-20 02:54:42 render scoring finished (V10)
+2026-10-20 02:55:26 V10 (cells: shared part doubled; totals V6) seed 0: avg H1 0.3483 vs 0.3452, KOLF200 0.1928 vs 0.1741, HCT116 0.4759 vs 0.4761; pds/mse unchanged. Running seeds 1-2 to confirm (main line: final = totals V8 or V9 by the V7a result + cells V10 if confirmed).
+2026-10-20 02:59:45 score 1/6: H1_V10_seed1 avg 0.3477 raw mse 1.090 raw pds 0.9270 (gen 61s, total 252s)
+2026-10-20 03:03:14 score 2/6: KOLF200_V10_seed1 avg 0.1975 raw mse 1.127 raw pds 0.6256 (gen 73s, total 201s)
+2026-10-20 03:08:18 score 3/6: HCT116_V10_seed1 avg 0.4838 raw mse 0.852 raw pds 0.6966 (gen 74s, total 295s)
+2026-10-20 03:12:36 score 4/6: H1_V10_seed2 avg 0.3476 raw mse 1.092 raw pds 0.9270 (gen 60s, total 252s)
+2026-10-20 03:16:06 score 5/6: KOLF200_V10_seed2 avg 0.1989 raw mse 1.127 raw pds 0.6256 (gen 71s, total 203s)
+2026-10-20 03:21:20 score 6/6: HCT116_V10_seed2 avg 0.4803 raw mse 0.852 raw pds 0.6966 (gen 72s, total 306s)
+2026-10-20 03:21:20 render scoring finished (V10)
+2026-10-20 03:22:04 V10 confirmed over 3 seeds (avg diff vs V6: H1 +0.0030, KOLF200 +0.0213, HCT116 +0.0009). Final candidates F8 (cells V10 + totals V8) and F9 (cells V10 + totals V9): 1-seed local check + F8 pairing control.
+2026-10-20 03:26:32 score 1/9: H1_F8_seed0 avg 0.3415 raw mse 1.107 raw pds 0.9357 (gen 77s, total 261s)
+2026-10-20 03:30:42 score 2/9: H1_F8s_seed0 avg 0.0996 raw mse 1.330 raw pds 0.5375 (gen 77s, total 250s)
+2026-10-20 03:34:50 score 3/9: H1_F9_seed0 avg 0.3381 raw mse 0.895 raw pds 0.9375 (gen 73s, total 248s)
+2026-10-20 03:38:31 score 4/9: KOLF200_F8_seed0 avg 0.1971 raw mse 1.127 raw pds 0.6436 (gen 81s, total 214s)
+2026-10-20 03:42:02 score 5/9: KOLF200_F8s_seed0 avg 0.1264 raw mse 1.175 raw pds 0.5214 (gen 80s, total 211s)
+2026-10-20 03:45:35 score 6/9: KOLF200_F9_seed0 avg 0.1840 raw mse 1.156 raw pds 0.6469 (gen 80s, total 214s)
+2026-10-20 03:50:47 score 7/9: HCT116_F8_seed0 avg 0.5127 raw mse 0.937 raw pds 0.7281 (gen 82s, total 303s)
+2026-10-20 03:55:44 score 8/9: HCT116_F8s_seed0 avg -0.1012 raw mse 1.546 raw pds 0.5047 (gen 85s, total 297s)
+2026-10-20 04:00:38 score 9/9: HCT116_F9_seed0 avg 0.4983 raw mse 1.251 raw pds 0.7260 (gen 84s, total 294s)
+2026-10-20 04:00:38 render scoring finished (F8,F8s,F9)
+2026-10-20 04:26:56 final candidates (seed 0): F8 avg H1 0.3415 / KOLF200 0.1971 / HCT116 0.5127 (V6: 0.3449/0.1751/0.4791); F9 0.3381/0.1840/0.4983; F8s pairing 0.0996/0.1264/-0.1012. A/B/C files built and validated (gm_vip_f8.vcc, gm_vip_f9.vcc), not uploaded. Decision after the V7a score: mse>0 -> F9, else F8.
+2026-10-20 08:47:56 V10 strength check (pre-registered: change from x2 only if a strength beats V10 on avg in >= 2 of 3 sets): V10g05 (shared x1.5 in cells), V10g2 (x3), seed 0.
+2026-10-20 08:52:44 score 1/6: H1_V10g05_seed0 avg 0.3465 raw mse 1.098 raw pds 0.9270 (gen 62s, total 283s)
+2026-10-20 08:56:58 score 2/6: H1_V10g2_seed0 avg 0.3472 raw mse 1.072 raw pds 0.9270 (gen 64s, total 253s)
+2026-10-20 09:00:28 score 3/6: KOLF200_V10g05_seed0 avg 0.1822 raw mse 1.127 raw pds 0.6256 (gen 70s, total 204s)
+2026-10-20 09:03:50 score 4/6: KOLF200_V10g2_seed0 avg 0.2066 raw mse 1.127 raw pds 0.6256 (gen 71s, total 202s)
+2026-10-20 09:03 LEADERBOARD V7a (V6 totals x0.5): 0.2032 rank 269 (pds 0.685, mse 0.168, nmae 0.159, fid 0.009, reach 0.189, jac 0.008); V6 was 0.1808. The mse member is unlocked on A/B/C (deep 400-cell panel, small correction claim) as predicted. Second slot: F9 (cells V10 + totals V9) uploaded 09:05 (my decision, user delegated).
+2026-10-20 09:09:16 score 5/6: HCT116_V10g05_seed0 avg 0.4757 raw mse 0.852 raw pds 0.6966 (gen 74s, total 314s)
+2026-10-20 09:14:24 score 6/6: HCT116_V10g2_seed0 avg 0.4684 raw mse 0.852 raw pds 0.6966 (gen 82s, total 308s)
+2026-10-20 09:14:24 render scoring finished (V10g05,V10g2)
+2026-10-20 09:14:32 V10 strength check verdict: keep x2. avg seed 0 (x1.5 / x2 / x3): H1 0.3465 / 0.3483 / 0.3472, KOLF200 0.1822 / 0.1928 / 0.2066, HCT116 0.4757 / 0.4759 / 0.4684; x3 better only on KOLF200 (1 of 3), x1.5 on none.
+2026-10-20 09:31 LEADERBOARD F9 (cells V10 + totals V9 = 0.5 x (own+cis+V8 trans)): 0.2080 rank 247 (pds 0.753, mse 0.150, nmae 0.153, fid 0.016, reach 0.166, jac 0.010) vs V7a 0.2032 (pds 0.685, mse 0.168, nmae 0.159, fid 0.009, reach 0.189, jac 0.008). Control-axis removal in the totals: pds +0.068 (local raw +0.009..+0.031), mse -0.018. DE members -0.020 in sum (reach -0.023), most likely from V10 cells (shared part doubled) -> V10 not confirmed on A/B/C.
+2026-10-20 09:40 cell-free screens (bulk_eval.py; pds proxy + mse_free = official estimator without the prediction-side correction): totals own+cis + s x trans (cis unscaled) beat s x (own+cis+trans) on pds at small s (s 0.1-0.3: H1 +0.004..+0.007, KOLF +0.006..+0.015, HCT116 +0.008..+0.019 raw vs s 0.5 whole); per-source PC cleaning k10 adds pds (+0.012 / +0.002 / +0.014 at s 0.3); depth weights n/(n+50..200) add a little (+0.003..+0.01); knockdown weights, per-gene / per-target transfer coefficients and a per-component Wiener filter all hurt pds. Local mse_free never goes clearly below 1 on KOLF/HCT116 (real noise share 0.73 / 0.86); H1 best 0.978 at s 0.2.
+2026-10-20 10:30 leaderboard API (virtualcellchallenge.org/api/leaderboard) gives RAW members: F9 raw pds 0.840, mse 0.846, nmae 0.908, fid 0.517, reach 0.227, jac 0.034. Top-40: pds 0.84-0.88, mse 0.47-0.60, nmae 0.82-0.87, reach 0.29-0.37. Entries with pds 0.83-0.85 have mse median 0.76 (ours 0.846). mse score 0 <-> raw ~1.0.
+2026-10-20 10:45 budget_abc.py (#348 on A/B/C from the released controls): claim ~4,300-4,800 (400-cell pseudobulk jackknife trace 14-16 x 300); budget V6 ~12,000 (ratio 2.6-2.9), V7a/F9 ~3,000 (ratio 0.64-0.73), trans x0.3 ratio 0.25, x0.2 0.11. Below ratio 1 the plug-in s^2 cost is refunded by the correction, so raw mse falls LINEARLY with the trans scale s up to budget = claim (s_c ~0.60-0.63 here), then quadratic. Estimated optimum = s_c (u ~0.81 vs F9 0.846); trans x0.3 would be WORSE (~0.91). Planned G1 (x0.3) cancelled. At s_c, raw mse ~ 1 - 2 cos sqrt(claim/dist): improve the global noise-corrected cosine.
+2026-10-20 10:15 cos screens (cos_screen.py, combo_check*.py; global noise-corrected cosine = mse-relevant quality): depth weights n/(n+200) raise cos on all 3 hold-outs (+0.016 / +0.005 / +0.008) and pds; per-target sharpening (row x |t_p|^(gamma-1)) raises cos monotonically to gamma 4-6 (depth200+gamma3: H1 0.147->0.189, KOLF 0.025->0.040, HCT116 0.069->0.093; pds +0.006..+0.014). Real energy is concentrated in few targets (H1 top-20 = 42%) while predicted magnitudes were nearly flat. Per-source PC cleaning raises pds but LOWERS cos (dropped). Target expression does not predict energy (Spearman 0.03-0.19). Perturbed-group jackknife = control-draw jackknife (ratio 1.00-1.04): no hidden claim headroom.
+2026-10-20 10:00 G1 built: totals = own+cis + s_c x trans(depth200, shared+axes removed, gamma 3), s_c per context at budget = claim (A 0.00604, B 0.00613, C 0.00636 in sharpened units); cells V1. Upload planned 10-21 08:00 (my decision).
+2026-10-20 10:20 DE metric structure (cell-eval2 source): reach ranks the reference's significant genes by OUR p_adj/p_value (|lfc| only breaks ties); fid_yield_raw = k / max(n_pred, N_conf) over our significant genes (k = sign matches with the real lfc). Offline from the H1/KOLF V6 DE tables (recomputation matches the scorer exactly): ordering by agreement x |t| instead of our p-values gives reach H1 0.24->0.28, KOLF 0.14->0.16; calling the top N_conf genes gives fid H1 0.555->0.616, KOLF 0.342->0.546 (under-calling crashes fid, over-calling decays to ~0.5). A/B/C F9 fid 0.517 = chance -> we over-call. de_eval.py tests cell variants with the official scorer.
+2026-10-20 10:17:08 de_eval start: sets ['H1', 'KOLF200'], variants ['D0', 'D1', 'D2', 'D3', 'D4'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 10:20 scheduled G1 upload at 2026-10-21 00:01 UTC (08:01 Taiwan) via submit_queue.sh (upload_g1.log)
+2026-10-20 10:23:13 de_eval H1_D0_seed0: raw fid 0.5385 reach 0.2297 jac 0.0667 nmae 0.9232 | n_pred median 539 (IQR 305-1088) vs N_conf median 150 | pds 0.9439 mse 0.815 (352s)
+2026-10-20 10:29:50 de_eval H1_D1_seed0: raw fid 0.4358 reach 0.2254 jac 0.0614 nmae 0.9296 | n_pred median 156 (IQR 74-505) vs N_conf median 150 | pds 0.9439 mse 0.815 (397s)
+2026-10-20 10:35 km_screen.py (G1 totals, cell-free): shared components k 10 and control axes m 50 stay (k 5 better on H1 only; k 0/20 worse everywhere).
+2026-10-20 10:33:54 de_eval H1_D2_seed0: raw fid 0.2814 reach 0.1808 jac 0.0439 nmae 0.9403 | n_pred median 39 (IQR 23-91) vs N_conf median 150 | pds 0.9439 mse 0.815 (244s)
+2026-10-20 10:36 de_eval: D1-D2 (depth-weighted magnitudes) under-call on H1 (n_pred 156 / 39 vs N_conf 150; fid 0.436 / 0.281) -> stopped D3/D4 (same scale, predictable failure); next D0f, D5, D6, D7, D8 on H1.
+2026-10-20 10:34:18 de_eval start: sets ['H1'], variants ['D0f', 'D5', 'D6', 'D7', 'D8'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 10:40 note: with the G1-style totals (depth200 + gamma 3, 0.6 x base norm) the LOCAL official H1 raw mse is 0.815 (V6 1.104, V7a 0.875, V9 0.895) and raw pds 0.944 (V8 0.936) -- consistent with the cell-free cos/pds screens. render.py: new mode 'mix' (fraction kappa|lfc| of cells changed by 2^(+-1/kappa)) prototyped; toy check: lowers the Wilcoxon shift of highly expressed genes (AUC 0.70 -> 0.59) but the top-tail total fix then also trims the geometric-mean change (0.26 -> 0.19); not used yet.
+2026-10-20 10:38:39 de_eval H1_D0f_seed0: raw fid 0.5494 reach 0.2409 jac 0.0659 nmae 0.9185 | n_pred median 805 (IQR 496-1472) vs N_conf median 150 | pds 0.9439 mse 0.815 (247s)
+2026-10-20 10:50 offline nmae (H1/KOLF200 V6 DE tables): our |lfc| on reference-significant genes is 0.23x / 0.16x the real one, |lfc|-weighted sign accuracy 0.667 / 0.516; best global cell-scale x1.5 on H1 (0.887 -> 0.872) but worse on KOLF; per-target sharpening of the cells does not help nmae. Cell amplitude stays.
+2026-10-20 10:48 de_eval H1_D5 scorer run failed (likely memory: ran alongside the totals builds); restarted D5-D8 alone, then D0f on KOLF200.
+2026-10-20 10:45:51 de_eval start: sets ['H1'], variants ['D5', 'D6', 'D7', 'D8'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 10:55 leaderboard snapshot saved (data/leaderboard/lb_20261020_0941.json). At our pds (0.83-0.85, n 134): reach median 0.253 (ours 0.227), fid 0.514 (0.517), nmae 0.905 (0.908), jac 0.031 (0.034). CellWM (rank 9) has pds 0.840 like us but mse 0.524, nmae 0.837, reach 0.329: same discrimination, much better per-gene magnitudes/signs.
+2026-10-20 10:49:52 de_eval H1_D5_seed0: raw fid 0.3024 reach 0.1731 jac 0.0416 nmae 0.9398 | n_pred median 47 (IQR 33-88) vs N_conf median 150 | pds 0.9439 mse 0.815 (225s)
+2026-10-20 10:52 de_eval H1_D5 (equal-weight trans masked to top-300 by agreement x |t|): n_pred 47 vs N_conf 150 -> fid 0.302: the most confident genes by |t| are mostly low-expression genes that cannot reach significance; masking fails. D6 stopped (same failure expected); running D7, D8, then KOLF200 D0/D0f.
+2026-10-20 10:50:28 de_eval start: sets ['H1'], variants ['D7', 'D8'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 10:55 deleted never-uploaded obsolete files vccsub/out/gm_vip_{f8,v8,v9}.vcc (rebuildable with build_f8/v8/v9.sh) to make room for G2 and the D/E/F builds.
+2026-10-20 10:54:41 de_eval H1_D7_seed0: raw fid 0.4629 reach 0.2322 jac 0.0643 nmae 0.9277 | n_pred median 198 (IQR 104-556) vs N_conf median 150 | pds 0.9439 mse 0.815 (238s)
+2026-10-20 10:56 de_eval H1_D7 (alpha 2.25): n_pred 198 -> fid 0.463 (D0 0.539), nmae 0.928 -> smaller cell amplitude hurts (under-calling on part of the targets).
+2026-10-20 10:57 pre-registered for slot 2 on 10-21 (before the KOLF D0f result): use TOP_FRAC 0.02 if KOLF200 D0f is not worse than D0 on raw fid and reach (nmae not worse by > 0.005); totals = G1's unless G1's leaderboard mse member is below F9's 0.150 (then F9-style V9 totals); cell amplitude stays x3 unless D8 beats D0 on H1 fid by > 0.01 with nmae not worse by > 0.01.
+2026-10-20 10:58:35 de_eval H1_D8_seed0: raw fid 0.5614 reach 0.2391 jac 0.0669 nmae 0.9166 | n_pred median 1493 (IQR 1046-2293) vs N_conf median 150 | pds 0.9439 mse 0.815 (233s)
+2026-10-20 10:58:35 de_eval finished
+2026-10-20 10:58:37 de_eval start: sets ['KOLF200'], variants ['D0', 'D0f'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 10:59 de_eval H1_D8 (alpha 4.5): n_pred 1493 -> fid 0.561 (+0.023 vs D0), reach 0.239 (+0.009), nmae 0.917 (better by 0.007), jac 0.067. Under-calling of strong targets (large N_conf) dominates on H1, so more calls help; meets the pre-registered rule for raising the cell amplitude. Queued after KOLF D0/D0f: H1 D8f, KOLF D8, D8f.
+2026-10-20 11:02:15 de_eval KOLF200_D0_seed0: raw fid 0.2608 reach 0.1382 jac 0.0210 nmae 0.9915 | n_pred median 10 (IQR 5-22) vs N_conf median 26 | pds 0.6546 mse 1.130 (200s)
+2026-10-20 11:03 de_eval KOLF200_D0 (V1 cells, G1-style totals): n_pred 10 vs N_conf 26 -> fid 0.261 (V6-totals table: 0.342), reach 0.138, nmae 0.9915; pds 0.6546 (F9 0.6469), mse 1.130 (F9 1.156). The smaller totals of weak targets trim the cells' shifts (top-tail fix) -> fewer calls: a DE risk for G1; more calls needed (alpha 4.5 / top 2 %).
+2026-10-20 11:05:36 de_eval KOLF200_D0f_seed0: raw fid 0.3162 reach 0.1389 jac 0.0221 nmae 0.9917 | n_pred median 16 (IQR 9-40) vs N_conf median 26 | pds 0.6546 mse 1.130 (201s)
+2026-10-20 11:05:36 de_eval finished
+2026-10-20 11:05:39 de_eval start: sets ['H1'], variants ['D8f'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 11:06 de_eval KOLF200_D0f: fid 0.316 (D0 0.261), reach 0.1389 (0.1382), nmae 0.9917 (0.9915) -> pre-registered TOP_FRAC rule PASSES (H1 and KOLF200): use added counts in the top 2 % of cells.
+2026-10-20 11:09:52 de_eval H1_D8f_seed0: raw fid 0.5609 reach 0.2422 jac 0.0652 nmae 0.9092 | n_pred median 1982 (IQR 1473-2798) vs N_conf median 150 | pds 0.9439 mse 0.815 (238s)
+2026-10-20 11:09:52 de_eval finished
+2026-10-20 11:09:55 de_eval start: sets ['KOLF200'], variants ['D8', 'D8f'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 11:10 de_eval H1_D8f (alpha 4.5 + top 2 %): fid 0.5609, reach 0.2422, jac 0.0652, nmae 0.9092 (best nmae) -> vs D0: +0.022 / +0.013 / -0.0015 / -0.014; ~+0.11 scaled on the A/B/C anchors.
+2026-10-20 11:13:37 de_eval KOLF200_D8_seed0: raw fid 0.3944 reach 0.1406 jac 0.0279 nmae 0.9922 | n_pred median 37 (IQR 20-82) vs N_conf median 26 | pds 0.6546 mse 1.130 (204s)
+2026-10-20 11:14 de_eval KOLF200_D8 (alpha 4.5): fid 0.394 (D0 0.261), reach 0.1406, jac 0.0279, nmae 0.9922 (D0 0.9915); n_pred 37 vs N_conf 26.
+2026-10-20 11:17:01 de_eval KOLF200_D8f_seed0: raw fid 0.4324 reach 0.1514 jac 0.0268 nmae 0.9915 | n_pred median 64 (IQR 36-146) vs N_conf median 26 | pds 0.6546 mse 1.130 (204s)
+2026-10-20 11:17:01 de_eval finished
+2026-10-20 11:18 de_eval KOLF200_D8f (alpha 4.5 + top 2 %): fid 0.432 (D0 0.261), reach 0.1514 (0.1382), jac 0.0268 (0.0210), nmae 0.9915 (0.9915). D8f best on both sets -> DECISION: slot 1 on 10-21 = G2 (G1 totals + cells own+cis+trans x4.5 + added counts in the top 2 % of cells) instead of G1; pds/mse depend only on the totals, so G2 tests everything G1 would plus the DE change.
+2026-10-20 11:20 cancelled the scheduled G1 upload; scheduled G2 (out/gm_vip_g2.vcc) at 2026-10-21 00:01 UTC (upload_g2.log). gm_vip_g1.vcc kept as a fallback.
+2026-10-20 11:30 src_weight_screen.py (G1 totals objective, approx value 1.94 d(pds) + 0.95 d(cos)): lam 1 / 10, kcap 2, quality^0.5 / ^1 weights -> no setting better on all 3 hold-outs (quality weights hurt H1 by 0.03-0.05, help KOLF/HCT116 by ~0.01). G1 settings stay (lam 3, kcap 1, no quality weight).
+2026-10-20 11:33 G2 built and validated (nnz 2,093,968,726); scheduled 10-21 00:01 UTC. Starting the D/E/F pipeline rehearsal (RENDER=g1 TOPFRAC=0.02 CELLAMP=1.5) on A/B/C.
+2026-10-20 11:47 D/E/F rehearsal PASSED: final_pipeline.sh RENDER=g1 TOPFRAC=0.02 CELLAMP=1.5 on A/B/C ran end to end in 15 min (two exports, totals, cells, pack, validate); export n0=200 = cache d200 (6e-7); totals A identical, B/C within 0.7 % (claim draws); nnz 2,093,967,878 vs G2 2,093,968,726.
+2026-10-20 11:47:27 de_eval start: sets ['H1'], variants ['D9f', 'D8g'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 11:51:41 de_eval H1_D9f_seed0: raw fid 0.5546 reach 0.2524 jac 0.0630 nmae 0.9032 | n_pred median 3104 (IQR 2496-3964) vs N_conf median 150 | pds 0.9439 mse 0.815 (237s)
+2026-10-20 11:52 de_eval H1_D9f (alpha 6 + top 2 %): fid 0.5546 (D8f 0.5609), reach 0.2524 (0.2422), jac 0.0630 (0.0652), nmae 0.9032 (0.9092) -> net ~0 on the A/B/C anchors vs D8f; alpha 4.5 near the optimum on H1.
+2026-10-20 11:55:38 de_eval H1_D8g_seed0: raw fid 0.5590 reach 0.2397 jac 0.0650 nmae 0.9068 | n_pred median 2083 (IQR 1571-2973) vs N_conf median 150 | pds 0.9439 mse 0.815 (237s)
+2026-10-20 11:55:38 de_eval finished
+2026-10-20 11:55:41 de_eval start: sets ['KOLF200'], variants ['D9f', 'D8g'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 11:56 de_eval H1_D8g (alpha 4.5 + top 0.5 %): fid 0.5590, reach 0.2397, jac 0.0650, nmae 0.9068 ~ D8f (0.5609 / 0.2422 / 0.0652 / 0.9092): no gain below 2 %.
+2026-10-20 11:59:18 de_eval KOLF200_D9f_seed0: raw fid 0.4780 reach 0.1563 jac 0.0255 nmae 0.9952 | n_pred median 169 (IQR 94-326) vs N_conf median 26 | pds 0.6546 mse 1.130 (199s)
+2026-10-20 12:00 de_eval KOLF200_D9f (alpha 6 + top 2 %): fid 0.478 (D8f 0.432), reach 0.1563 (0.1514), jac 0.0255 (0.0268), nmae 0.9952 (0.9915); n_pred 169 vs N_conf 26. alpha 6 vs 4.5 on the A/B/C anchors: KOLF +0.15, H1 -0.006 -> slot-2 candidate G3 = gamma-4 totals + alpha-6 cells + top 2 % (pds/mse from the totals, DE from the cells).
+2026-10-20 12:02:37 de_eval KOLF200_D8g_seed0: raw fid 0.4391 reach 0.1532 jac 0.0265 nmae 0.9954 | n_pred median 74 (IQR 41-158) vs N_conf median 26 | pds 0.6546 mse 1.130 (200s)
+2026-10-20 12:02:37 de_eval finished
+2026-10-20 12:03 de_eval KOLF200_D8g: fid 0.439, reach 0.1532, jac 0.0265, nmae 0.9954 ~ D8f (nmae slightly worse) -> keep top 2 %. Building G3 (gamma-4 totals + alpha-6 cells + top 2 %) as the 10-21 slot-2 candidate.
+2026-10-20 12:25 energy_proxy_screen.py: per-target magnitude |t|^3 x agreement (mean pairwise source cosine) or x n_sources or |t|^2 x agreement each beat G1's |t|^3 on all 3 hold-outs, but only by +0.006..+0.017 (approx scaled value); noted, not applied to G2/G3.
+2026-10-20 12:35 exprmatch_screen.py: per-(source, gene) weights by control-expression match with the new context: H1 worse at every tau (-0.002..-0.075), KOLF200/HCT116 +0.01 at tau 2-4 -> not adopted. End of the 10-20 session: G2 scheduled 10-21 00:01 UTC; G3 (gamma 4 + cells x6) built as the slot-2 candidate; D/E/F pipeline rehearsed.
+2026-10-20 12:50 depmap_energy.py: fraction of DepMap lines where the target is essential correlates with true energy (H1 0.34, KOLF 0.16, HCT116 0.23; |t| 0.49/0.11/0.19); magnitude x (1 + b frac) gives +0.002..+0.009 (b 1-3) on all 3 -> small. headroom.py: oracle per-target magnitudes would raise cos to 0.227 / 0.058 / 0.134 (G1 0.183 / 0.038 / 0.095; equal magnitudes 0.141 / 0.025 / 0.073); per-target direction cos median 0.10 / 0.013 / 0.034 -> directions are the main limit.
+2026-10-20 13:00 simw_screen.py: context-similarity source weights (tau 2/5/10) worse on H1 and KOLF200, +0.02 on HCT116 at tau 2 only -> not adopted. Concern: G2's cells (trans x4.5) also amplify the shared part (panel mean + top-10 components), which hurt reach on A/B/C in F9 (V10); testing D10f = own+cis + trans + 0.5 x target-specific part (shared part kept x1) + top 2 %.
+2026-10-20 15:20:24 de_eval start: sets ['H1'], variants ['D10f', 'D11f'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 15:21:14 note: the hand-typed times on the last five run.log notes (12:25-13:00) were approximate; actual completion times were later (screens ran ~13:00-15:20).
+2026-10-20 15:24:54 de_eval H1_D10f_seed0: raw fid 0.5593 reach 0.2341 jac 0.0646 nmae 0.9118 | n_pred median 1808 (IQR 1386-2615) vs N_conf median 150 | pds 0.9439 mse 0.815 (257s)
+2026-10-20 15:25:02 de_eval H1_D10f (specific part x1.5, shared x1, top 2 %): fid 0.5593, reach 0.2341, jac 0.0646, nmae 0.9118 vs D8f 0.5609 / 0.2422 / 0.0652 / 0.9092 -> locally the shared amplification helps reach a little (A/B/C evidence from F9 says the opposite).
+2026-10-20 15:28:57 de_eval H1_D11f_seed0: raw fid 0.5536 reach 0.2270 jac 0.0623 nmae 0.9082 | n_pred median 2852 (IQR 2338-3600) vs N_conf median 150 | pds 0.9439 mse 0.815 (243s)
+2026-10-20 15:28:57 de_eval finished
+2026-10-20 15:28:59 de_eval start: sets ['KOLF200'], variants ['D10f', 'D11f'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 15:29:04 de_eval H1_D11f (specific x2, shared x1, top 2 %): fid 0.5536, reach 0.2270, jac 0.0623, nmae 0.9082 -> below D8f on H1 (reach -0.015).
+2026-10-20 15:32:43 de_eval KOLF200_D10f_seed0: raw fid 0.4163 reach 0.1403 jac 0.0260 nmae 0.9918 | n_pred median 52 (IQR 29-108) vs N_conf median 26 | pds 0.6546 mse 1.130 (206s)
+2026-10-20 15:36:14 de_eval KOLF200_D11f_seed0: raw fid 0.4649 reach 0.1451 jac 0.0257 nmae 0.9920 | n_pred median 118 (IQR 69-218) vs N_conf median 26 | pds 0.6546 mse 1.130 (211s)
+2026-10-20 15:36:14 de_eval finished
+2026-10-20 15:36:27 de_eval KOLF200 D10f / D11f: fid 0.416 / 0.465, reach 0.140 / 0.145, nmae 0.9918 / 0.9920 (D8f 0.432 / 0.151 / 0.9915; D9f 0.478 / 0.156). Locally, amplifying the shared part helps (D8f > D10f, D9f > D11f on both sets); A/B/C (F9 vs V7a) suggested the opposite but was confounded with the totals. Keep G2 = D8f cells; G3 (cells x6) on the leaderboard will show the amplification effect on A/B/C.
+2026-10-20 15:38:08 magnitude_combo.py (approx value summed over 3 hold-outs vs G1): x agreement +0.037 (all 3 positive), x agreement x n_sources (M4) +0.046 (all 3 positive), x DepMap essentiality +0.017, combos with essentiality hurt H1. Adopting M4 for the next totals (G3w).
+2026-10-20 15:42:21 target weights tempered: (agreement x n)^1 makes A/B/C totals extremely concentrated (participation ratio 7/300; hold-outs 7-17) -> power 0.5 (A/B/C PR 23, hold-outs 21-31, approx value +0.016 / +0.012 / +0.015, sum +0.042). tools/target_weights.py + make_bulk_effects.py --target-weights + final_pipeline.sh TWPOW. Building G3w = (gamma 3 x (a n)^0.5) totals + cells x6 + top 2 % as the preferred 10-21 slot-2 candidate (G3 = gamma-4 totals kept as alternative).
+2026-10-20 15:47:13 robust_avg_screen.py: leave-one-out agreement weights per (source, target), per-gene median, trimmed mean -> all clearly worse than the weighted mean on all 3 hold-outs (val -0.02..-0.33). Directions look near the limit of statistical combination of these sources.
+2026-10-20 15:48:07 leaderboard snapshot: rank 1 0.4734, 10 0.3155, 50 0.2888, 100 0.2623, 200 0.2234; our F9 now rank 244.
+2026-10-20 15:56:29 de_eval start: sets ['H1'], variants ['D12f', 'D13f'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 15:57:06 G3w built and validated (nnz 2,096,312,862). tools/target_weights.py: targets missing from the signature cache now get the median weight (guards a changed final panel); weights for A/B/C unchanged. Pre-registered for 10-21 slot 2: default G3w; if G2's mse member < 0.150 (F9) -> instead G2 cells + V9 totals (isolate the totals); if G2's reach member < 0.150 -> instead G3w totals + V1 cells (x3) + top 2 % (built in the morning).
+2026-10-20 16:00:57 de_eval H1_D12f_seed0: raw fid 0.5608 reach 0.2652 jac 0.0637 nmae 0.9076 | n_pred median 2136 (IQR 1665-2912) vs N_conf median 150 | pds 0.9439 mse 0.815 (252s)
+2026-10-20 16:01:03 de_eval H1_D12f (cells x4.5 x per-entry agreement^1 + top 2 %): fid 0.5608, reach 0.2652 (+0.023 vs D8f), jac 0.0637, nmae 0.9076.
+2026-10-20 16:04:59 de_eval H1_D13f_seed0: raw fid 0.5586 reach 0.2636 jac 0.0623 nmae 0.9076 | n_pred median 2392 (IQR 1942-3056) vs N_conf median 150 | pds 0.9439 mse 0.815 (242s)
+2026-10-20 16:04:59 de_eval finished
+2026-10-20 16:05:02 de_eval start: sets ['KOLF200'], variants ['D12f', 'D13f'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 16:05:04 de_eval H1_D13f (agreement^2): fid 0.5586, reach 0.2636, jac 0.0623, nmae 0.9076 ~ D12f (k 1 enough).
+2026-10-20 16:08:41 de_eval KOLF200_D12f_seed0: raw fid 0.4720 reach 0.1449 jac 0.0237 nmae 0.9932 | n_pred median 129 (IQR 75-258) vs N_conf median 26 | pds 0.6546 mse 1.130 (201s)
+2026-10-20 16:09:02 de_eval KOLF200_D12f: fid 0.472 (D8f 0.432), reach 0.1449 (0.1514), jac 0.0237 (0.0268), nmae 0.9932 (0.9915). Approx scaled value vs D8f: H1 +0.025, KOLF200 +0.12 -> ADOPT agreement-weighted cells (x4.5 x agreement/median). Plan: rebuild slot 1 (G2: G1 totals) and slot 2 (G3w: (a n)^0.5 totals) with these cells tonight; identical cells -> the two leaderboard results isolate the totals.
+2026-10-20 16:12:09 de_eval KOLF200_D13f_seed0: raw fid 0.5031 reach 0.1450 jac 0.0199 nmae 0.9966 | n_pred median 254 (IQR 168-438) vs N_conf median 26 | pds 0.6546 mse 1.130 (208s)
+2026-10-20 16:12:09 de_eval finished
+2026-10-20 16:12:14 de_eval KOLF200_D13f (agreement^2): fid 0.503, reach 0.1450, jac 0.0199, nmae 0.9966 (more calls; jac/nmae worse than D12f) -> keep k 1.
+2026-10-20 16:12:15 de_eval start: sets ['H1'], variants ['D14f'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 16:16:34 de_eval H1_D14f_seed0: raw fid 0.5540 reach 0.2484 jac 0.0649 nmae 0.9088 | n_pred median 1980 (IQR 1229-3176) vs N_conf median 150 | pds 0.9439 mse 0.815 (243s)
+2026-10-20 16:16:34 de_eval finished
+2026-10-20 16:16:36 de_eval start: sets ['KOLF200'], variants ['D14f'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 16:16:43 de_eval H1_D14f (cells x4.5 x |t_p|/median): fid 0.5540, reach 0.2484, jac 0.0649, nmae 0.9088 -> below D12f (0.5608 / 0.2652); D12f stays.
+2026-10-20 16:20:22 de_eval KOLF200_D14f_seed0: raw fid 0.4149 reach 0.1471 jac 0.0231 nmae 0.9919 | n_pred median 66 (IQR 24-196) vs N_conf median 26 | pds 0.6546 mse 1.130 (208s)
+2026-10-20 16:20:22 de_eval finished
+2026-10-20 16:20:40 de_eval KOLF200_D14f: fid 0.415, reach 0.1471, jac 0.0231, nmae 0.9919 -> below D12f. Building G2c (G1 totals + D12f cells) and G3c ((a n)^0.5 totals + D12f cells).
+2026-10-20 16:27:13 agree_totals_screen.py: per-entry sign agreement (k 1) in the totals adds +0.006 / +0.005 / +0.010; with (a n)^0.5: +0.018 / +0.016 / +0.021 (sum +0.055 vs G1; (a n)^0.5 alone +0.042). New totals g3a (PR 24/300 on A) used for G3c (slot-2 candidate). make_bulk_effects.py --entry-agree, final_pipeline.sh ENTRYAGREE.
+2026-10-20 16:28:35 predjk_check.py: our G3c cells' pseudobulk jackknife trace is 1.48x a 400-cell control draw (min 1.19, 30 targets of A) -> pred_jk >= real_jk, so claim ~ sum of real traces as estimated; the budget = claim scale stands. Plan 10-21: slot 1 = G3c (g3a totals + D12f cells + top 2 %), slot 2 = G3v (same totals + V1 cells x3 + top 2 %) to isolate the cell change on A/B/C.
+2026-10-20 16:28:48 rescheduled 10-21 uploads: 00:01 UTC G3c then G3v (upload_g3.log); the earlier G2 schedule was cancelled (gm_vip_g2.vcc kept as fallback).
+2026-10-20 16:29:16 de_eval start: sets ['HCT116'], variants ['D0', 'D12f'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 16:29:42 queue changed: only G3c at 00:01 UTC; slot 2 chosen manually after G3c's members (G3v if the DE members disappoint, G2c = G1 totals + same cells if pds/mse disappoint).
+2026-10-20 16:34:18 ivw_screen.py: per-entry inverse-variance weights (Poisson noise from ncell and expression, tau2 0.02/0.05/0.2) -> H1 +0.003, KOLF200 -0.003, HCT116 +0.014 at tau2 0.02; mixed, not adopted.
+2026-10-20 17:00:04 DISK FULL at 16:34 (the pack step needs a temporary ~16 GB copy besides the 17 GB h5ad): the G2c pack segfaulted, G3c/G3v builds and the HCT116 de_eval run failed. Freed ~48 GB: deleted the failed g2c h5ad and temp dir, and the superseded never-uploaded or old files gm_vip.vcc, gm_vip_exact.vcc, gm_vip_g1.vcc, gm_vip_g3.vcc, gm_vip_g3w.vcc (all rebuildable). Rebuilding G3c first (needed for the 08:01 upload), then G2c and G3v, one at a time with a free-space check.
+2026-10-20 17:05:36 km_screen2.py (refined totals): (k 10, m 50) stays; other (k, m) within +-0.002 summed, mixed across sets.
+2026-10-20 17:14:55 G3c rebuilt and validated (nnz 2,095,198,110) for the 08:01 upload; G2c and G3v building next (sequential).
+2026-10-20 17:15:32 deleted old uploaded files gm_vip_v6.vcc and gm_vip_v7_s050.vcc (rebuildable) to keep >= 40 GB for builds; full-config D/E/F rehearsal (rehearse_final.sh) queued after the builds and the HCT116 check.
+2026-10-20 17:19:02 cis_scale_screen.py (refined totals): cis x1.5 / x2 -> approx value +0.014 / +0.022 summed (positive on all 3, monotone); testing x3 / x4.
+2026-10-20 17:22:28 cis x3 / x4 in the refined totals: approx value +0.033 / +0.040 summed (H1 peaks near x3; KOLF/HCT116 still rising). make_bulk_effects.py --cis-scale and final_pipeline.sh CISSCALE added; candidate CISSCALE=3 for a later leaderboard test.
+2026-10-20 17:35:59 G2c built (nnz 2,095,425,344); deleted gm_vip_g2.vcc (superseded by G2c) and gm_vip_f9.vcc (uploaded, rebuildable with build_f9.sh) to keep >= 40 GB for the rehearsal.
+2026-10-20 17:42:09 all three files built and validated: G3c (08:01 upload), G2c and G3v (slot-2 options). 50 GB free.
+2026-10-20 17:42:29 de_eval start: sets ['HCT116'], variants ['D0', 'D12f'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 17:48:02 de_eval HCT116_D0_seed0: raw fid 0.5295 reach 0.6426 jac 0.0130 nmae 0.8150 | n_pred median 78 (IQR 44-150) vs N_conf median 2 | pds 0.7393 mse 1.026 (316s)
+2026-10-20 17:48:10 de_eval HCT116_D0: fid 0.5295, reach 0.6426, jac 0.0130, nmae 0.8150; N_conf median 2 (shallow X-Atlas HCT116: few reference DE genes) -> weak test of the DE members.
+2026-10-20 17:52:57 de_eval HCT116_D12f_seed0: raw fid 0.5175 reach 0.6472 jac 0.0039 nmae 0.8274 | n_pred median 800 (IQR 585-1194) vs N_conf median 2 | pds 0.7393 mse 1.026 (295s)
+2026-10-20 17:52:57 de_eval finished
+2026-10-20 17:53:14 de_eval HCT116_D12f: fid 0.5175 (D0 0.5295), reach 0.6472 (0.6426), jac 0.0039 (0.0130), nmae 0.8274 (0.8150); n_pred 800 vs N_conf 2 -> over-calling hurts where reference DE sets are tiny (approx scaled -0.08), vs H1 +0.025 and KOLF200 +0.12. A/B/C: 73-91 % of targets have >= 10 reference DE genes (scorer docs), closer to H1/KOLF. G3v on the leaderboard (same totals, cells x3) will settle it on A/B/C.
+2026-10-20 17:58:30 abc_calls.py (context A, 30 targets, scorer-style DE vs the released controls, own gene excluded): significant genes per target, G3v cells (x3) median 726 (IQR 480-1128), G3c cells (x4.5 x agreement) median 2064 (IQR 1667-2569). Both likely exceed most targets' reference sets; whether fid gains (H1/KOLF) or loses (HCT116) on A/B/C is open -> G3c vs G3v on the leaderboard decides.
+2026-10-20 18:11:38 FULL D/E/F rehearsal PASSED (RENDER=g1 TOPFRAC=0.02 CELLAMP=1.5 CELLAGREE=1 TWPOW=0.5 ENTRYAGREE=1; 18 min): cells identical to c12, totals within 1e-6 of g3a, nnz 2,095,198,110 = G3c.
+2026-10-20 18:12:31 de_eval start: sets ['H1'], variants ['D0', 'D12f'] (totals fixed; raw fid/reach/jac/nmae compared)
+2026-10-20 18:15:51 Claude Code stopped the background waiter for the 10-21 upload result (system low on memory during the seed-1 scorer run); the upload queue itself (submit_queue.sh, G3c at 00:01 UTC) is still running. Not restarting the waiter (harness instruction); the result will be read manually from upload_g3.log / the leaderboard API.
+2026-10-20 18:17:04 de_eval H1_D0_seed1: raw fid 0.5363 reach 0.2409 jac 0.0667 nmae 0.9247 | n_pred median 537 (IQR 314-1073) vs N_conf median 150 | pds 0.9439 mse 0.815 (255s)
+2026-10-20 18:17:10 de_eval H1_D0_seed1: fid 0.5363, reach 0.2409, jac 0.0667, nmae 0.9247 (seed 0: 0.5385 / 0.2297 / 0.0667 / 0.9232) -> seed noise in reach ~0.01.
+2026-10-20 18:21:07 de_eval H1_D12f_seed1: raw fid 0.5607 reach 0.2467 jac 0.0639 nmae 0.9100 | n_pred median 2116 (IQR 1682-2929) vs N_conf median 150 | pds 0.9439 mse 0.815 (244s)
+2026-10-20 18:21:07 de_eval finished
+2026-10-20 18:21:39 de_eval H1_D12f_seed1: fid 0.5607, reach 0.2467, jac 0.0639, nmae 0.9100. Two-seed means D12f vs D0 on H1: fid 0.561 vs 0.537, reach 0.256 vs 0.235, nmae 0.909 vs 0.924, jac 0.064 vs 0.067 -> the gain holds (reach seed noise ~0.01-0.02).
+2026-10-20 18:23:05 totals_grid.py (vs G3c setting, summed approx value): cis x3 +0.033 (PR 29/30/23), gamma 4 + cis x3 +0.040 (PR 20/12/8, too concentrated), power 0.75 + cis x3 +0.032, gamma 2 variants +0.018..+0.020 -> next totals candidate = G3c + cis x3.
+2026-10-20 18:25:28 learned_combiner.py (HistGradientBoosting on per-entry features, trained on pseudo-new contexts): H1 cos 0.117 / pds 0.920 vs mean-based 0.202 / 0.946 (val -0.13); 50/50 mix -0.07 -> tree regression loses the directional resolution; dropped. Next: binned transfer coefficients y ~ m x g(bin of agreement, n, expression, sd/|m|).
+2026-10-20 18:27:00 binned_coef.py: transfer coefficients per bin of (agreement, n, expression, sd/|m|) learned on pseudo-new contexts -> H1 -0.109, KOLF +0.001, HCT116 -0.017 (sum -0.125); the hand-set agreement factor stays positive (+0.013). Learned transfer rules from the sources do not carry over to new lines; simple heuristics generalise better. Learning approaches dropped.
+2026-10-20 18:43:08 building G4c (G3c totals with cis x3 + D12f cells) as the next test candidate.
+2026-10-20 18:55:58 G4c built and validated (nnz 2,095,174,737): G3c with cis x3 in the totals; candidate for a later slot. Files ready: G3c (08:01), G2c, G3v, G4c; 47 GB free.
+2026-10-21 10:17:20 G3c leaderboard (08:01 upload, published 09:44): 0.2386 rank 169-170 (F9 0.2080 rank 247). Raw vs F9: pds 0.8545 (0.8399), mse 0.708 (0.846), nmae 0.930 (0.908, worse), fid 0.521 (0.517), reach 0.255 (0.227), jac 0.033 (0.034). Scaled: pds 0.785, mse 0.295 (0.150), nmae 0.117 (0.153), fid 0.029, reach 0.198 (0.166), jac 0.008. Totals change clearly works (mse +0.145 scaled); DE members flat in sum (nmae down, reach/fid up) -> slot 2 = G3v (same totals, V1 cells x3) to isolate the cells on A/B/C. G2c not needed.
+2026-10-21 10:17:20 deleted gm_vip_g2c.vcc (not needed; rebuildable with build_g2c.sh). Uploading G3v now.
+2026-10-21 10:18:36 building G4v (cis x3 totals + V1 cells x3) so that the 10-22 file is ready whichever cells win today (G4c if G3c's cells win, G4v if G3v's win).
+2026-10-21 10:24:14 DISK CLEANUP (user approved both groups): deleted raw downloads already converted to data/stage3/stats + stats_ext (kolf counts_region.bin, replogle2022 *_singlecell_01.h5ad, viperturb genome_wide_filtered.rds, h1_2025/, nadig2025/, feng2025/, crispra/; small metadata/logs and replogle bulk files kept) and early-experiment files (scDFM/data [Norman], scDFM/data_dl, scDFM/ckpts, scDFM/runs, data/stage3/model, loco/KOLF, loco/KOLFbig, codex_pilot pred). Kept: data/vcc2026, stage3 stats/stats_ext/effects, stage3 per-line h5ad, loco H1/KOLF200/HCT116, repro, vccsub/out.
+2026-10-21 10:32:16 G4v built and validated (nnz 2,091,198,823): cis x3 totals + V1 cells x3. Ready for 10-22: G4c (if G3c's cells win) or G4v (if G3v's cells win).
+2026-10-21 10:36:46 prepared tools/vcc_truth.py (A/B/C truth -> stats npz + loco real sets; tested on plain / no-control / shuffled-gene / multi-context files, exact) and repro/truth_20261022/PLAN.md for the 10-22 truth release.
+2026-10-21 10:43:47 G3v leaderboard: 0.2391 rank 171 vs G3c 0.2386. Same totals -> pds 0.785 / mse 0.295 identical (pds and mse depend only on the totals). Cells: G3v (V1 x3) vs G3c (x4.5 x agreement) scaled nmae 0.131 vs 0.117, fid 0.022 vs 0.029, reach 0.192 vs 0.198, jac 0.009 vs 0.008 (raw nmae 0.9215 vs 0.9303, fid 0.519 vs 0.521, reach 0.250 vs 0.255) -> net tie: the agreement cells gain fid/reach but lose nmae (LFC sizes overshoot). Local hold-outs predicted H1 +0.025, KOLF +0.12, HCT116 -0.08; A/B/C lands at ~0. Tune the amplitude trade-off on the A/B/C truth (leave-one-context-out). 10-22 slot (if the val board stays open): G4v (G3v + cis x3 totals).
+2026-10-21 15:18:46 user: no upload on 10-22 (the A/B/C truth makes val uploads pointless; the exam becomes D/E/F). No upload is scheduled (checked processes and crontab); G4v stays unuploaded.
+2026-10-22 17:28:17 FINAL PHASE OPEN: vcc-cli 0.3.0 installed (final phase, contexts D/E/F, panel vcc2026-test-1, deadline 11-05 23:59 UTC; scores hidden until winners; 2/day, last entry counts). controls-final in data/vcc2026_final (300 targets, 129 shared with A/B/C, same 18,533 genes). A/B/C truth NOT published (site/wiki/GitHub checked). pack_vcc.py now records contexts/perts_fingerprint/panel_id/cli_version like vcc 0.3.0 prep (tiny D/E/F test: meta and content identical to official prep). Coverage gap: 'vcc'-kind sources were extracted for A/B/C targets only -> D/E/F new targets thin. K562 stats filled from the gwps bulk file (128 added, 19 replaced; 277/300). X-Atlas HCT116/HEK293T re-extraction for 157 final targets started (logs_20261022/). Backups: data/stage3/stats_abc_backup_20261022, stats_ext_abc_backup_20261022.
+2026-10-22 17:28:32 running both X-Atlas extractions at once was OOM-killed (HCT116, ~5 GB RSS each); HCT116 queued after HEK293T.
+2026-10-22 18:23:54 X-Atlas final-panel re-extraction done (HEK293T 35,039 cells, HCT116 26,247 cells); stats: HEK293T 138 added + 19 replaced (298/300), HCT116 see next line; unchanged groups identical.
+2026-10-22 18:30:16 CD4 stats: 150 final-panel groups added per condition (check AASS exact); coverage Rest 283, Stim8hr/48hr 284 of 300. Old signature cache moved to cache_abc_backup_20261022; rebuilding with T incl. the final targets.
+2026-10-22 18:33:02 signature cache rebuilt with the final targets (T 633); unchanged sources identical, filled sources corr >= 0.9997 on old rows; A/B/C export after the fill-in vs VCC_gm_vip: per-target corr median 0.9999 (min 0.9997), rel change 1.3%. Running the D/E/F pipeline (G3c config) as gm_final_v1.
+2026-10-22 18:49:02 gm_final_v1.vcc built and validated for D/E/F (G3c config on the filled stats; contexts D/E/F recorded, panel vcc2026-test-1; nnz 2,010,814,567; totals claim 4312/4562/4533, s_c 0.0104-0.0109 like A/B/C). Not submitted.
+2026-10-22 19:16:12 user approved submitting gm_final_v1 as the first final (D/E/F) entry; uploading.
+2026-10-22 19:44:14 FINAL ENTRY 1: gm_final_v1 submitted 19:16, scored and published 19:44 (entry umbfgCZ0SxTep6RxQcTu, is_final True, partition test, panel vcc2026-test-1, anchors vcc2026-testD/E/F-r1, no error; score hidden). 1 final slot left today (UTC day).
+2026-10-22 21:32:51 model_v2: leave-one-cell-type-out benchmark (7 folds, trans genes). consensus_d200 dir 0.111 pds 0.738 skill -0.001; ResponseNet (free gene embeddings) overfits (H1 pds 0.69-0.76 vs 0.83); program projection trades pds for dir/skill; AdaptNet (learned per-target detail weight, source weights, cell-state program gains; ~20k weights) seed 0: dir 0.149 pds 0.747 skill +0.020 (dir better in 7/7 folds, skill 6/7, pds 5/7). Seed 1 running.
+2026-10-22 21:39:02 AdaptNet seed 1: dir 0.154 pds 0.744 skill +0.022 (seed 0: 0.149 / 0.747 / +0.020) -> the trained model beats the consensus on hidden cell types; SUMMARY in repro/model_v2_20261022.
+2026-10-22 21:58:00 mock exam tooling: VCC_EXCLUDE (gm export, target_weights, cell_effects, make_bulk_effects), PRECOMP / NOPACK in final_pipeline.sh; fixed a target_weights.py line I had broken (rows assignment commented out); all three tools reproduce gm_final_v1's files exactly without exclusion. Mock data: data/mock_h1/s0..s4.
+2026-10-22 22:34:57 mock s0: AdaptNet (beta learned) lost all 6 official members; processing tuned on the consensus removes its signal. 7-fold: AdaptNet beta=1 raw dir 0.131 pds 0.762 skill +0.016 beats consensus+shared10 (0.068 / 0.746 / -0.008); shared removal hurts the model. Full mock exam A vs B (beta 1, minimal processing) running.
+2026-10-23 00:07:27 MOCK EXAM (H1 hidden, official scorer, 5 subsets): hybrid (AdaptNet beta 1 totals, minimal processing + current cells) 0.2910 vs current 0.2723 (+0.0186, 5/5 subsets, all 6 members up on average); AdaptNet for cells too 0.2741 (fid down); cell agreement variant worse (stopped).
+2026-10-23 00:11:27 building gm_final_v2 (hybrid): AdaptNet beta 1 trained on all 14 contexts (data/stage3/model_v2/adaptnet_all14_seed0.pt) -> per-context totals inputs gm_final_v2pre_d200_{D,E,F}; cells = gm_final_v1's; SHAREDK=0 GAMMA=1, no TWPOW/ENTRYAGREE; CELLAGREE=1 CELLAMP=1.5 TOPFRAC=0.02.
+2026-10-23 01:01:28 user approved submitting gm_final_v2 (hybrid: AdaptNet totals + gm_final_v1 cells) as the final entry, replacing gm_final_v1; uploading.
+2026-10-23 01:07:22 ELEM-1200RS (access granted 10-23; license allows AI training/academic research, attribution sentence required on any material use, derivatives under the same license): 914 KO targets in 61 lines (832 HAP1 KO pools, weak controls); only 34/300 D/E/F targets, median 1 bulk KO sample each (32 HAP1) -> not added (tiny coverage, KO + bulk vs CRISPRi single-cell). Files in data/external/elem; HF token removed from this machine after download.
+2026-10-23 01:30:07 FINAL ENTRY 2: gm_final_v2 (AdaptNet totals + gm_final_v1 cells) scored OK (entry 8aUSeSU40cVTixPTAP7U, is_final, no error); it is now the counting final entry.
+2026-10-23 04:07:39 GeneNet2 (measured genes own data only; calibrated never-perturbed size): hidden cell types dir 0.122 pds 0.750 skill +0.012; never-perturbed genes in hidden cell types (S2) 0.025 / 0.572 / -0.006 (best S2). ELEM run OOM (group sums 8 GB) -> sparse group sums (5.8 GB peak). Running GeneNet3 (2,500 steps, p_drop_self 0.3) without and with ELEM.
+2026-10-23 04:32:08 GeneNet3 (2,500 steps, p_drop_self 0.3) hidden cell types 0.124 / 0.748 / +0.013 (no better). GeneNet4 = frozen AdaptNet expert for measured genes (H1: 0.177 / 0.858 = AdaptNet) + knowledge branch trained only on never-perturbed episodes + size calibration. Running without and with ELEM.
+2026-10-23 06:34:33 GeneNet4 = AdaptNet expert (measured) + knowledge branch (never-perturbed): hidden cell types 0.131 / 0.762 / +0.016 (= AdaptNet), never-perturbed genes in hidden cell types 0.025 / 0.572 / -0.007 (best). ELEM-1200RS on identical test sets: 0.124 / 0.762 / +0.013 and 0.019 / 0.549 / -0.018 -> hurts, not used.
+2026-10-23 07:13:23 never-perturbed genes, extra knowledge: CollecTRI TF->target prior (720 TFs) -> direction ~0 alone, S2 pds +0.02 on TFs only, S1 dir down; UniProt ProtT5 protein embeddings (17,899 genes) -> kNN weaker than STRING/GO (0.062/0.573), adds nothing in combination (combo3 0.116/0.606, ridge_p 0.120/0.588). Gene-knowledge route saturated; next: more perturbation data (RPE1 bulk local, scPerturb CRISPRi sets).
+2026-10-23 07:51:47 RPE1 (bulk summary, 2,204 targets) as training-only cell type: hidden cell types 0.131/0.762/+0.016 -> 0.152/0.766/+0.025 (HepG2, Jurkat, K562, H1 up); never-perturbed S2 unchanged; 0 D/E/F targets. Kept.
+2026-10-23 08:30:45 neurons (scPerturb TianKampmann2021 CRISPRi: 184 targets, 437 controls, knockdown median -0.30; 2019 day7 set unusable: 26 single-perturbation targets, no visible knockdown) on top of RPE1: hidden cell types 0.152/0.766/+0.025 -> 0.152/0.768/+0.023 (no change).
+2026-10-23 09:12:11 STRING diffusion for never-perturbed genes (walk-weighted average of measured genes within 3 hops): alpha 0.6 S1 0.113/0.587/+0.011, S2 0.020/0.547/-0.011; alpha 0.9 S1 0.115/0.585/+0.017 (best S1 skill), S2 0.020/0.546/-0.008. Better size, not better discrimination; GeneNet4 stays best on S2 (0.025/0.572/-0.007).
+2026-10-23 09:46:33 mock exam with RPE1 in AdaptNet's training: 0.2934 vs gm_final_v2 config 0.2910 (+0.0024, 5/5 subsets); on H1 the gain sits mostly in the 95 targets RPE1 measured (bench: not-in-RPE1 targets pds 0.811 -> 0.822, dir +0.002, skill -0.005). gm_final_v3 built (AdaptNet on 15 contexts incl. RPE1, otherwise = v2); not submitted.
+2026-10-23 11:21:04 user: hold gm_final_v3; submit only after more improvements accumulate. Next: cells input blending consensus and AdaptNet trans (mock exam).
+2026-10-23 11:26:07 cells input 50/50 consensus + AdaptNet trans (mock s0): 0.2844 vs 0.2952 with consensus cells (fid 0.528 vs 0.547, reach 0.005 vs 0.044) -> stopped; cells stay consensus.

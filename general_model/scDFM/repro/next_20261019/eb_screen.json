@@ -1,0 +1,257 @@
+{
+ "H1": {
+  "global_coef": 0.15702783130466158,
+  "rows": {
+   "base s0.05": {
+    "mse_free": 0.9895,
+    "pds": 0.9442
+   },
+   "base s0.1": {
+    "mse_free": 0.9827,
+    "pds": 0.9446
+   },
+   "base s0.2": {
+    "mse_free": 0.9784,
+    "pds": 0.9434
+   },
+   "base s0.3": {
+    "mse_free": 0.9863,
+    "pds": 0.9421
+   },
+   "base s0.5": {
+    "mse_free": 1.0391,
+    "pds": 0.9397
+   },
+   "gene s0.05": {
+    "mse_free": 0.9888,
+    "pds": 0.9295
+   },
+   "gene s0.1": {
+    "mse_free": 0.9821,
+    "pds": 0.9289
+   },
+   "gene s0.2": {
+    "mse_free": 0.9797,
+    "pds": 0.9275
+   },
+   "gene s0.3": {
+    "mse_free": 0.9918,
+    "pds": 0.9264
+   },
+   "gene s0.5": {
+    "mse_free": 1.0597,
+    "pds": 0.9253
+   },
+   "target s0.05": {
+    "mse_free": 0.9904,
+    "pds": 0.88
+   },
+   "target s0.1": {
+    "mse_free": 0.9846,
+    "pds": 0.8835
+   },
+   "target s0.2": {
+    "mse_free": 0.9823,
+    "pds": 0.8805
+   },
+   "target s0.3": {
+    "mse_free": 0.9925,
+    "pds": 0.8798
+   },
+   "target s0.5": {
+    "mse_free": 1.0499,
+    "pds": 0.8786
+   },
+   "gene+target s0.05": {
+    "mse_free": 0.9892,
+    "pds": 0.8805
+   },
+   "gene+target s0.1": {
+    "mse_free": 0.9831,
+    "pds": 0.8839
+   },
+   "gene+target s0.2": {
+    "mse_free": 0.982,
+    "pds": 0.8835
+   },
+   "gene+target s0.3": {
+    "mse_free": 0.996,
+    "pds": 0.8828
+   },
+   "gene+target s0.5": {
+    "mse_free": 1.068,
+    "pds": 0.879
+   }
+  }
+ },
+ "KOLF200": {
+  "global_coef": 0.23408866777785997,
+  "rows": {
+   "base s0.05": {
+    "mse_free": 0.9999,
+    "pds": 0.6659
+   },
+   "base s0.1": {
+    "mse_free": 1.0029,
+    "pds": 0.6589
+   },
+   "base s0.2": {
+    "mse_free": 1.019,
+    "pds": 0.6531
+   },
+   "base s0.3": {
+    "mse_free": 1.0484,
+    "pds": 0.6503
+   },
+   "base s0.5": {
+    "mse_free": 1.1467,
+    "pds": 0.6468
+   },
+   "gene s0.05": {
+    "mse_free": 0.9999,
+    "pds": 0.6626
+   },
+   "gene s0.1": {
+    "mse_free": 1.0034,
+    "pds": 0.6556
+   },
+   "gene s0.2": {
+    "mse_free": 1.0219,
+    "pds": 0.6488
+   },
+   "gene s0.3": {
+    "mse_free": 1.0554,
+    "pds": 0.6453
+   },
+   "gene s0.5": {
+    "mse_free": 1.1672,
+    "pds": 0.6422
+   },
+   "target s0.05": {
+    "mse_free": 0.9998,
+    "pds": 0.6753
+   },
+   "target s0.1": {
+    "mse_free": 1.0027,
+    "pds": 0.6738
+   },
+   "target s0.2": {
+    "mse_free": 1.0185,
+    "pds": 0.6665
+   },
+   "target s0.3": {
+    "mse_free": 1.0474,
+    "pds": 0.6611
+   },
+   "target s0.5": {
+    "mse_free": 1.1446,
+    "pds": 0.6536
+   },
+   "gene+target s0.05": {
+    "mse_free": 0.9999,
+    "pds": 0.6707
+   },
+   "gene+target s0.1": {
+    "mse_free": 1.0036,
+    "pds": 0.6687
+   },
+   "gene+target s0.2": {
+    "mse_free": 1.0228,
+    "pds": 0.6578
+   },
+   "gene+target s0.3": {
+    "mse_free": 1.057,
+    "pds": 0.6498
+   },
+   "gene+target s0.5": {
+    "mse_free": 1.1697,
+    "pds": 0.6413
+   }
+  }
+ },
+ "HCT116": {
+  "global_coef": 0.20832893853693318,
+  "rows": {
+   "base s0.05": {
+    "mse_free": 0.9956,
+    "pds": 0.7575
+   },
+   "base s0.1": {
+    "mse_free": 1.0109,
+    "pds": 0.7485
+   },
+   "base s0.2": {
+    "mse_free": 1.0973,
+    "pds": 0.742
+   },
+   "base s0.3": {
+    "mse_free": 1.2582,
+    "pds": 0.7381
+   },
+   "base s0.5": {
+    "mse_free": 1.8034,
+    "pds": 0.7339
+   },
+   "gene s0.05": {
+    "mse_free": 0.9947,
+    "pds": 0.7615
+   },
+   "gene s0.1": {
+    "mse_free": 1.0103,
+    "pds": 0.7545
+   },
+   "gene s0.2": {
+    "mse_free": 1.1011,
+    "pds": 0.7482
+   },
+   "gene s0.3": {
+    "mse_free": 1.2713,
+    "pds": 0.7436
+   },
+   "gene s0.5": {
+    "mse_free": 1.8499,
+    "pds": 0.7382
+   },
+   "target s0.05": {
+    "mse_free": 0.9958,
+    "pds": 0.7183
+   },
+   "target s0.1": {
+    "mse_free": 1.0114,
+    "pds": 0.7167
+   },
+   "target s0.2": {
+    "mse_free": 1.0987,
+    "pds": 0.7114
+   },
+   "target s0.3": {
+    "mse_free": 1.2609,
+    "pds": 0.7072
+   },
+   "target s0.5": {
+    "mse_free": 1.8096,
+    "pds": 0.6999
+   },
+   "gene+target s0.05": {
+    "mse_free": 0.9946,
+    "pds": 0.7194
+   },
+   "gene+target s0.1": {
+    "mse_free": 1.0109,
+    "pds": 0.7169
+   },
+   "gene+target s0.2": {
+    "mse_free": 1.1058,
+    "pds": 0.7101
+   },
+   "gene+target s0.3": {
+    "mse_free": 1.2837,
+    "pds": 0.7038
+   },
+   "gene+target s0.5": {
+    "mse_free": 1.891,
+    "pds": 0.6935
+   }
+  }
+ }
+}

@@ -1,0 +1,18 @@
+{
+ "H1": {
+  "n_targets": 188,
+  "control_cells_for_coexp": 20000,
+  "targets_with_coexp": 188,
+  "cos_trans_A_median": 0.08620206467361327,
+  "cos_trans_A_frac_pos": 0.9361702127659575,
+  "cos_full_A_median": 0.08666017562177458,
+  "cos_full_A_frac_pos": 0.9414893617021277,
+  "cos_coexp_median": 0.00643760584535486,
+  "cos_coexp_frac_pos": 0.5425531914893617,
+  "pds_like_full_A": 0.9005859597223801,
+  "pds_like_coexp": 0.49015815223574927,
+  "pds_like_full_A+0.25coexp": 0.884486289680282,
+  "pds_like_full_A+0.5coexp": 0.8539082944589826,
+  "pds_like_full_A+1.0coexp": 0.7826260097849584
+ }
+}

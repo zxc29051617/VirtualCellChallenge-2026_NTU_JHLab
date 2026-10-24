@@ -1,0 +1,11 @@
+# data and model artefacts stay out of git (see README: data not in the repo)
+*.h5ad
+*.npz
+*.npy
+*.pt
+*.vcc
+*.parquet
+*.zip
+__pycache__/
+# third-party code cloned for experiments (SIGnature, clone it from its own repository)
+scDFM/repro/signature_20261013/ext/

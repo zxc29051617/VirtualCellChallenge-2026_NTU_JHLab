@@ -1,0 +1,24 @@
+{
+ "started": "2026-10-19T14:36:14+08:00",
+ "state": "done",
+ "experiment": "rendering: exact totals (V1), dual bulk/cell amplitude (V2), V2 pairing shuffle (V2s); V0 = signature_20261013 group A scores",
+ "sets": [
+  "H1",
+  "KOLF200",
+  "HCT116"
+ ],
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "runs_planned": 27,
+ "leaderboard_submission": false,
+ "cost": "local only",
+ "finished": "2026-10-19T16:49:49+0800",
+ "runs_done": 27,
+ "leaderboard": {
+  "gm_v1_vip_exact": 0.1608,
+  "rank": 451
+ }
+}
