@@ -323,3 +323,14 @@ reach 0.1699, jac 0.1183, nmae 0.9395), so call strategies can be compared witho
   -0.0027 / +0.0037 / +0.0038 / +0.0024 / -0.0005), HCT116 raw pds 0.747 -> 0.741, mse 0.915 -> 0.918, KOLF200 pds
   0.654 -> 0.653, mse 1.046 -> 1.041, DE members flat. -> within noise, fails the adoption rule; v5 stays the counting
   entry (nothing uploaded). Context PCA with or without the test contexts' controls makes no difference.
+
+## 10-25 afternoon: public data like the test lines (scDFM/repro/DATASET_SURVEY_DEF.md)
+- DepMap 24Q4 expression matching (depmap_match.py, 1,673 lines): A Jurkat 0.87, B HeLa 0.70, C CAL-33 0.76, D MOLM-13 0.86,
+  E U-87 MG 0.81, F no single line (non-cancerous mesenchymal stromal / fibroblast lines ~0.66).
+- Line-specific CRISPR dependency adds no magnitude signal beyond the pan-line mean (dep_magnitude.py: own beyond mean
+  -0.03..+0.11 Spearman over six DepMap training lines).
+- Survey (three parallel searches, overlaps recomputed from saved lists in data/research_genelists_def/): no public
+  knockdown/knockout data covers >= 50 of the 300 targets in cells like D/E/F (MOLM-13 5, U-87 MG 21 kinases, fibroblast
+  knockdown 13, human myeloid union 26). The only new resource with all 300 targets: IGVF Engreitz TeloHAEC genome-wide
+  CRISPRi CC-Perturb-seq (endothelial, 3 states, 6.1 M cells, ~530 cells per target per condition, high MOI; 35-87 GB per
+  condition, ~13 MB/s here). Not integrated; decision left to the user.

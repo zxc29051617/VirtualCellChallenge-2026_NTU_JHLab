@@ -1,0 +1,102 @@
+{
+ "contexts": {
+  "K562": {
+   "n": 1579,
+   "own": 0.1522370747626344,
+   "pan": 0.1700528910350916,
+   "own_beyond_pan": -0.02493327695898449
+  },
+  "K562ess": {
+   "n": 1714,
+   "own": 0.41724610796701583,
+   "pan": 0.43346186562265904,
+   "own_beyond_pan": 0.06646609156138411
+  },
+  "VIPK562": {
+   "n": 2586,
+   "own": 0.14558920923378843,
+   "pan": 0.15116161617414484,
+   "own_beyond_pan": 0.030183039810383713
+  },
+  "HepG2": {
+   "n": 1002,
+   "own": 0.42442294513028417,
+   "pan": 0.4217715824870408,
+   "own_beyond_pan": 0.11181410275744037
+  },
+  "Jurkat": {
+   "n": 1694,
+   "own": 0.3105299354895558,
+   "pan": 0.35148985097839847,
+   "own_beyond_pan": -0.017238811490757056
+  },
+  "HCT116": {
+   "n": 1583,
+   "own": 0.07541729519015841,
+   "pan": 0.10487844826979101,
+   "own_beyond_pan": -0.023104913188433333
+  }
+ },
+ "D (MOLM-13)": {
+  "screened": 300,
+  "essential": [
+   "LTO1",
+   "MED25",
+   "PA2G4",
+   "ACLY",
+   "MTF1",
+   "UROS",
+   "SUPT7L",
+   "PLAGL2",
+   "DPY30",
+   "SLC52A2",
+   "BRPF1",
+   "UBAP2L",
+   "VEZF1",
+   "SMARCD1",
+   "PAPOLA",
+   "HDAC8",
+   "COQ10B",
+   "LDLR",
+   "RBM5",
+   "S100A11"
+  ],
+  "specific": [
+   "MED25",
+   "MTF1",
+   "UROS",
+   "SUPT7L",
+   "PLAGL2",
+   "SLC52A2",
+   "BRPF1",
+   "VEZF1",
+   "SMARCD1",
+   "PAPOLA",
+   "HDAC8",
+   "COQ10B",
+   "LDLR",
+   "RBM5",
+   "S100A11"
+  ]
+ },
+ "E (U-87 MG)": {
+  "screened": 300,
+  "essential": [
+   "LTO1",
+   "E2F1",
+   "TIMM50",
+   "EIF4ENIF1",
+   "SMARCC2",
+   "LENG1",
+   "RBM18",
+   "RPP25L"
+  ],
+  "specific": [
+   "E2F1",
+   "TIMM50",
+   "EIF4ENIF1",
+   "SMARCC2",
+   "RBM18"
+  ]
+ }
+}
