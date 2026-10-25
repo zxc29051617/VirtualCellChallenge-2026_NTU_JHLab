@@ -139,7 +139,7 @@ fig, axes3 = plt.subplots(1, 2, figsize=(8.4, 4.2))
 gl = ["有測量的基因", "沒測過的基因"]
 b = axes3[0].bar(gl, [0.152, 0.025], color=[NAVY, ORANGE], width=0.5); bar_labels(axes3[0], b, dy=0.003)
 axes3[0].set_ylim(0, 0.18); axes3[0].set_yticks([0, 0.05, 0.10, 0.15]); axes3[0].set_title("方向相似度")
-b = axes3[1].bar(gl, [0.766, 0.572], color=[NAVY, ORANGE], width=0.5); bar_labels(axes3[1], b, dy=0.004)
+b = axes3[1].bar(gl, [0.766, 0.565], color=[NAVY, ORANGE], width=0.5); bar_labels(axes3[1], b, dy=0.004)
 axes3[1].set_ylim(0.45, 0.8); axes3[1].axhline(0.5, color=GRAY, ls="--", lw=1.4)
 axes3[1].text(0.5, 0.507, "亂猜 = 0.5", color=GRAY, ha="center", fontsize=12); axes3[1].set_title("區分度")
 fig.tight_layout(w_pad=3); save(fig, "fig_genenet.png")

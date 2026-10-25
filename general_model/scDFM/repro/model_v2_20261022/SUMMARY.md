@@ -317,6 +317,9 @@ reach 0.1699, jac 0.1183, nmae 0.9395), so call strategies can be compared witho
   training-only common mode). -> the leak did not inflate the gene benchmark; GeneNet4 S2 re-running.
 - adapt_b1_check (run_clean_checks.py adapt, default PCA, no RPE1) equals adapt_b1_raw exactly, so both strict-PCA
   comparisons above are matched pairs. On the ln scale the strict runs read 0.162 (vs 0.156) and 0.185 (vs 0.181).
-- Queued (one job at a time, lowest priority, each waits for free memory as the machine is shared): v5 + STRICT_PCA=1
-  on the H1 / HCT116 / KOLF200 official mocks (name v5_strictpca, compare with v4_ax5), then GeneNet4 + RPE1 S2 without
-  the leak. No upload without the user's OK; v5 stays the counting entry.
+- GeneNet4 + RPE1 S2 without the leak (genes_genenet4_rpe1_clean.json): 0.025 / 0.571 -> 0.025 / 0.565.
+- v5 + STRICT_PCA=1 on the official mocks (v5_strictpca vs v4_ax5, 10-25 morning; a first try at 01:15 was OOM-killed
+  while the user's own job filled the memory, the queue then waited for >= 12 GB free): H1 0.3063 -> 0.3077 (subsets
+  -0.0027 / +0.0037 / +0.0038 / +0.0024 / -0.0005), HCT116 raw pds 0.747 -> 0.741, mse 0.915 -> 0.918, KOLF200 pds
+  0.654 -> 0.653, mse 1.046 -> 1.041, DE members flat. -> within noise, fails the adoption rule; v5 stays the counting
+  entry (nothing uploaded). Context PCA with or without the test contexts' controls makes no difference.
