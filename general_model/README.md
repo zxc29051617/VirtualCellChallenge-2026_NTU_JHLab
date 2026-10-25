@@ -3,6 +3,8 @@
 > 這份文件寫給**第一次接觸這個專案的人**，不需要生物或機器學習背景。
 > 看到不懂的名詞，可以直接跳到 [13. 名詞解釋](#13-名詞解釋) 查。
 > 期末算分的版本是 **v5**（台灣時間 2026/10/24 00:24 上傳）。
+> 模型名稱：**AdaptNet**（跨細胞種類的擾動反應遷移模型，本專案自己設計）；期末上傳的是「**AdaptNet 混合流程**」：
+> AdaptNet 預測每個基因的總量，共識模型產生細胞。資料夾叫 `scDFM` 只是沿用專案起點的名字（第 12 節）。
 
 ## 這份文件怎麼讀
 
@@ -288,7 +290,13 @@ flowchart LR
 
 ## 6. 模型：AdaptNet 一步一步看
 
-程式在 `scDFM/repro/model_v2_20261022/adaptnet.py`。
+正式名稱：**AdaptNet：跨細胞種類的擾動反應遷移模型**（英文：*AdaptNet: an adaptive source-combination network for
+cross-cell-type perturbation response prediction*）。程式在 `scDFM/repro/model_v2_20261022/adaptnet.py`。
+
+AdaptNet 是本專案自己設計、自己取名的模型，**沒有對應的發表論文**；支持它的是第 8～10 節的驗證結果。
+它用到的元件都是常見的機器學習做法：低秩分解找出的「基因程式」、依細胞狀態調整的增益（類似 FiLM，Perez et al. 2018）、
+輪流藏起一種細胞來訓練（episodic training，Vinyals et al. 2016）、對比損失（InfoNCE，van den Oord et al. 2018）。
+名字相近的 AdaNet（Cortes et al., ICML 2017）和 AdaptiveNet（MobiCom 2023）是完全無關的方法。
 
 > 神經網路、參數、訓練、損失函數、過度擬合等名詞，見第 2 節最後的「機器學習與統計的基本概念」。
 
@@ -1114,6 +1122,9 @@ repo 根目錄（`general_model/` 以外）是隊友最早的基準流程（成�
 | pds / mse / nmae / fid / reach / jaccard | 六項評分的英文簡稱：區分度、整體誤差、變化大小、方向正確、方向排序、清單重疊 |
 | 來源（source） | 同一個目標基因在其他細胞的測量結果 |
 | 共識模型（consensus） | 把各來源平均的簡單方法（原方法，程式在 `scDFM/vcc/gm.py`） |
+| AdaptNet | 本專案設計的小型神經網路（正式名稱：跨細胞種類的擾動反應遷移模型），學怎麼依新細胞的狀態組合各來源，第 6 節 |
+| AdaptNet 混合流程 | 期末上傳的整套做法：AdaptNet 預測總量＋共識模型產生細胞，第 4、7 節 |
+| scDFM | 專案起點的論文模型（single-cell Distributional Flow Matching Model，ICLR 2026）；在新細胞上學不到擾動訊號，期末沒有使用 |
 | 共同反應（common mode） | 同一個實驗裡大部分擾動都會出現的變化 |
 | 對照組雜訊方向 | 對照組細胞之間最主要的幾種自然差異（例如細胞分裂），第 7 節 |
 | budget = claim | 評分會扣掉抽樣雜訊的修正（claim），但最多扣到預測的變化幅度（budget）；兩者相等時整體誤差最低，第 7 節 |
@@ -1136,6 +1147,11 @@ repo 根目錄（`general_model/` 以外）是隊友最早的基準流程（成�
 **Q：為什麼不用大型的「虛擬細胞」基礎模型？**
 A：我們試過現成的生成模型 scDFM，在新細胞上學不到擾動訊號；大模型在只有 9 類細胞的資料上會過度擬合。
 小模型專注學「怎麼組合其他細胞的實驗結果」，在藏起細胞的測試中最準。
+
+**Q：模型叫什麼？和 scDFM 有什麼關係？有論文嗎？**
+A：期末模型叫 **AdaptNet**（跨細胞種類的擾動反應遷移模型），整套上傳流程叫「AdaptNet 混合流程」。它是本專案自己設計的，
+沒有發表論文，效果由第 8～10 節的驗證支持。scDFM（single-cell Distributional Flow Matching Model）是專案起點重現的論文模型，
+在新細胞上學不到擾動訊號，所以期末沒有用；程式資料夾仍叫 `scDFM` 只是沿用名字。
 
 **Q：模擬考的分數就是期末的分數嗎？**
 A：不是。模擬考用的是 H1 等其他細胞，只用來比較「哪個版本比較好」。期末考細胞更不像訓練資料，實際分數可能較低；
