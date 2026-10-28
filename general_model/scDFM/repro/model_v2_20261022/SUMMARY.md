@@ -334,3 +334,21 @@ reach 0.1699, jac 0.1183, nmae 0.9395), so call strategies can be compared witho
   knockdown 13, human myeloid union 26). The only new resource with all 300 targets: IGVF Engreitz TeloHAEC genome-wide
   CRISPRi CC-Perturb-seq (endothelial, 3 states, 6.1 M cells, ~530 cells per target per condition, high MOI; 35-87 GB per
   condition, ~13 MB/s here). Not integrated; decision left to the user.
+
+## 10-29: the IGVF TeloHAEC screen as a new source (user: "v5 could be better") -> no clear gain, v5 stays
+- IGVF TeloHAEC genome-wide CRISPRi CC-Perturb-seq (Engreitz lab, released 10-12; high MOI ~4.8 guides per cell) is the
+  only public screen with the final targets (298 / 300). The two resting replicates (IGVFFI0721PXFB, IGVFFI2522NCFR;
+  44.5 + 66.3 GB, md5 checked) -> tools/igvf_telohaec_stats.py: the 300 targets + 1,000 auxiliary genes, a group = every
+  cell with a guide for the gene, control = the whole population (2.2 M cells); median 595 cells per target, target
+  knockdown -0.64 ln (like HCT116 / HEK293T / KOLF); counts are fractional (multimappers) but sum to total_counts.
+- Opt-in: TELO=1 adds it to the consensus (vcc.contexts OPT_IN) and to AdaptNet (bench.py); without the flag v5 rebuilds
+  unchanged. mock_exam.py A_TAG=current_telo rebuilds variant A with it, so the cells part sees it too.
+- Official mocks, v5 settings + TELO=1 (v5_telo) vs v5 (v4_ax5):
+  | set | v5 | v5 + TeloHAEC |
+  | --- | --- | --- |
+  | H1 (5 subsets, scaled) | 0.3063 | 0.3058 (pds +0.871 -> +0.873, mse +0.165 -> +0.159, reach +0.075 -> +0.077) |
+  | HCT116 raw (4) | pds 0.747, mse 0.915, nmae 0.805, reach 0.644 | 0.746, 0.903, 0.811, 0.649 |
+  | KOLF200 raw (4) | pds 0.654, mse 1.046, fid 0.509, reach 0.144 | 0.653, 1.043, 0.511, 0.161 |
+  No member moves clearly on all three sets (reach up on KOLF200 only) -> fails the adoption rule; v5 stays the counting
+  entry, nothing uploaded. The raw downloads were removed (re-downloadable, ~35 min); the derived stats_ext and
+  model_v2 TeloHAEC files are kept.

@@ -20,7 +20,7 @@ from vcc.gm import _ratios
 OUT = "/home/zxc29051617/VCC/data/stage3/model_v2"
 os.makedirs(OUT, exist_ok=True)
 t0 = time.time(); total = 0
-for name in available():
+for name in (sys.argv[1:] or available()):           # names given: rebuild only those contexts (e.g. TeloHAEC, 2026-10-29)
     c = load(name, min_cells=20, keep_var=True)
     L, xc = _ratios(c)
     cm = np.nanmean(L, 0).astype(np.float32)

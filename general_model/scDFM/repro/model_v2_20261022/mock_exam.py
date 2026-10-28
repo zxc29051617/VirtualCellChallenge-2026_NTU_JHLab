@@ -9,6 +9,7 @@ For each subset data/mock_h1/s<k> (prepared by mock_data.py; H1 excluded from ev
                instead of the consensus: own + cis from A's export; AdaptNet trans (own/cis genes zeroed, log2) rescaled
                to A's global trans norm for the cells input and for the totals input (the totals are then scaled to the
                scorer's budget = claim by the pipeline anyway), passed in with PRECOMP.
+A_TAG=<name> caches variant A under that name (default current; e.g. current_telo with TELO=1, 2026-10-29).
 Both are scored by cell-eval2 (vcc2026 preset, pdex) against the subset's real.h5ad and scaled with its bundle
 (context-mean baseline). Results: repro/model_v2_20261022/mock/<variant>_s<k>.json and a summary line per subset.
 """
@@ -24,6 +25,7 @@ ENV = {**os.environ, **{k: "4" for k in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "
 MOCK_SET = os.environ.get("MOCK_SET", "h1")         # h1 (mock_data.py) or hct116 / kolf200 (mock_data_loco.py)
 EXCL, FOLD = {"h1": ("H1", "H1"), "hct116": ("HCT116,HEK293T", "XAtlas"), "kolf200": ("FengNF,FengF,KOLF", "iPSC")}[MOCK_SET]
 PFX = "" if MOCK_SET == "h1" else f"{MOCK_SET}_"      # result / effect file prefix for the other sets
+A_TAG = os.environ.get("A_TAG", "current")          # name of variant A's cached run (e.g. current_telo: A rebuilt with TELO=1)
 PIPE_ENV = {**os.environ, "VCC_EXCLUDE": EXCL, "RENDER": "g1", "TOPFRAC": "0.02", "CELLAMP": "1.5", "CELLAGREE": "1", "TWPOW": "0.5",
             "ENTRYAGREE": "1", "NOPACK": "1"}
 MEMBERS = ["pds_cosine", "expr_mse_unbiased_capped_norm", "de_wilcoxon_lfc_nmae", "de_wilcoxon_direction_fidelity_yield_raw",
@@ -72,7 +74,7 @@ def adaptnet_effects(model, d, k, cells_from_a=False, cells_blend=0.0):
     """PRECOMP files for variant B from A's own + cis and AdaptNet's trans. cells_from_a: the cells input stays A's
     (consensus) and only the totals input comes from AdaptNet (hybrid)."""
     import adaptnet as AN
-    a = f"{EFF}/mock_{PFX}current_s{k}"; zc = np.load(f"{a}.npz", allow_pickle=True); zo = np.load(f"{a}_oc.npz", allow_pickle=True); zd = np.load(f"{a}_d200.npz", allow_pickle=True)
+    a = f"{EFF}/mock_{PFX}{A_TAG}_s{k}"; zc = np.load(f"{a}.npz", allow_pickle=True); zo = np.load(f"{a}_oc.npz", allow_pickle=True); zd = np.load(f"{a}_d200.npz", allow_pickle=True)
     targets = [str(t) for t in zc["targets"]]; oc = zo["lfc"].astype(np.float64)
     C = ad.read_h5ad(f"{d}/context_H.h5ad"); s = np.asarray(sp.csr_matrix(C.X).sum(0)).ravel(); ctrl = np.log1p(5e4 * s / s.sum())
     T = np.mean([AN.predict_ctrl(m, ctrl, targets).astype(np.float64) for m in (model if isinstance(model, list) else [model])], 0) / np.log(2)
@@ -122,10 +124,10 @@ if __name__ == "__main__":
     for k in subsets:
         d = f"{ROOT}/data/mock_{MOCK_SET}/s{k}"; t0 = time.time()
         bundle(d); log(f"s{k}: bundle ready")
-        if os.path.exists(f"{HERE}/mock/mock_{PFX}current_s{k}.json") and os.path.exists(f"{EFF}/mock_{PFX}current_s{k}_oc.npz"):
-            A = json.load(open(f"{HERE}/mock/mock_{PFX}current_s{k}.json")); log(f"s{k}: current (cached)")
+        if os.path.exists(f"{HERE}/mock/mock_{PFX}{A_TAG}_s{k}.json") and os.path.exists(f"{EFF}/mock_{PFX}{A_TAG}_s{k}_oc.npz"):
+            A = json.load(open(f"{HERE}/mock/mock_{PFX}{A_TAG}_s{k}.json")); log(f"s{k}: {A_TAG} (cached)")
         else:
-            pipeline(d, f"mock_{PFX}current_s{k}"); A = score(d, f"mock_{PFX}current_s{k}"); log(f"s{k}: current scored ({time.time() - t0:.0f}s)")
+            pipeline(d, f"mock_{PFX}{A_TAG}_s{k}"); A = score(d, f"mock_{PFX}{A_TAG}_s{k}"); log(f"s{k}: {A_TAG} scored ({time.time() - t0:.0f}s)")
         if model is None:
             train = [c for c in B.CONTEXTS if c not in B.FOLDS[FOLD]]; model = []
             for sd in [int(x) for x in os.environ.get("SEEDS", "0").split(",")]:      # SEEDS=0,1,2: seed ensemble

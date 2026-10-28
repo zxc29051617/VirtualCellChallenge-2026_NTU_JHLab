@@ -31,6 +31,8 @@ if os.environ.get("ELEM") == "1":                    # ELEM-1200RS (elem_build.p
     FOLDS["ELEM"] = ["ELEM_HAP1", "ELEM_lines"]; CONTEXTS += FOLDS["ELEM"]; SKIP_EVAL.add("ELEM"); EXTRA |= set(FOLDS["ELEM"])
 if os.environ.get("RPE1") == "1":                    # Replogle RPE1 essential screen from its bulk summary (rpe1_build.py)
     FOLDS["RPE1"] = ["RPE1"]; CONTEXTS += ["RPE1"]; SKIP_EVAL.add("RPE1"); EXTRA.add("RPE1")
+if os.environ.get("TELO") == "1":                    # IGVF TeloHAEC CRISPRi, resting (tools/igvf_telohaec_stats.py, 2026-10-29)
+    FOLDS["TeloHAEC"] = ["TeloHAEC"]; CONTEXTS += ["TeloHAEC"]; SKIP_EVAL.add("TeloHAEC"); EXTRA.add("TeloHAEC")
 if os.environ.get("NEURON") == "1":                  # Tian 2021 CRISPRi in iPSC-induced neurons (sc_build.py, scPerturb)
     FOLDS["Neuron"] = ["TianNeuron2021"]; CONTEXTS += ["TianNeuron2021"]; SKIP_EVAL.add("Neuron"); EXTRA.add("TianNeuron2021")
 elif os.environ.get("NEURON") == "outer":            # 2026-10-24: neurons as an untouched outer test (scored, never a source)

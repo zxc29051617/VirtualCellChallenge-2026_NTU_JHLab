@@ -28,6 +28,7 @@ CONTEXTS = {
     "KOLF": ("stats_ext/KOLF", "all"), "TeloHAEC": ("stats_ext/TeloHAEC", "all"),
     "VIPK562": ("stats_ext/VIPK562", "all"),          # VIPerturb-seq K562, 10x Flex
 }
+OPT_IN = {"TeloHAEC": "TELO"}   # sources added after gm_final_v5: used only with their flag = 1, so v5 rebuilds unchanged
 
 
 @dataclass
@@ -76,7 +77,7 @@ def load(name, min_cells=20, keep_var=True):
 
 
 def available():
-    return [n for n, (p, _) in CONTEXTS.items() if os.path.exists(f"{ROOT}/{p}.npz")]
+    return [n for n, (p, _) in CONTEXTS.items() if os.path.exists(f"{ROOT}/{p}.npz") and (n not in OPT_IN or os.environ.get(OPT_IN[n]) == "1")]
 
 
 def load_all(names=None, min_cells=20, keep_var=True):
