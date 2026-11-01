@@ -1,0 +1,1 @@
+"""Shared tools for PertRelay: the consensus model (gm.py), cell rendering (render.py) and the per-experiment statistics (contexts.py, stats.py). prepare/train/predict/effect_model are the earlier multi-cell-line scDFM experiments, kept for the record."""

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # After the fp32 token run: the effect-conditioned run with bf16 autocast (grad cosine 0.9994 vs fp32).
-cd /home/zxc29051617/VCC/scDFM
+cd /home/zxc29051617/VCC/pertrelay
 while kill -0 97947 2>/dev/null; do sleep 30; done
 export PYTHONPATH=.
 F=/home/zxc29051617/VCC/data/stage3/model/h1_pert_holdout

@@ -8,9 +8,9 @@ repo 根目錄的 [`papers/`](../../papers/) 是隊友早期整理的版本（�
 
 | 檔案 | 論文 | 我們怎麼用 | 結論 | 紀錄 |
 | --- | --- | --- | --- | --- |
-| [`scDFM_Yu2026_ICLR.pdf`](scDFM_Yu2026_ICLR.pdf) | Yu C, Wang C, Liao B, Wu T. **scDFM: Distributional Flow Matching Model for Robust Single-Cell Perturbation Prediction.** *ICLR* (2026). arXiv:2602.07103 | 專案的起點：先在原論文的資料（Norman, K562）重現，再改成多細胞種類版本，拿來預測沒看過的細胞 | 在沒看過的細胞上學不到「關掉哪個基因」的訊號（區分度 0.50，等於亂猜），所以改走小模型 AdaptNet | `scDFM/repro/STAGE1.md`、`STAGE3.md`、`PAPERS.md` |
-| [`PerturbCellRL_Wu2026_arXiv.pdf`](PerturbCellRL_Wu2026_arXiv.pdf) | Wu D, Li M, Lundberg E, Zhang Y, Yeung-Levy S, Kumar A, Fox EB. **PerturbCellRL: Aligning Distributions and Grounding Biology via Post-Training Perturbation Generators.** arXiv:2606.27752 (2026) | 評估能不能用強化學習進一步微調 scDFM | 這篇和 scDFM 一樣只測單一細胞種類，沒有跨細胞的結果，而且區分度在 4 個設定中有 3 個變差；在基礎模型學到擾動訊號之前用不上，沒有採用 | `scDFM/repro/PAPERS.md` |
-| [`SIGnature_Gold2026_NatBiotechnol.pdf`](SIGnature_Gold2026_NatBiotechnol.pdf) | Gold MP, Reyes M, Diamant N, …, Heimberg G, Biancalani T. **Scoring gene importance by interpreting single-cell foundation models.** *Nature Biotechnology* (2026). doi:10.1038/s41587-026-03112-5 | 用它的「基因重要性分數」當作判斷來源可信度的特徵，在 3 個留出細胞 × 3 個種子 × 5 組設定上做了 45 次官方評分 | 沒有比原本的表現量特徵更好，也沒有贏過打亂分數的對照組，放棄 | `scDFM/repro/signature_20261013/SUMMARY.md` |
+| [`scDFM_Yu2026_ICLR.pdf`](scDFM_Yu2026_ICLR.pdf) | Yu C, Wang C, Liao B, Wu T. **scDFM: Distributional Flow Matching Model for Robust Single-Cell Perturbation Prediction.** *ICLR* (2026). arXiv:2602.07103 | 專案的起點：先在原論文的資料（Norman, K562）重現，再改成多細胞種類版本，拿來預測沒看過的細胞 | 在沒看過的細胞上學不到「關掉哪個基因」的訊號（區分度 0.50，等於亂猜），所以改走小模型 AdaptNet | `pertrelay/experiments/STAGE1.md`、`STAGE3.md`、`PAPERS.md` |
+| [`PerturbCellRL_Wu2026_arXiv.pdf`](PerturbCellRL_Wu2026_arXiv.pdf) | Wu D, Li M, Lundberg E, Zhang Y, Yeung-Levy S, Kumar A, Fox EB. **PerturbCellRL: Aligning Distributions and Grounding Biology via Post-Training Perturbation Generators.** arXiv:2606.27752 (2026) | 評估能不能用強化學習進一步微調 scDFM | 這篇和 scDFM 一樣只測單一細胞種類，沒有跨細胞的結果，而且區分度在 4 個設定中有 3 個變差；在基礎模型學到擾動訊號之前用不上，沒有採用 | `pertrelay/experiments/PAPERS.md` |
+| [`SIGnature_Gold2026_NatBiotechnol.pdf`](SIGnature_Gold2026_NatBiotechnol.pdf) | Gold MP, Reyes M, Diamant N, …, Heimberg G, Biancalani T. **Scoring gene importance by interpreting single-cell foundation models.** *Nature Biotechnology* (2026). doi:10.1038/s41587-026-03112-5 | 用它的「基因重要性分數」當作判斷來源可信度的特徵，在 3 個留出細胞 × 3 個種子 × 5 組設定上做了 45 次官方評分 | 沒有比原本的表現量特徵更好，也沒有贏過打亂分數的對照組，放棄 | `pertrelay/experiments/signature_20261013/SUMMARY.md` |
 
 ## 2. 比賽的官方文件
 

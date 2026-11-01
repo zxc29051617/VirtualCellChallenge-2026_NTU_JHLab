@@ -3,7 +3,7 @@
 # (effect file data/stage3/effects/<heldout>_<name>.npz; one heavy job at a time)
 cd /home/zxc29051617/VCC
 H=$1; shift
-PY="scDFM/.venv/bin/python -I tools/loco.py"
+PY="pertrelay/.venv/bin/python -I tools/loco.py"
 step() { echo "=== $(date +%T) $*"; "$@" || echo "!!! FAILED: $*"; }
 for n in "$@"; do
   step $PY pred  --heldout $H --method effectfile --effect-file data/stage3/effects/${H}_$n.npz ${LOCO_PRED_ARGS:-}

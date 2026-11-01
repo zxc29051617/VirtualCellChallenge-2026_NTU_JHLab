@@ -2,9 +2,9 @@
 
 > 這份文件寫給**第一次接觸這個專案的人**，不需要生物或機器學習背景。
 > 看到不懂的名詞，可以直接跳到 [13. 名詞解釋](#13-名詞解釋) 查。
-> 期末算分的版本是 **v5**（台灣時間 2026/10/24 00:24 上傳）。
-> 模型名稱：**AdaptNet**（跨細胞種類的擾動反應遷移模型，本專案自己設計）；期末上傳的是「**AdaptNet 混合流程**」：
-> AdaptNet 預測每個基因的總量，共識模型產生細胞。資料夾叫 `scDFM` 只是沿用專案起點的名字（第 12 節）。
+> 系統名稱：**PertRelay**（Perturbation Relay：把其他細胞的擾動實驗結果「接力」傳到新細胞），程式都在 `pertrelay/`。
+> 裡面的模型元件：**AdaptNet**（組合各來源、預測每個基因的總量）、**GeneNet4**（沒測過的基因）、共識模型（產生細胞）。
+> 期末算分的是 **PertRelay 期末版**（內部代號 v5，台灣時間 2026/10/24 00:24 上傳）。
 
 ## 這份文件怎麼讀
 
@@ -205,7 +205,7 @@ flowchart LR
 
 | 模型 | 是什麼 | 負責 |
 | --- | --- | --- |
-| **共識模型**（原方法，也就是 v1） | 把各來源（其他細胞的實驗結果）依可信度直接平均的簡單方法，程式在 `scDFM/vcc/gm.py` | **細胞分布**的變化（影響顯著基因的四項分數） |
+| **共識模型**（原方法，也就是 v1） | 把各來源（其他細胞的實驗結果）依可信度直接平均的簡單方法，程式在 `pertrelay/vcc/gm.py` | **細胞分布**的變化（影響顯著基因的四項分數） |
 | **AdaptNet**（本專案訓練的模型） | 學會怎麼依新細胞的狀態組合來源的小型神經網路（第 6 節） | 每個基因的**總量**（影響區分度和整體誤差） |
 
 我們也試過讓 AdaptNet 同時負責細胞分布，但它的預測比較平滑，會讓太多基因被判成顯著，「方向正確」反而變差，所以細胞分布仍用共識模型。
@@ -274,7 +274,7 @@ flowchart LR
 另外用了兩個**基因知識庫**：STRING（蛋白質之間的交互作用網路）和 Gene Ontology（基因功能註解），
 用來推測「從沒被任何實驗關掉過的基因」。
 
-### 資料怎麼整理（`scDFM/repro/model_v2_20261022/build_data.py`）
+### 資料怎麼整理（`pertrelay/model/build_data.py`）
 
 對每個實驗、每個被關掉的基因：
 
@@ -291,7 +291,7 @@ flowchart LR
 ## 6. 模型：AdaptNet 一步一步看
 
 正式名稱：**AdaptNet：跨細胞種類的擾動反應遷移模型**（英文：*AdaptNet: an adaptive source-combination network for
-cross-cell-type perturbation response prediction*）。程式在 `scDFM/repro/model_v2_20261022/adaptnet.py`。
+cross-cell-type perturbation response prediction*）。程式在 `pertrelay/model/adaptnet.py`。
 
 AdaptNet 是本專案自己設計、自己取名的模型，**沒有對應的發表論文**；支持它的是第 8～10 節的驗證結果。
 它用到的元件都是常見的機器學習做法：低秩分解找出的「基因程式」、依細胞狀態調整的增益（類似 FiLM，Perez et al. 2018）、
@@ -350,11 +350,11 @@ flowchart LR
 
 - 被關掉的基因本身，固定預測下降約 85%（比賽保證 > 80%）。
 - CRISPRi 也會影響基因組上**很近的鄰居基因**（50 kb，也就是 5 萬個 DNA 字母以內），
-  這部分由共識模型（`scDFM/vcc/gm.py`）從所有實驗統計出來。
+  這部分由共識模型（`pertrelay/vcc/gm.py`）從所有實驗統計出來。
 
 ### GeneNet4：從沒被測過的基因
 
-程式在 `scDFM/repro/model_v2_20261022/genenet.py`。如果某個基因從沒被任何實驗關掉過，就沒有來源可以參考。
+程式在 `pertrelay/model/genenet.py`。如果某個基因從沒被任何實驗關掉過，就沒有來源可以參考。
 GeneNet4 改用 STRING 和 Gene Ontology 找出**功能最像的 32 個基因**，用它們被關掉時的反應來推測，並學會該相信多少。
 期末考的 300 個基因都有測量資料，所以期末沒有用到這條路，但它讓模型可以處理「任何基因」。
 
@@ -368,7 +368,7 @@ GeneNet4 改用 STRING 和 Gene Ontology 找出**功能最像的 32 個基因**�
 ## 7. 從預測到 400 顆細胞
 
 程式在 `tools/final_pipeline.sh`（總指揮）、`tools/make_bulk_effects.py`（總量）、
-`tools/cell_effects.py`（細胞層變化）、`vccsub/make_effect_submission.py` 與 `scDFM/vcc/render.py`（產生細胞）。
+`tools/cell_effects.py`（細胞層變化）、`vccsub/make_effect_submission.py` 與 `pertrelay/vcc/render.py`（產生細胞）。
 
 ### 第一步：每個基因的總量（決定區分度與整體誤差）
 
@@ -484,7 +484,7 @@ v5 把區分度拉回接近 v1（0.747、0.654），同時保留 AdaptNet 在整
 - **區分度**在這張表是另一種尺度：0.5 ＝ 亂猜、1 ＝ 每個擾動都分得開（和第 3 節的換算分數不同）。
 - **一句話**：用同樣的資料，AdaptNet 的方向相似度比原方法高 18%（0.111 → 0.131）；再加入 RPE1 資料升到 0.152，合計高 37%。
   （公平比較：原方法加入 RPE1 也會升到 0.134，所以在有 RPE1 的情況下 AdaptNet 高 13%。）
-- 數字來源：`scDFM/repro/model_v2_20261022/results/` 裡的 `consensus_d200.json`、`adapt_b1_raw.json`、`genenet4_rpe1.json`
+- 數字來源：`pertrelay/model/results/` 裡的 `consensus_d200.json`、`adapt_b1_raw.json`、`genenet4_rpe1.json`
   （GeneNet4 對有測量的基因就是用 AdaptNet，所以這一列可以當作「AdaptNet＋RPE1」；10/24 用 AdaptNet 單獨重跑，
   結果和這一列相同到小數點後第 7 位，見 `results/adapt_b1_rpe1.json`）。
 
@@ -565,9 +565,9 @@ AdaptNet 是驗證期結束後才完成的，所以排行榜上沒有它的成�
   也就是說，**就算資料完全沒有雜訊，非必需基因的方向也幾乎無法從其他細胞搬過來**，而期末考的基因大多是非必需基因。
 - 結論：用現有的公開資料，這條「從其他細胞搬運反應」的路已經走到底了。要再大幅進步，需要新的資訊來源，
   例如和期末考細胞相似的新實驗，而不是再調整現在的模型。
-- 程式與數字：`scDFM/repro/model_v2_20261022/ceiling_check.py`，結果在 `results/ceiling*.json`。
+- 程式與數字：`pertrelay/model/ceiling_check.py`，結果在 `results/ceiling*.json`。
 
-### 試過但沒採用（詳細數字在 `scDFM/repro/model_v2_20261022/SUMMARY.md`）
+### 試過但沒採用（詳細數字在 `pertrelay/model/SUMMARY.md`）
 
 | 嘗試 | 為什麼可能有用 | 結果 |
 | --- | --- | --- |
@@ -593,7 +593,7 @@ AdaptNet 是驗證期結束後才完成的，所以排行榜上沒有它的成�
 - 能涵蓋這 300 個基因的大型公開實驗都已經加入，再往上需要和期末考細胞相似的新資料。
   10/25 全面查過：這三類細胞的公開擾動實驗都只涵蓋很少的期末考基因（MOLM-13 共 5 個、U-87 MG 21 個激酶、纖維母細胞的敲低實驗最多 13 個），
   沒有任何一份在相似細胞中涵蓋 50 個以上。唯一涵蓋全部 300 個的新資料是 IGVF 10/12 釋出的內皮細胞全基因組 CRISPRi 實驗
-  （細胞種類不像期末考，尚未加入）。完整清單見 `scDFM/repro/DATASET_SURVEY_DEF.md`，基因清單在 `data/research_genelists_def/`。
+  （細胞種類不像期末考，尚未加入）。完整清單見 `pertrelay/experiments/DATASET_SURVEY_DEF.md`，基因清單在 `data/research_genelists_def/`。
 ---
 
 ## 11. 怎麼執行（從零開始）
@@ -606,17 +606,17 @@ AdaptNet 是驗證期結束後才完成的，所以排行榜上沒有它的成�
 | B. 跑模型、模擬考 | 11.2～11.7 | Linux＋NVIDIA 顯示卡，下載並整理資料 | 數天（大部分是下載） |
 | C. 重建期末上傳檔 v5 | 11.2～11.9 | 同上，再加主辦單位帳號 | 再約 2 小時 |
 
-> **所有指令都在 `general_model/` 資料夾裡執行**（除非特別寫 `cd scDFM`）。repo 根目錄另外有一個 `data/`，那是隊友舊流程用的，和這裡無關。
+> **所有指令都在 `general_model/` 資料夾裡執行**（除非特別寫 `cd pertrelay`）。repo 根目錄另外有一個 `data/`，那是隊友舊流程用的，和這裡無關。
 
 ### 11.1 先看看結果（不用下載資料）
 
-repo 裡已經存了模擬考的評分結果（`scDFM/repro/model_v2_20261022/mock/*.json`），可以直接重現第 9 節的數字：
+repo 裡已經存了模擬考的評分結果（`pertrelay/model/mock/*.json`），可以直接重現第 9 節的數字：
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh     # 安裝 uv（安裝 Python 套件的工具），裝好後重開終端機
 git clone https://github.com/scnpg/VCC_2026_NTU_JHLab.git
-cd VCC_2026_NTU_JHLab/general_model/scDFM
-uv run --no-project --with numpy python repro/model_v2_20261022/mock_cmp.py 0,1,2,3,4 current v4_ax5
+cd VCC_2026_NTU_JHLab/general_model/pertrelay
+uv run --no-project --with numpy python model/mock_cmp.py 0,1,2,3,4 current v4_ax5
 ```
 
 應該會看到：
@@ -632,8 +632,8 @@ v4_ax5                 overall 0.3063 (5 subsets) | pds +0.871 mse +0.165 nmae -
 另外兩套模擬考看原始分數（`mock_raw.py`；pds、fid、reach、jac 越高越好，mse、nmae 越低越好）：
 
 ```bash
-uv run --no-project --with numpy python repro/model_v2_20261022/mock_raw.py 0,1,2,3 hct116_current hct116_v4 hct116_v4_ax5
-uv run --no-project --with numpy python repro/model_v2_20261022/mock_raw.py 0,1,2,3 kolf200_current kolf200_v4 kolf200_v4_ax5
+uv run --no-project --with numpy python model/mock_raw.py 0,1,2,3 hct116_current hct116_v4 hct116_v4_ax5
+uv run --no-project --with numpy python model/mock_raw.py 0,1,2,3 kolf200_current kolf200_v4 kolf200_v4_ax5
 ```
 
 
@@ -659,14 +659,14 @@ grep -rlZ "/home/zxc29051617/VCC" --include=*.py --include=*.sh . | xargs -0 sed
 grep -rl "/home/zxc29051617" --include=*.py --include=*.sh .     # 檢查：應該什麼都不印
 ```
 
-- 一定要在 `general_model/` 裡執行，不是 repo 根目錄；換錯位置的話，程式會找不到自己的套件（`scDFM/vcc`）。
+- 一定要在 `general_model/` 裡執行，不是 repo 根目錄；換錯位置的話，程式會找不到自己的套件（`pertrelay/vcc`）。
 - 程式裡另外會用到 `~/.local/bin/vcc` 和 `~/.local/share/uv/tools/vcc-cli/bin/python`，那是 11.4 安裝的上傳工具，會自動指向你自己的家目錄，不用改。
 
 全部設定好之後，`general_model/` 裡會多出這些資料夾：
 
 ```
 general_model/
-├── scDFM/.venv/   ← 模型環境（11.4）
+├── pertrelay/.venv/   ← 模型環境（11.4）
 ├── evalenv/       ← 評分環境（11.4）
 ├── rdsenv/        ← 讀 R 檔的環境（11.4，只有 VIPerturb 需要）
 └── data/          ← 所有資料（11.5～11.6）
@@ -675,15 +675,15 @@ general_model/
 ### 11.4 建立 Python 環境
 
 用 **uv**（一個安裝 Python 和套件的工具）建立三個**互相獨立**的環境。
-要分開的原因：官方評分程式需要特定版本的套件；而上傳工具 vcc-cli 的程式模組也叫 `vcc`，會和我們自己的 `scDFM/vcc/` 撞名。
+要分開的原因：官方評分程式需要特定版本的套件；而上傳工具 vcc-cli 的程式模組也叫 `vcc`，會和我們自己的 `pertrelay/vcc/` 撞名。
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh            # 安裝 uv（11.1 裝過就不用再裝）
 
 # (1) 模型環境：Python 3.11 + PyTorch（CUDA 12.6 版）等，套件版本在 requirements.txt
-uv venv scDFM/.venv --python 3.11
-uv pip install --python scDFM/.venv/bin/python -r requirements.txt
-scDFM/.venv/bin/python -c "import torch; print(torch.cuda.is_available())"   # 應該印 True
+uv venv pertrelay/.venv --python 3.11
+uv pip install --python pertrelay/.venv/bin/python -r requirements.txt
+pertrelay/.venv/bin/python -c "import torch; print(torch.cuda.is_available())"   # 應該印 True
 
 # (2) 評分環境：官方評分程式 cell-eval2
 uv venv evalenv --python 3.11
@@ -758,26 +758,26 @@ mkdir -p data/external/{meta,replogle2022,nadig2025,feng2025,kolf,viperturb,cd4,
 
 ```bash
 # X-Atlas 要抽哪些細胞（用到 (2) 的檔案）
-scDFM/.venv/bin/python -I tools/select_cells.py
+pertrelay/.venv/bin/python -I tools/select_cells.py
 
 # K562、K562ess、HepG2、Jurkat 的單細胞檔（清單在 tools/download_list.tsv；其中 rpe1_raw_singlecell 用不到，可以先刪掉那一行）
 bash tools/fetch_stage3.sh
 
 # K562、X-Atlas、H1 → data/stage3/stats/
-(cd tools && ../scDFM/.venv/bin/python -I extract_replogle.py K562_gwps_raw_singlecell_01.h5ad K562 replogle_K562_gwps)
-scDFM/.venv/bin/python -I tools/extract_xatlas.py HCT116
-scDFM/.venv/bin/python -I tools/extract_xatlas.py HEK293T
+(cd tools && ../pertrelay/.venv/bin/python -I extract_replogle.py K562_gwps_raw_singlecell_01.h5ad K562 replogle_K562_gwps)
+pertrelay/.venv/bin/python -I tools/extract_xatlas.py HCT116
+pertrelay/.venv/bin/python -I tools/extract_xatlas.py HEK293T
 B=https://storage.googleapis.com/arc-institute-virtual-cell-atlas/virtual-cell-challenge/2025
 for f in validation/adata_Validation.h5ad test/adata_Test.h5ad train/adata_Training.h5ad; do
   python3 -I tools/pget.py $B/$f data/external/h1_2025/$(basename $f) --conns 12 --chunk-mb 16
 done
-scDFM/.venv/bin/python -I tools/extract_h1.py
-(cd scDFM && .venv/bin/python -m vcc.stats K562 HCT116 HEK293T H1)
+pertrelay/.venv/bin/python -I tools/extract_h1.py
+(cd pertrelay && .venv/bin/python -m vcc.stats K562 HCT116 HEK293T H1)
 
 # CD4 T 細胞（45 GB，平行下載約 30 分鐘）
 python3 -I tools/par_download.py https://genome-scale-tcell-perturb-seq.s3.amazonaws.com/marson2025_data/GWCD4i.pseudobulk_merged.h5ad \
   data/external/cd4/GWCD4i.pseudobulk_merged.h5ad --workers 128 --part-mb 8
-scDFM/.venv/bin/python -I tools/cd4_stats.py data/external/cd4/GWCD4i.pseudobulk_merged.h5ad data/vcc2026/gene_names.csv \
+pertrelay/.venv/bin/python -I tools/cd4_stats.py data/external/cd4/GWCD4i.pseudobulk_merged.h5ad data/vcc2026/gene_names.csv \
   data/coverage/vcc_h1_targets.txt data/stage3/stats/
 
 # Feng（兩組誘導多能幹細胞）。fetch_squeeze.sh 裡含 jurkat、hepg2 的兩行（第 6、7 行）會重新下載 HepG2、Jurkat，已經有的話先刪掉那兩行
@@ -785,7 +785,7 @@ bash tools/fetch_squeeze.sh
 bash tools/fetch_feng_fitness.sh
 
 # K562ess、HepG2、Jurkat、FengNF、FengF → data/stage3/stats_ext/
-cd scDFM
+cd pertrelay
 E=../data/external
 PYTHONPATH=. .venv/bin/python -m vcc.stats_ext replogle K562ess $E/replogle2022/K562_essential_raw_singlecell_01.h5ad
 PYTHONPATH=. .venv/bin/python -m vcc.stats_ext replogle HepG2 $E/nadig2025/GSE264667_hepg2_raw_singlecell_01.h5ad
@@ -795,9 +795,9 @@ PYTHONPATH=. .venv/bin/python -m vcc.stats_ext feng FengF $E/feng2025/GenomeWide
 cd ..
 
 # KOLF（先讀遠端檔案的目錄，再只下載需要的那一段）
-scDFM/.venv/bin/python -I tools/kolf_meta.py https://ndownloader.figshare.com/files/64650261 data/external/kolf/kolf_meta.npz
+pertrelay/.venv/bin/python -I tools/kolf_meta.py https://ndownloader.figshare.com/files/64650261 data/external/kolf/kolf_meta.npz
 bash tools/fetch_kolf.sh
-scDFM/.venv/bin/python -I tools/kolf_process.py
+pertrelay/.venv/bin/python -I tools/kolf_process.py
 
 # VIPerturb-seq K562（R 的 .rds 檔，用 rdsenv 讀）
 bash tools/fetch_viperturb.sh
@@ -807,13 +807,13 @@ rdsenv/bin/python -I tools/viperturb_stats.py
 最後補上期末考 300 個基因裡、原本沒有抽出的部分（2026/10/22 做的）：
 
 ```bash
-scDFM/.venv/bin/python -I tools/stats_add_groups.py k562bulk data/stage3/stats/K562.npz \
+pertrelay/.venv/bin/python -I tools/stats_add_groups.py k562bulk data/stage3/stats/K562.npz \
   data/external/replogle2022/K562_gwps_raw_bulk_01.h5ad data/vcc2026_final/pert_counts.csv
 for L in HEK293T HCT116; do
-  scDFM/.venv/bin/python -I tools/extract_xatlas.py $L data/coverage/xatlas_keep_def_$L.csv data/stage3/xatlas_def_$L.h5ad
-  scDFM/.venv/bin/python -I tools/stats_add_groups.py cells data/stage3/stats/$L.npz data/stage3/xatlas_def_$L.h5ad data/vcc2026_final/pert_counts.csv
+  pertrelay/.venv/bin/python -I tools/extract_xatlas.py $L data/coverage/xatlas_keep_def_$L.csv data/stage3/xatlas_def_$L.h5ad
+  pertrelay/.venv/bin/python -I tools/stats_add_groups.py cells data/stage3/stats/$L.npz data/stage3/xatlas_def_$L.h5ad data/vcc2026_final/pert_counts.csv
 done
-scDFM/.venv/bin/python -I tools/cd4_add_remote.py data/vcc2026_final/pert_counts.csv \
+pertrelay/.venv/bin/python -I tools/cd4_add_remote.py data/vcc2026_final/pert_counts.csv \
   --local data/external/cd4/GWCD4i.pseudobulk_merged.h5ad --check AASS --batch 40
 ```
 
@@ -821,44 +821,44 @@ scDFM/.venv/bin/python -I tools/cd4_add_remote.py data/vcc2026_final/pert_counts
 
 ```bash
 # 訓練資料 → data/stage3/model_v2/*.npz（14 個實驗＋RPE1）
-(cd scDFM && .venv/bin/python -I repro/model_v2_20261022/build_data.py)
-(cd scDFM && .venv/bin/python -I repro/model_v2_20261022/rpe1_build.py)
+(cd pertrelay && .venv/bin/python -I model/build_data.py)
+(cd pertrelay && .venv/bin/python -I model/rpe1_build.py)
 
 # 三個留出驗證集（H1、HCT116、KOLF200），用 repo 裡存好的基因清單，確保和原本一模一樣
 mkdir -p data/stage3/loco
 for X in H1 HCT116 KOLF200; do
   python3 -c "import json; print('\n'.join(json.load(open('data/stage3/loco_targets/${X}_real.json'))['targets']))" > data/stage3/loco/${X}_targets.txt
 done
-scDFM/.venv/bin/python -I tools/loco.py prep --heldout H1 --roles h1_target vcc_target --max-cells 80 --targets-file data/stage3/loco/H1_targets.txt
-scDFM/.venv/bin/python -I tools/loco.py prep --heldout HCT116 --targets-file data/stage3/loco/HCT116_targets.txt
-scDFM/.venv/bin/python -I tools/fix_zeros.py data/stage3/kolf_KOLF.h5ad
-scDFM/.venv/bin/python -I tools/loco.py prep --heldout KOLF200 --max-cells 200 --targets-file data/stage3/loco/KOLF200_targets.txt
+pertrelay/.venv/bin/python -I tools/loco.py prep --heldout H1 --roles h1_target vcc_target --max-cells 80 --targets-file data/stage3/loco/H1_targets.txt
+pertrelay/.venv/bin/python -I tools/loco.py prep --heldout HCT116 --targets-file data/stage3/loco/HCT116_targets.txt
+pertrelay/.venv/bin/python -I tools/fix_zeros.py data/stage3/kolf_KOLF.h5ad
+pertrelay/.venv/bin/python -I tools/loco.py prep --heldout KOLF200 --max-cells 200 --targets-file data/stage3/loco/KOLF200_targets.txt
 
 # 來源一致度快取（期末流程的「來源一致度」「目標權重」會用到；要在上面三個驗證集做好之後跑）
-(cd scDFM && rm -f repro/signature_20261013/cache/*.npz && .venv/bin/python -I repro/signature_20261013/cache_contexts.py)
+(cd pertrelay && rm -f experiments/signature_20261013/cache/*.npz && .venv/bin/python -I experiments/signature_20261013/cache_contexts.py)
 
 # 三套模擬考的資料 → data/mock_h1、data/mock_hct116、data/mock_kolf200
-(cd scDFM && .venv/bin/python -I repro/model_v2_20261022/mock_data.py)
-(cd scDFM && .venv/bin/python -I repro/model_v2_20261022/mock_data_loco.py HCT116,KOLF200)
+(cd pertrelay && .venv/bin/python -I model/mock_data.py)
+(cd pertrelay && .venv/bin/python -I model/mock_data_loco.py HCT116,KOLF200)
 
 # GeneNet4 用的基因知識（只有 GeneNet4 的測試需要）
-(cd scDFM && .venv/bin/python -I repro/model_v2_20261022/gene_knowledge.py)
+(cd pertrelay && .venv/bin/python -I model/gene_knowledge.py)
 ```
 
 ### 11.7 跑基準測試與模擬考（確認環境和資料都正確）
 
-**基準測試**（藏起細胞、藏起基因；在 `scDFM/` 裡執行）：
+**基準測試**（藏起細胞、藏起基因；在 `pertrelay/` 裡執行）：
 
 ```bash
-cd scDFM
-.venv/bin/python -I repro/model_v2_20261022/bench.py consensus_d200                 # 原方法，應得到方向相似度約 0.111、區分度約 0.738
-RPE1=1 .venv/bin/python -I repro/model_v2_20261022/run_genenet4_bench.py mytest_gn4  # GeneNet4＋RPE1（參數是結果名稱），約 0.152、0.766
-RPE1=1 .venv/bin/python -I repro/model_v2_20261022/bench_genes.py blend             # 藏起基因（不給參數會跑全部方法，很久）
-RPE1=1 .venv/bin/python -I repro/model_v2_20261022/bench_sign.py consensus_agree    # 方向猜對率（第 10 節的圖）
+cd pertrelay
+.venv/bin/python -I model/bench.py consensus_d200                 # 原方法，應得到方向相似度約 0.111、區分度約 0.738
+RPE1=1 .venv/bin/python -I model/run_genenet4_bench.py mytest_gn4  # GeneNet4＋RPE1（參數是結果名稱），約 0.152、0.766
+RPE1=1 .venv/bin/python -I model/bench_genes.py blend             # 藏起基因（不給參數會跑全部方法，很久）
+RPE1=1 .venv/bin/python -I model/bench_sign.py consensus_agree    # 方向猜對率（第 10 節的圖）
 cd ..
 ```
 
-結果寫在 `scDFM/repro/model_v2_20261022/results/`：`bench.py` 和 `run_genenet4_bench.py` 寫成 `<名稱>.json`，
+結果寫在 `pertrelay/model/results/`：`bench.py` 和 `run_genenet4_bench.py` 寫成 `<名稱>.json`，
 `bench_genes.py` 寫成 `genes_<名稱>.json`，`bench_sign.py` 寫成 `sign_<名稱>.json`。
 用和 repo 裡相同的名稱會**覆蓋**原本的結果檔（例如上面第一行會覆蓋 `consensus_d200.json`），想保留的話先備份 `results/`。
 `RPE1=1` 代表把 RPE1 加進訓練資料；不加的話就是只用原本 14 個實驗。
@@ -866,8 +866,8 @@ cd ..
 **稽核後的嚴格版檢查**（2026-10-24 加入，結果見第 9、10 節）：
 
 ```bash
-cd scDFM
-P=repro/model_v2_20261022
+cd pertrelay
+P=model
 STRICT_PCA=1 RPE1=1 .venv/bin/python -I $P/run_clean_checks.py adapt mytest_strict          # 細胞狀態的 8 個數字只用訓練細胞的對照組算
 CLEAN_CENTRING=1 .venv/bin/python -I $P/run_clean_checks.py genes knn_combo blend         # 藏起基因、而且中心化時不碰被藏的基因
 .venv/bin/python -I $P/var_scale_check.py                                                 # 雜訊換成同一個單位後，重算所有已存的結果
@@ -885,18 +885,18 @@ cd ..
 - `run_clean_checks.py adapt` 每一折都重新訓練一次 AdaptNet（種子 0），7 折在我們的顯示卡（RTX 4060 Ti 16 GB）上約 7 分鐘；`genes` 寫成 `genes_<方法>_clean.json`。
 - `sc_build.py` 印出 `184 targets ... 437 control cells` 就對了（我們用重新下載的檔案驗證過，和原本的資料逐位元相同）。
 
-**模擬考**（在 `scDFM/` 裡執行；評分程式約用 7 GB 記憶體，不要同時跑兩個。第一次跑每組約 30 分鐘，因為要先算 v1 的結果；之後每組約 10 分鐘）：
+**模擬考**（在 `pertrelay/` 裡執行；評分程式約用 7 GB 記憶體，不要同時跑兩個。第一次跑每組約 30 分鐘，因為要先算 v1 的結果；之後每組約 10 分鐘）：
 
 ```bash
-cd scDFM
+cd pertrelay
 V5="CELLAGREE=1;CELLS_FROM_A=1;CTRLAXES=5;TWPOW=0.5"       # 這就是期末 v5 的設定
-RPE1=1 SEEDS=0,1,2 .venv/bin/python -I repro/model_v2_20261022/mock_exam.py 0,1,2,3,4 mytest "$V5"
-MOCK_SET=hct116  RPE1=1 SEEDS=0,1,2 .venv/bin/python -I repro/model_v2_20261022/mock_exam.py 0,1,2,3 mytest "$V5"
-MOCK_SET=kolf200 RPE1=1 SEEDS=0,1,2 .venv/bin/python -I repro/model_v2_20261022/mock_exam.py 0,1,2,3 mytest "$V5"
+RPE1=1 SEEDS=0,1,2 .venv/bin/python -I model/mock_exam.py 0,1,2,3,4 mytest "$V5"
+MOCK_SET=hct116  RPE1=1 SEEDS=0,1,2 .venv/bin/python -I model/mock_exam.py 0,1,2,3 mytest "$V5"
+MOCK_SET=kolf200 RPE1=1 SEEDS=0,1,2 .venv/bin/python -I model/mock_exam.py 0,1,2,3 mytest "$V5"
 # 和 v5（名稱 v4_ax5）比較
-.venv/bin/python -I repro/model_v2_20261022/mock_cmp.py 0,1,2,3,4 v4_ax5 mytest
-.venv/bin/python -I repro/model_v2_20261022/mock_raw.py 0,1,2,3 hct116_v4_ax5 hct116_mytest
-.venv/bin/python -I repro/model_v2_20261022/mock_raw.py 0,1,2,3 kolf200_v4_ax5 kolf200_mytest
+.venv/bin/python -I model/mock_cmp.py 0,1,2,3,4 v4_ax5 mytest
+.venv/bin/python -I model/mock_raw.py 0,1,2,3 hct116_v4_ax5 hct116_mytest
+.venv/bin/python -I model/mock_raw.py 0,1,2,3 kolf200_v4_ax5 kolf200_mytest
 cd ..
 ```
 
@@ -906,18 +906,18 @@ cd ..
 - 用同樣的 v5 設定重跑，分數應該和 `v4_ax5` 非常接近（顯示卡運算有微小的隨機性，不會完全一樣）。
 - 在新電腦上第一次跑時，程式也會重新算一次 v1 的模擬考（名稱 `current`），會覆蓋 repo 裡的 `mock/mock_current_*.json`（還有 hct116、kolf200 的 current），所以第一次大約要花兩倍時間。
 
-### 11.8 重建期末上傳檔 v5
+### 11.8 重建期末上傳檔（PertRelay 期末版，內部代號 v5）
 
 ```bash
 # 步驟 1：共識模型（v1）的效果檔。AdaptNet 要用它的「目標基因本身＋鄰居基因」部分和整體大小（約 3 分鐘）
-cd scDFM
+cd pertrelay
 D=$(readlink -f ../data/vcc2026_final); E=../data/stage3/effects
 VCC_DATA_DIR=$D .venv/bin/python -m vcc.gm export D vcc $E/gm_final_v1.npz per_celltype=False lam=3.0 kcap=1.0 alpha=3.0 \
   bulk_out=$E/gm_final_v1_bulk.npz shared_k=10 oc_out=$E/gm_final_v1_oc.npz
 VCC_DATA_DIR=$D .venv/bin/python -m vcc.gm export D vcc $E/gm_final_v1_d200.npz per_celltype=False lam=3.0 kcap=1.0 alpha=3.0 n0=200.0
 
 # 步驟 2：訓練 3 個 AdaptNet（亂數種子 0、1、2），預測 D、E、F 每個基因的總量 → gm_final_v4pre*（約 4 分鐘）
-RPE1=1 SEEDS=0,1,2 .venv/bin/python -I repro/model_v2_20261022/build_v2.py v4
+RPE1=1 SEEDS=0,1,2 .venv/bin/python -I model/build_v2.py v4
 cd ..
 
 # 步驟 3：產生 36 萬顆細胞並打包成 vccsub/out/gm_final_v5.vcc（約 20 分鐘，硬碟要有 40 GB 空閒）
@@ -977,7 +977,7 @@ PRECOMP=$(pwd)/data/stage3/effects/gm_final_v4pre RENDER=g1 SHAREDK=0 GAMMA=1 CT
 | v4 | `gm_final_v4.vcc` | `gm_final_v4pre*` | `hyb_ax0_tw_ens3` | 不移除對照組方向＋重新加回目標權重＋3 個種子平均 |
 | **v5** | **`gm_final_v5.vcc`** | **`gm_final_v4pre*`（和 v4 共用）** | **`v4_ax5`** | **v4＋只移除 5 個對照組方向** |
 
-另外：資料夾 `model_v2_20261022` 是「第二代模型、2026/10/22 開始」的意思，和上傳的 v2 無關；`RENDER=g1` 是產生細胞的模式名稱。
+另外：`data/stage3/model_v2/` 等檔名裡的 model_v2 是「第二代模型」的意思，和上傳的 v2 無關；`RENDER=g1` 是產生細胞的模式名稱。
 
 ### 11.12 重現時的限制
 
@@ -987,11 +987,11 @@ PRECOMP=$(pwd)/data/stage3/effects/gm_final_v4pre RENDER=g1 SHAREDK=0 GAMMA=1 CT
 - **資料來源可能變動**：GO（current 版）、Hugging Face、Zenodo、GEO 和主辦單位的下載都可能更新或下架。
 - **每個目標最多用 13 個來源**：超過的部分不會使用（程式會印出提醒）。期末 300 個目標都沒有超過，但之後加入更多資料時要注意。
 - **下載**：下載腳本遇到失敗會立刻停下來並回報錯誤；下載中斷後重跑會從斷點繼續，換了下載設定則會重新開始。
-- **快取與環境變數**：模擬考和基準測試會重用已經算好的檔案（`data/mock_*/s*/bundle`、`scDFM/repro/model_v2_20261022/mock/`、
-  `scDFM/repro/signature_20261013/cache/`），只看檔案在不在、不檢查內容；改了資料或設定之後，要先刪掉對應的快取再重跑。
+- **快取與環境變數**：模擬考和基準測試會重用已經算好的檔案（`data/mock_*/s*/bundle`、`pertrelay/model/mock/`、
+  `pertrelay/experiments/signature_20261013/cache/`），只看檔案在不在、不檢查內容；改了資料或設定之後，要先刪掉對應的快取再重跑。
   `mock_exam.py` 也會沿用目前終端機裡的環境變數（例如 `PRECOMP`、`CTRLAXES`），重跑前先確認沒有上一次留下的設定。
 - **舊的驗證入口**：`python -m vcc.gm loco` 是早期的版本，同一個實驗的兄弟細胞（HCT116／HEK293T、三個誘導多能幹細胞實驗）沒有一起藏，
-  比第 8 節的 7 折寬鬆；本文件的數字都來自 `scDFM/repro/model_v2_20261022/bench.py`。
+  比第 8 節的 7 折寬鬆；本文件的數字都來自 `pertrelay/model/bench.py`。
 - **授權**：X-Atlas/Orion 是 CC BY-NC-SA 4.0，不能商業使用；比賽有獎金，是否算商業使用尚未向資料提供者確認。
   Feng 2025 的計數資料（figshare 27989294 第 2 版）在 figshare 的官方紀錄上標示 MIT（2026-10-24 查證）。
 - **顯示卡的微小隨機性**：換一張顯示卡或不同版本的驅動，AdaptNet 的結果可能有極小的差異，分數應該非常接近。
@@ -1016,9 +1016,9 @@ HCT116、KOLF200 兩套留出資料需要的中間檔已經刪除，所以沒有
 
 ## 12. 資料夾與重要檔案導覽
 
-> **為什麼程式放在叫 `scDFM` 的資料夾？** 專案一開始是在重現 scDFM 這篇論文的程式，後來的新模型也在同一個資料夾裡開發，
-> 名字就沿用下來了。repo 裡只放了我們用到的 `scDFM/vcc/`（共用工具）和 `scDFM/repro/`（各階段實驗，期末模型在 `model_v2_20261022/`），
-> 原本 scDFM 論文的程式沒有放進來。`scDFM/README_VCC2026.md` 是早期筆記，裡面提到的部分資料夾不在 repo 裡，以這份文件為準。
+> 2026/11/01 起程式整理到 `pertrelay/`。專案一開始是在重現 scDFM 生成模型，所以舊的紀錄、早期筆記裡會看到 `scDFM/...` 的路徑，
+> 現在分別對應到 `pertrelay/vcc/`、`pertrelay/model/`、`pertrelay/experiments/`。scDFM 的重現只留在 `pertrelay/experiments/` 當歷史紀錄，
+> 期末模型沒有用到 scDFM。`pertrelay/experiments/README_VCC2026.md` 是早期筆記，裡面提到的部分資料夾不在 repo 裡，以這份文件為準。
 
 ```
 general_model/
@@ -1039,27 +1039,28 @@ general_model/
 │   ├── make_effect_submission.py ← 把預測變成 400 顆細胞
 │   ├── pack_vcc.py               ← 打包成官方 .vcc 格式
 │   └── writer.py                 ← 省記憶體地寫出大檔案
-└── scDFM/
+└── pertrelay/                    ← PertRelay 的程式（指令多半在這裡執行）
     ├── vcc/                      ← 共識模型與共用工具
     │   ├── gm.py                 ← 共識模型（鄰居基因效應、各來源平均）
     │   ├── render.py             ← 產生細胞的核心演算法
     │   ├── contexts.py、stats.py ← 讀取與彙總各實驗資料
     │   └── ...
-    └── repro/
-        ├── model_v2_20261022/    ← 期末模型（最重要）
-        │   ├── SUMMARY.md        ← 所有實驗的完整紀錄與數字（英文）
-        │   ├── adaptnet.py       ← AdaptNet 模型
-        │   ├── genenet.py        ← GeneNet4（沒測過的基因）
-        │   ├── responsenet.py    ← 資料載入、細胞狀態摘要
-        │   ├── bench*.py         ← 各種基準測試
-        │   ├── build_data.py     ← 建立訓練資料
-        │   ├── build_v2.py       ← 為 D/E/F 訓練並預測
-        │   ├── mock_exam.py      ← 模擬考
-        │   ├── mse_proxy.py、de_sim.py ← 快速試算
-        │   ├── run_clean_checks.py、var_scale_check.py、ceiling_check.py ← 稽核後的嚴格版檢查與進步空間分析
-        │   └── results/、mock/   ← 基準測試與模擬考的結果（JSON）
+    ├── model/                    ← 期末模型（最重要）
+    │   ├── SUMMARY.md            ← 所有實驗的完整紀錄與數字（英文）
+    │   ├── adaptnet.py           ← AdaptNet 模型
+    │   ├── genenet.py            ← GeneNet4（沒測過的基因）
+    │   ├── responsenet.py        ← 資料載入、細胞狀態摘要
+    │   ├── bench*.py             ← 各種基準測試
+    │   ├── build_data.py         ← 建立訓練資料
+    │   ├── build_v2.py           ← 為 D/E/F 訓練並預測
+    │   ├── mock_exam.py          ← 模擬考
+    │   ├── mse_proxy.py、de_sim.py ← 快速試算
+    │   ├── run_clean_checks.py、var_scale_check.py、ceiling_check.py ← 嚴格版檢查與進步空間分析
+    │   └── results/、mock/       ← 基準測試與模擬考的結果（JSON）
+    └── experiments/              ← 各階段的實驗與紀錄（歷史）
         ├── next_20261019/        ← A/B/C 時期的流程實驗（run.log 是逐日紀錄）
-        ├── signature_20261013/   ← 來源加權實驗、一致度快取的產生程式
+        ├── signature_20261013/   ← 來源加權實驗、一致度快取的產生程式（期末流程仍會讀它的快取）
+        ├── stage1.py、STAGE1.md、STAGE3.md ← 最早的 scDFM 重現
         └── *.md                  ← 早期的計畫、資料調查、方法紀錄
 ```
 
@@ -1121,7 +1122,7 @@ repo 根目錄（`general_model/` 以外）是隊友最早的基準流程（成�
 | 換算分數 | （我們 − 基準）÷（實驗重複 − 基準），見第 3 節 |
 | pds / mse / nmae / fid / reach / jaccard | 六項評分的英文簡稱：區分度、整體誤差、變化大小、方向正確、方向排序、清單重疊 |
 | 來源（source） | 同一個目標基因在其他細胞的測量結果 |
-| 共識模型（consensus） | 把各來源平均的簡單方法（原方法，程式在 `scDFM/vcc/gm.py`） |
+| 共識模型（consensus） | 把各來源平均的簡單方法（原方法，程式在 `pertrelay/vcc/gm.py`） |
 | AdaptNet | 本專案設計的小型神經網路（正式名稱：跨細胞種類的擾動反應遷移模型），學怎麼依新細胞的狀態組合各來源，第 6 節 |
 | AdaptNet 混合流程 | 期末上傳的整套做法：AdaptNet 預測總量＋共識模型產生細胞，第 4、7 節 |
 | scDFM | 專案起點的論文模型（single-cell Distributional Flow Matching Model，ICLR 2026）；在新細胞上學不到擾動訊號，期末沒有使用 |
@@ -1149,9 +1150,9 @@ A：我們試過現成的生成模型 scDFM，在新細胞上學不到擾動訊�
 小模型專注學「怎麼組合其他細胞的實驗結果」，在藏起細胞的測試中最準。
 
 **Q：模型叫什麼？和 scDFM 有什麼關係？有論文嗎？**
-A：期末模型叫 **AdaptNet**（跨細胞種類的擾動反應遷移模型），整套上傳流程叫「AdaptNet 混合流程」。它是本專案自己設計的，
-沒有發表論文，效果由第 8～10 節的驗證支持。scDFM（single-cell Distributional Flow Matching Model）是專案起點重現的論文模型，
-在新細胞上學不到擾動訊號，所以期末沒有用；程式資料夾仍叫 `scDFM` 只是沿用名字。
+A：整套系統叫 **PertRelay**（Perturbation Relay），核心模型是 **AdaptNet**（跨細胞種類的擾動反應遷移模型），另外有處理沒測過基因的 GeneNet4。
+都是本專案自己設計的，沒有發表論文，效果由第 8～10 節的驗證支持。scDFM（single-cell Distributional Flow Matching Model）是專案起點重現的論文模型，
+在新細胞上學不到擾動訊號，所以期末沒有用；早期紀錄裡的 `scDFM/...` 路徑現在都在 `pertrelay/` 下（第 12 節）。
 
 **Q：模擬考的分數就是期末的分數嗎？**
 A：不是。模擬考用的是 H1 等其他細胞，只用來比較「哪個版本比較好」。期末考細胞更不像訓練資料，實際分數可能較低；
@@ -1175,10 +1176,10 @@ A：期末截止（台灣時間 11/06 07:59）後就不能再上傳期末檔案�
 
 **Q：可以再加什麼資料讓它更好？**
 A：最有幫助的是和期末考細胞相似（MOLM-13 白血病、U-87 MG 膠質母細胞瘤、纖維母細胞），而且涵蓋這 300 個基因的擾動資料。
-10/25 全面查過，公開資料在這些細胞中最多只涵蓋 21 個（第 10 節「限制」、`scDFM/repro/DATASET_SURVEY_DEF.md`）。
+10/25 全面查過，公開資料在這些細胞中最多只涵蓋 21 個（第 10 節「限制」、`pertrelay/experiments/DATASET_SURVEY_DEF.md`）。
 
 **Q：沒有 NVIDIA 顯示卡可以跑嗎？**
-A：訓練用的程式寫成用 GPU（`DEV = "cuda"`）。只有 CPU 的話，要把 `scDFM/repro/model_v2_20261022/` 裡
+A：訓練用的程式寫成用 GPU（`DEV = "cuda"`）。只有 CPU 的話，要把 `pertrelay/model/` 裡
 `adaptnet.py`、`responsenet.py`、`genenet.py`、`bench_genes.py` 的 `"cuda"` 改成 `"cpu"`；會慢很多，但模型很小，仍跑得動。
 官方評分程式（cell-eval2）沒有 GPU 時會自動用 CPU。
 

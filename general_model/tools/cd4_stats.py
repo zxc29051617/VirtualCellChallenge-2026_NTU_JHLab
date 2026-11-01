@@ -1,5 +1,5 @@
 """Marson 2025 genome-wide CRISPRi in primary CD4+ T cells -> per-condition stats files in the
-format of scDFM/vcc/stats.py (names, sums on the VCC gene axis, ncell, measured, genes).
+format of pertrelay/vcc/stats.py (names, sums on the VCC gene axis, ncell, measured, genes).
 
 Run where the 44.6 GB pseudobulk file is local (a cloud box in AWS):
     python cd4_stats.py GWCD4i.pseudobulk_merged.h5ad gene_names.csv targets.txt outdir/

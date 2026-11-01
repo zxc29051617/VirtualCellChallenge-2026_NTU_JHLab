@@ -1,6 +1,6 @@
 """IGVF TeloHAEC genome-wide CRISPRi CC-Perturb-seq (Engreitz lab, released 2026-10-12) as a source stats file (2026-10-29).
 
-    .venv/bin/python -I ../tools/igvf_telohaec_stats.py <resting h5ad> [<resting h5ad> ...]        (from scDFM/)
+    .venv/bin/python -I ../tools/igvf_telohaec_stats.py <resting h5ad> [<resting h5ad> ...]        (from pertrelay/)
 
 Input: the per-replicate resting files of analysis set IGVFDS8166LJMC (IGVFFI0721PXFB, IGVFFI2522NCFR; cells x genes in X,
 cells x guides in obsm/guide_assignment, guide names in uns/guide_names). High MOI (~4.8 guides per cell), so there are

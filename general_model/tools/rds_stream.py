@@ -5,7 +5,7 @@ Pass 1 (`skeleton`): parse the whole object but replace numeric vectors longer t
 Pass 2 (`stream`): parse again and hand each Big vector to a callback chunk by chunk.
 
 Only what Seurat/Matrix objects need is supported (pairlists, S4, vectors, strings, symbols, refs, environments,
-compact ALTREP). Run with the rdsenv or scDFM venv; reads untrusted data only as bytes, never evaluates anything.
+compact ALTREP). Run with the rdsenv or pertrelay venv; reads untrusted data only as bytes, never evaluates anything.
 """
 import gzip, bz2, lzma, struct
 import numpy as np

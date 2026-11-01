@@ -26,7 +26,7 @@ p.add_argument("--limit-targets", type=int, default=0)
 p.add_argument("--clip", type=float, default=4.0)
 p.add_argument("--seed", type=int, default=0)
 p.add_argument("--render", choices=["current", "exact", "dual", "dual_lib"], default="current",
-               help="cell construction, see scDFM/vcc/render.py (current = the construction described above)")
+               help="cell construction, see pertrelay/vcc/render.py (current = the construction described above)")
 p.add_argument("--top-frac", type=float, default=None,
                help="dual render: fraction of a target's cells (largest counts) that receive added counts (default 0.1)")
 p.add_argument("--effects-bulk", nargs="+", default=None,
@@ -36,7 +36,7 @@ p.add_argument("--require-all", action="store_true",
                     " unperturbed control cells for missing targets)")
 a = p.parse_args()
 if a.render != "current":
-    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scDFM"))
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "pertrelay"))
     from vcc.render import render  # noqa: E402
     if a.top_frac is not None:
         import vcc.render as _VR; _VR.TOP_FRAC = a.top_frac

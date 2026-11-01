@@ -1,6 +1,6 @@
 """Add final-panel (D/E/F) targets to the CD4 stats by reading only their rows of the remote Marson pseudobulk (2026-10-22).
 
-    scDFM/.venv/bin/python -I tools/cd4_add_remote.py <pert_counts.csv> [--check GENE]
+    pertrelay/.venv/bin/python -I tools/cd4_add_remote.py <pert_counts.csv> [--check GENE]
 
 The 44.6 GB GWCD4i.pseudobulk_merged.h5ad (public S3) downloads at ~1 MB/s here, but X is CSR with uncompressed
 42,464-element chunks, so the rows of ~160 targets (~22 pseudobulk rows each, ~10k nonzeros per row) are a few GB of

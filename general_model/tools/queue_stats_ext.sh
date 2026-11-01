@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Pseudobulk statistics for the extra lines, one at a time (15 GB RAM).
-cd /home/zxc29051617/VCC/scDFM
+cd /home/zxc29051617/VCC/pertrelay
 export PYTHONPATH=.
 D=/home/zxc29051617/VCC/data/external
 run() { echo "=== $(date +%T) $*"; .venv/bin/python -m vcc.stats_ext "$@" || echo "FAILED $*"; }

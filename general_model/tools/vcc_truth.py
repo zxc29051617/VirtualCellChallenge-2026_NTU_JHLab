@@ -1,7 +1,7 @@
 """A/B/C ground truth -> inputs for the general model and the local tests (prepared 2026-10-21, before the release).
 
-    scDFM/.venv/bin/python -I tools/vcc_truth.py stats <truth.h5ad> <X> [--controls F] [--out F]
-    scDFM/.venv/bin/python -I tools/vcc_truth.py loco  <truth.h5ad> <X> [--controls F] [--cells 200] [--n-ctrl 4000] [--out-dir D]
+    pertrelay/.venv/bin/python -I tools/vcc_truth.py stats <truth.h5ad> <X> [--controls F] [--out F]
+    pertrelay/.venv/bin/python -I tools/vcc_truth.py loco  <truth.h5ad> <X> [--controls F] [--cells 200] [--n-ctrl 4000] [--out-dir D]
 
 stats: per group summed counts over cells + cell counts in vcc/stats.py's format ('__ctrl__' = the non-targeting cells of
        the truth file when it has them, else the released controls data/vcc2026/context_<X>.h5ad), VCC gene axis, every

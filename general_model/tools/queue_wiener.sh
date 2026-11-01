@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 cd /home/zxc29051617/VCC
-PY="scDFM/.venv/bin/python -I tools/loco.py"
+PY="pertrelay/.venv/bin/python -I tools/loco.py"
 step() { echo "=== $(date +%T) $*"; "$@" || echo "!!! FAILED: $*"; }
 for n in "$@"; do
   step $PY pred  --heldout H1 --method effectfile --effect-file data/stage3/effects/H1_$n.npz

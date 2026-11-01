@@ -13,7 +13,7 @@ G1 (2026-10-20): --gamma g sharpens per-target magnitudes (row p x |t_p|^(g-1), 
 totals = oc + s_c x trans' with s_c per context such that the scorer's #348 budget (across-target centred sum of squares
 of the predicted pseudobulk means, bulk_lognorm 5e4, own target excluded) equals the expected claim (n_targets x the
 jackknife trace of a 400-cell pseudobulk of that context's controls): below that point the correction refunds the
-spread's cost, above it the plug-in error grows (repro/next_20261019/run.log). --trans-scale x: totals = oc + x trans'.
+spread's cost, above it the plug-in error grows (experiments/next_20261019/run.log). --trans-scale x: totals = oc + x trans'.
 """
 import argparse, os, sys
 import numpy as np, scipy.sparse as sp, anndata as ad
@@ -80,7 +80,7 @@ def load_trans(path):
     full = zf["lfc"].astype(np.float64); oc = zo["lfc"].astype(np.float64)
     trans = full - oc
     if a.entry_agree:
-        sys.path.insert(0, "/home/zxc29051617/VCC/scDFM/repro/signature_20261013"); import sigexp as S
+        sys.path.insert(0, "/home/zxc29051617/VCC/pertrelay/experiments/signature_20261013"); import sigexp as S
         ti = {t: i for i, t in enumerate(targets)}; n = np.zeros_like(full); s1 = np.zeros_like(full); pos = np.zeros_like(full)
         use = [c for c in S.CONTEXTS if c not in set(os.environ.get("VCC_EXCLUDE", "").split(","))]   # VCC_EXCLUDE: mock exams
         Cc = S.load_cache(use)

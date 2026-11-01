@@ -7,7 +7,7 @@ validated on the hold-outs (power 1 gives ~7 on A/B/C).
 """
 import os, sys
 import numpy as np, pandas as pd
-sys.path.insert(0, "/home/zxc29051617/VCC/scDFM/repro/signature_20261013")
+sys.path.insert(0, "/home/zxc29051617/VCC/pertrelay/experiments/signature_20261013")
 import sigexp as S
 src, out = sys.argv[1:3]; POW = float(sys.argv[3]) if len(sys.argv) > 3 else 0.5
 targets = [str(t) for t in np.load(src, allow_pickle=True)["targets"]] if src.endswith(".npz") else \

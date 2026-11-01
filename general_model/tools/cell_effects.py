@@ -7,7 +7,7 @@ Uses only the predictions and the public training screens.
 """
 import os, sys
 import numpy as np
-sys.path.insert(0, "/home/zxc29051617/VCC/scDFM/repro/signature_20261013")
+sys.path.insert(0, "/home/zxc29051617/VCC/pertrelay/experiments/signature_20261013")
 import sigexp as S
 full_f, oc_f, out = sys.argv[1:4]; AMP = float(sys.argv[4]) if len(sys.argv) > 4 else 1.5; K = float(sys.argv[5]) if len(sys.argv) > 5 else 1.0
 zf = np.load(full_f, allow_pickle=True); zo = np.load(oc_f, allow_pickle=True)

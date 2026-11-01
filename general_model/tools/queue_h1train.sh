@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # H1 (2025) as TRAINING data, with 100 of its perturbations held out as the test.
-cd /home/zxc29051617/VCC/scDFM
+cd /home/zxc29051617/VCC/pertrelay
 while kill -0 87175 2>/dev/null; do sleep 30; done
 step() { echo "=== $(date +%T) $*"; "$@" || echo "!!! FAILED: $*"; }
 F=/home/zxc29051617/VCC/data/stage3/model/h1_pert_holdout

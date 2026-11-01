@@ -1,6 +1,6 @@
 """KOLF obs/var metadata (cell -> target gene, batch, UMI) and the counts indptr, read remotely (writes kolf_meta.npz for tools/kolf_process.py).
 
-    scDFM/.venv/bin/python -I tools/kolf_meta.py https://ndownloader.figshare.com/files/64650261 data/external/kolf/kolf_meta.npz
+    pertrelay/.venv/bin/python -I tools/kolf_meta.py https://ndownloader.figshare.com/files/64650261 data/external/kolf/kolf_meta.npz
 """
 import os, sys, time, h5py, numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
