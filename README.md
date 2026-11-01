@@ -39,7 +39,7 @@ CRISPRi 關掉 300 個基因後，18,533 個基因的表現會怎麼改變，並
 .
 ├── general_model/              # 期末使用的通用模型
 │   ├── README.md               # 背景知識、評分方式、模型、結果與重跑步驟
-│   ├── scDFM/                  # AdaptNet 與細胞產生流程（資料夾名稱沿用專案起點）
+│   ├── pertrelay/              # PertRelay：模型（AdaptNet、GeneNet4）、細胞產生流程與實驗紀錄
 │   ├── vccsub/                 # 產生與打包上傳檔
 │   ├── tools/                  # 資料下載與整理
 │   ├── docs/                   # 圖表與實驗紀錄
@@ -55,8 +55,8 @@ CRISPRi 關掉 300 個基因後，18,533 個基因的表現會怎麼改變，並
 不用下載資料也能重現模擬考的分數：
 
 ```bash
-cd general_model/scDFM
-uv run --no-project --with numpy python repro/model_v2_20261022/mock_cmp.py 0,1,2,3,4 current v4_ax5
+cd general_model/pertrelay
+uv run --no-project --with numpy python model/mock_cmp.py 0,1,2,3,4 current v4_ax5
 ```
 
 會印出原方法（`current`）與期末 v5（`v4_ax5`）在 5 組模擬考的總分 0.2723 與 0.3063。
