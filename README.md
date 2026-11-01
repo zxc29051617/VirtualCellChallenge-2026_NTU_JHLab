@@ -64,5 +64,5 @@ uv run --no-project --with numpy python model/mock_cmp.py 0,1,2,3,4 current v4_a
 
 ## 比賽初期的基準流程
 
-比賽初期先做了一個簡單的基準：把公開細胞的擾動反應轉移到比賽細胞上，最好成績 0.109。相關程式在 `src/`、`scripts/`，
+比賽初期隊友先做了一個簡單的基準：把公開細胞的擾動反應轉移到比賽細胞上，最好成績 0.109。相關程式在 `src/`、`scripts/`，
 規則與實驗紀錄在 `docs/challenge_brief.md`、`docs/state_of_play.md`。
