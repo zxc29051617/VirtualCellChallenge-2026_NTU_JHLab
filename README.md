@@ -8,6 +8,8 @@ CRISPRi 關掉 300 個基因後，18,533 個基因的表現會怎麼改變，並
 
 團隊：[zxc29051617](https://github.com/zxc29051617)、[scnpg](https://github.com/scnpg)
 
+![PertRelay 架構圖：(a) 比賽任務 (b) 預測流程](docs/architecture.png)
+
 ## 方法
 
 使用設計的 **AdaptNet**（跨細胞種類的擾動反應遷移模型），詳細說明在
